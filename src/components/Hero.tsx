@@ -2,6 +2,8 @@ import { motion } from 'motion/react';
 import { Star, Droplets, Zap } from 'lucide-react';
 import { useRef, useState } from 'react';
 
+import heroImage from '../assets/images/regenerated_image_1779233473318.png';
+
 export default function Hero() {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [isStarting, setIsStarting] = useState(false);
@@ -98,10 +100,11 @@ export default function Hero() {
         ))}
       </div>
 
-      <div className="relative z-10 max-w-4xl">
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
+      <div className="relative z-10 max-w-7xl mx-auto w-full flex flex-col lg:flex-row items-center justify-between gap-12">
+        <div className="max-w-3xl flex-1 relative z-20">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
           className="inline-block px-3 py-1 mb-6 rounded-full bg-white/5 border border-white/10 text-[10px] font-bold uppercase tracking-widest text-neutral-400"
         >
@@ -229,6 +232,24 @@ export default function Hero() {
               </div>
             </div>
           ))}
+        </motion.div>
+        </div>
+        
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.95, x: 20 }}
+          animate={{ opacity: 1, scale: 1, x: 0 }}
+          transition={{ duration: 0.8, delay: 0.8 }}
+          className="flex-1 w-full max-w-2xl relative hidden lg:block z-20"
+        >
+          <div className="absolute inset-0 bg-white/5 rounded-3xl blur-2xl transform scale-105" />
+          <motion.img 
+            initial={{ y: 0 }}
+            animate={{ y: [-10, 10, -10] }}
+            transition={{ repeat: Infinity, duration: 5, ease: "easeInOut" }}
+            src={heroImage} 
+            alt="Dritzz Doorstep Car Wash" 
+            className="w-full h-auto rounded-3xl shadow-2xl relative z-10 border-0 object-cover aspect-[4/3] bg-black mt-[-230px]"
+          />
         </motion.div>
       </div>
 

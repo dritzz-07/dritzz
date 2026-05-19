@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Droplets, LogIn, User, LogOut } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import logoImage from '../assets/images/regenerated_image_1779231339878.png';
 
 interface NavbarProps {
   openLogin: () => void;
@@ -27,14 +28,14 @@ export default function Navbar({ openLogin, openSignup, openBookings }: NavbarPr
   };
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 py-4 md:px-16 bg-black/80 backdrop-blur-sm border-b border-white/5">
+    <nav className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 pt-1 pb-4 md:px-16 bg-black/80 backdrop-blur-sm border-b border-white/5">
       <a href="#" className="flex items-center gap-2 decoration-none text-white group" onClick={handleNavClick}>
         <motion.img 
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
-          src="/logo_v2.svg" 
+          src={logoImage} 
           alt="Dritzz Logo" 
-          className="h-12 w-auto transition-all" 
+          className="w-[150px] h-[150px] object-contain transition-all" 
         />
       </a>
       
