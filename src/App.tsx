@@ -16,8 +16,6 @@ import AdminDashboard from './components/AdminDashboard';
 import { BookingDetails, VehicleType, Package } from './types';
 import { PACKAGES } from './constants';
 
-import PremiumGallery from './components/PremiumGallery';
-
 function MainApp() {
   const [selectedVehicle, setSelectedVehicle] = useState<VehicleType>('hatchback');
   const [selectedPkgId, setSelectedPkgId] = useState<string>('');
@@ -68,7 +66,6 @@ function MainApp() {
       
       <main className="relative z-10">
         <Hero />
-        <PremiumGallery />
         <HowItWorks />
         <Pricing 
           onSelectPackage={handleSelectPackage} 
