@@ -22,6 +22,8 @@ interface Booking {
   status: string;
   paymentMethod: string;
   address?: string;
+  latitude?: number;
+  longitude?: number;
 }
 
 export default function MyBookingsModal({ isOpen, onClose }: MyBookingsProps) {
@@ -129,14 +131,16 @@ export default function MyBookingsModal({ isOpen, onClose }: MyBookingsProps) {
                               <span className="capitalize">{booking.paymentMethod}</span>
                             </div>
                             
-                            {/* Service Address & Location Action Tab Option */}
-                            <div className="col-span-2 pt-2 border-t border-white/5 space-y-2">
-                              <div className="flex items-center justify-between gap-4">
-                                <div className="flex items-start gap-2 text-sm text-neutral-300 max-w-[65%]">
-                                  <MapPin className="w-4 h-4 text-neutral-500 shrink-0 mt-0.5" />
+                            {/* Service Location Tab Section */}
+                            <div className="col-span-2 pt-3 border-t border-white/5 space-y-3">
+                              <div className="flex items-center justify-between bg-white/[0.02] border border-white/5 rounded-xl p-3">
+                                <div className="flex items-start gap-3 text-sm text-neutral-300 max-w-[65%]">
+                                  <div className="p-2 bg-emerald-500/10 border border-emerald-500/20 rounded-lg shrink-0">
+                                    <MapPin className="w-4 h-4 text-emerald-400" />
+                                  </div>
                                   <div className="text-left">
-                                    <div className="text-[9px] uppercase font-bold text-neutral-500 leading-none mb-1">Service Address</div>
-                                    <span className="line-clamp-2 text-xs text-neutral-400 font-medium">
+                                    <div className="text-[10px] uppercase font-black text-emerald-400 tracking-wider mb-1">Service Location</div>
+                                    <span className="line-clamp-2 text-xs text-neutral-300 font-medium leading-relaxed">
                                       {booking.address || 'Doorstep Service Location'}
                                     </span>
                                   </div>
@@ -144,17 +148,17 @@ export default function MyBookingsModal({ isOpen, onClose }: MyBookingsProps) {
                                 
                                 <button
                                   onClick={() => setActiveTrackId(activeTrackId === booking.id ? null : booking.id)}
-                                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all shrink-0 cursor-pointer
+                                  className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-black uppercase tracking-wider transition-all shrink-0 cursor-pointer border
                                     ${activeTrackId === booking.id 
-                                      ? 'bg-emerald-500 text-black shadow-[0_0_15px_rgba(16,185,129,0.4)] hover:brightness-95' 
-                                      : 'bg-white/5 hover:bg-white/10 border border-white/10 text-emerald-400'
+                                      ? 'bg-emerald-500 text-black border-emerald-400 shadow-[0_0_20px_rgba(16,185,129,0.5)] hover:brightness-95' 
+                                      : 'bg-emerald-500/10 text-emerald-400 border-emerald-500/25 hover:bg-emerald-500/20 hover:border-emerald-500/40 animate-pulse'
                                     }`}
                                 >
                                   <span className="relative flex h-2 w-2">
                                     <span className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${activeTrackId === booking.id ? 'bg-black' : 'bg-emerald-400'}`}></span>
                                     <span className={`relative inline-flex rounded-full h-2 w-2 ${activeTrackId === booking.id ? 'bg-black' : 'bg-emerald-500'}`}></span>
                                   </span>
-                                  Live Location
+                                  {activeTrackId === booking.id ? 'Map Active' : 'Live Location'}
                                 </button>
                               </div>
                             </div>
@@ -175,6 +179,8 @@ export default function MyBookingsModal({ isOpen, onClose }: MyBookingsProps) {
                           address={booking.address || 'Doorstep Service Location'}
                           status={booking.status}
                           onClose={() => setActiveTrackId(null)}
+                          latitude={booking.latitude}
+                          longitude={booking.longitude}
                         />
                       )}
                     </div>

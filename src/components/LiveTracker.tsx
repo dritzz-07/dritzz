@@ -7,9 +7,11 @@ interface LiveTrackerProps {
   address: string;
   status: string;
   onClose: () => void;
+  latitude?: number;
+  longitude?: number;
 }
 
-export default function LiveTracker({ bookingId, refId, address, status, onClose }: LiveTrackerProps) {
+export default function LiveTracker({ bookingId, refId, address, status, onClose, latitude, longitude }: LiveTrackerProps) {
   const [leafletLoaded, setLeafletLoaded] = useState(false);
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<any>(null);
@@ -90,7 +92,9 @@ export default function LiveTracker({ bookingId, refId, address, status, onClose
     return base;
   };
 
-  const customerCoords = getCoordinates(address, refId);
+  const customerCoords = (latitude && longitude)
+    ? [latitude, longitude] as [number, number]
+    : getCoordinates(address, refId);
 
   // Load Leaflet resources dynamically
   useEffect(() => {

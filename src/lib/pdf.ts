@@ -92,7 +92,7 @@ export const generateInvoice = async (details: BookingDetails, pkg: Package, amo
 
   // Customer & Details Block
   doc.setFillColor(248, 248, 250);
-  doc.roundedRect(20, 95, 170, 40, 3, 3, 'F');
+  doc.roundedRect(20, 95, 170, 48, 3, 3, 'F');
   
   // Bill To
   doc.setFont('helvetica', 'bold');
@@ -105,8 +105,21 @@ export const generateInvoice = async (details: BookingDetails, pkg: Package, amo
   doc.text(details.phone, 28, 120);
   doc.text(details.email || 'N/A', 28, 126);
   
-  // Service Details
+  // Service Address
   doc.setFont('helvetica', 'bold');
+  doc.setFontSize(8);
+  doc.setTextColor(120, 120, 120);
+  doc.text('ADDRESS', 28, 132);
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(9);
+  doc.setTextColor(60, 60, 60);
+  const addrText = details.address || 'N/A';
+  const splitAddr = doc.splitTextToSize(addrText, 70);
+  doc.text(splitAddr, 28, 137);
+  
+   // Service Details
+   doc.setFontSize(10);
+   doc.setFont('helvetica', 'bold');
   doc.setTextColor(120, 120, 120);
   doc.text('SERVICE SCHEDULE', 110, 106);
   doc.setTextColor(20, 20, 20);

@@ -21,4 +21,6 @@ export interface BookingDetails {
   vehicleType: VehicleType;
   packageId: string;
   notes: string;
+  latitude?: number;
+  longitude?: number;
 }

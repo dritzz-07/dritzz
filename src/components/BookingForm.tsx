@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'motion/react';
-import { Lock, ChevronRight } from 'lucide-react';
+import { Lock, ChevronRight, MapPin, Navigation, Loader2 } from 'lucide-react';
 import { PACKAGES, TIME_SLOTS } from '../constants';
 import { BookingDetails, VehicleType } from '../types';
 import { useAuth } from '../context/AuthContext';
@@ -32,6 +32,192 @@ export default function BookingForm({
     packageId: initialPackageId || '',
     notes: ''
   });
+
+  const [showMapPicker, setShowMapPicker] = useState(false);
+  const [locating, setLocating] = useState(false);
+  const [mapError, setMapError] = useState<string | null>(null);
+  const [leafletLoaded, setLeafletLoaded] = useState(false);
+
+  const pickerMapContainerRef = useRef<HTMLDivElement>(null);
+  const pickerMapRef = useRef<any>(null);
+  const pickerMarkerRef = useRef<any>(null);
+
+  // Clean map on unmount
+  useEffect(() => {
+    return () => {
+      if (pickerMapRef.current) {
+        pickerMapRef.current.remove();
+        pickerMapRef.current = null;
+      }
+    };
+  }, []);
+
+  // Clean map if toggled off
+  useEffect(() => {
+    if (!showMapPicker && pickerMapRef.current) {
+      pickerMapRef.current.remove();
+      pickerMapRef.current = null;
+      pickerMarkerRef.current = null;
+    }
+  }, [showMapPicker]);
+
+  const handleGetLiveLocation = () => {
+    setLocating(true);
+    setMapError(null);
+    setShowMapPicker(true);
+
+    if (!navigator.geolocation) {
+      setMapError('Geolocation is not supported by your browser.');
+      setLocating(false);
+      return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        const { latitude, longitude } = position.coords;
+        setDetails(prev => ({ ...prev, latitude, longitude }));
+
+        // Load Leaftlet dynamic and center map
+        loadLeafletAndCentremap(latitude, longitude);
+
+        // Fetch reverse geocode address
+        try {
+          const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`);
+          if (res.ok) {
+            const data = await res.json();
+            if (data && data.display_name) {
+              setDetails(prev => ({ ...prev, address: data.display_name }));
+            }
+          }
+        } catch (err) {
+          console.error('Error reverse geocoding:', err);
+        } finally {
+          setLocating(false);
+        }
+      },
+      (error) => {
+        let msg = 'Failed to retrieve your location.';
+        if (error.code === error.PERMISSION_DENIED) {
+          msg = 'Please grant location permission in your device/browser settings.';
+        }
+        setMapError(msg);
+        setLocating(false);
+        // Fallback to center Hyderabad city centre
+        loadLeafletAndCentremap(17.3850, 78.4867);
+      },
+      { enableHighAccuracy: true, timeout: 8000 }
+    );
+  };
+
+  const loadLeafletAndCentremap = (lat: number, lng: number) => {
+    if (!document.getElementById('leaflet-css')) {
+      const link = document.createElement('link');
+      link.id = 'leaflet-css';
+      link.rel = 'stylesheet';
+      link.href = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css';
+      document.head.appendChild(link);
+    }
+
+    if (!(window as any).L) {
+      const script = document.createElement('script');
+      script.src = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';
+      script.async = true;
+      script.onload = () => {
+        setLeafletLoaded(true);
+        initPickerMap(lat, lng);
+      };
+      document.body.appendChild(script);
+    } else {
+      setLeafletLoaded(true);
+      initPickerMap(lat, lng);
+    }
+  };
+
+  const initPickerMap = (lat: number, lng: number) => {
+    setTimeout(() => {
+      const L = (window as any).L;
+      if (!L || !pickerMapContainerRef.current) return;
+
+      if (pickerMapRef.current) {
+        pickerMapRef.current.setView([lat, lng], 16);
+        if (pickerMarkerRef.current) {
+          pickerMarkerRef.current.setLatLng([lat, lng]);
+        } else {
+          addMarkerToMap(L, lat, lng);
+        }
+        return;
+      }
+
+      pickerMapRef.current = L.map(pickerMapContainerRef.current, {
+        zoomControl: true,
+        attributionControl: false
+      }).setView([lat, lng], 16);
+
+      L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+        maxZoom: 20
+      }).addTo(pickerMapRef.current);
+
+      addMarkerToMap(L, lat, lng);
+
+      pickerMapRef.current.on('click', async (e: any) => {
+        const { lat: clickLat, lng: clickLng } = e.latlng;
+        setDetails(prev => ({ ...prev, latitude: clickLat, longitude: clickLng }));
+        if (pickerMarkerRef.current) {
+          pickerMarkerRef.current.setLatLng([clickLat, clickLng]);
+        }
+
+        try {
+          const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${clickLat}&lon=${clickLng}`);
+          if (res.ok) {
+            const data = await res.json();
+            if (data && data.display_name) {
+              setDetails(prev => ({ ...prev, address: data.display_name }));
+            }
+          }
+        } catch (err) {
+          console.error(err);
+        }
+      });
+    }, 100);
+  };
+
+  const addMarkerToMap = (L: any, lat: number, lng: number) => {
+    const customIcon = L.divIcon({
+      className: 'custom-pin-icon',
+      html: `
+        <div style="position: relative; display: flex; align-items: center; justify-content: center; width: 40px; height: 40px;">
+          <div style="position: absolute; width: 32px; height: 32px; border-radius: 50%; background-color: rgba(16, 185, 129, 0.2); border: 2px solid rgb(16, 185, 129); animation: ping 1.5s infinite; opacity: 0.6;"></div>
+          <div style="position: relative; width: 14px; height: 14px; border-radius: 50%; background-color: rgb(16, 185, 129); border: 2px solid white; box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);"></div>
+        </div>
+      `,
+      iconSize: [40, 40],
+      iconAnchor: [20, 20]
+    });
+
+    pickerMarkerRef.current = L.marker([lat, lng], {
+      icon: customIcon,
+      draggable: true
+    }).addTo(pickerMapRef.current);
+
+    pickerMarkerRef.current.on('dragend', async (e: any) => {
+      const position = e.target.getLatLng();
+      const dragLat = position.lat;
+      const dragLng = position.lng;
+      setDetails(prev => ({ ...prev, latitude: dragLat, longitude: dragLng }));
+
+      try {
+        const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${dragLat}&lon=${dragLng}`);
+        if (res.ok) {
+          const data = await res.json();
+          if (data && data.display_name) {
+            setDetails(prev => ({ ...prev, address: data.display_name }));
+          }
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    });
+  };
 
   useEffect(() => {
     if (initialVehicle) setDetails(prev => ({ ...prev, vehicleType: initialVehicle }));
@@ -114,8 +300,28 @@ export default function BookingForm({
             />
           </div>
 
-          <div className="space-y-2">
-            <label className="text-[10px] uppercase tracking-widest text-neutral-500 font-bold block">Service Address</label>
+          <div className="space-y-4">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+              <label className="text-[10px] uppercase tracking-widest text-neutral-500 font-bold block">Service Address</label>
+              <button
+                type="button"
+                onClick={handleGetLiveLocation}
+                className="flex items-center gap-1.5 text-xs text-emerald-400 hover:text-emerald-300 font-black uppercase tracking-wider bg-emerald-500/10 hover:bg-emerald-500/25 px-3 py-1.5 rounded-lg border border-emerald-500/20 transition-all cursor-pointer shrink-0"
+              >
+                {locating ? (
+                  <>
+                    <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                    Locating...
+                  </>
+                ) : (
+                  <>
+                    <Navigation className="w-3.5 h-3.5 animate-pulse" />
+                    Detect Live Location
+                  </>
+                )}
+              </button>
+            </div>
+            
             <input
               required
               type="text"
@@ -125,6 +331,43 @@ export default function BookingForm({
               placeholder="Flat no, Building, Area, Hyderabad"
               className="w-full bg-white/5 border border-white/10 px-4 py-3 text-sm focus:border-white outline-none transition-colors rounded-lg text-white"
             />
+
+            {showMapPicker && (
+              <div className="border border-white/10 rounded-xl overflow-hidden bg-white/5 p-4 space-y-3">
+                <div className="flex justify-between items-center mr-1">
+                  <div className="text-[10px] uppercase font-black text-emerald-400 tracking-wider flex items-center gap-1.5">
+                    <span className="relative flex h-2 w-2">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                      <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                    </span>
+                    Drag Pin or Click Map To Adjust Destination Location
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setShowMapPicker(false)}
+                    className="text-neutral-400 hover:text-white text-xs font-bold"
+                  >
+                    Hide Map
+                  </button>
+                </div>
+                
+                <div 
+                  ref={pickerMapContainerRef} 
+                  className="w-full h-48 sm:h-56 rounded-lg bg-black/40 border border-white/5 overflow-hidden" 
+                  id="picker-map"
+                />
+                
+                {details.latitude && details.longitude && (
+                  <div className="flex items-center justify-between text-[11px] font-mono text-neutral-400 bg-black/20 px-3 py-2 rounded-lg">
+                    <span className="text-neutral-500">GPS Coords: <span className="text-neutral-300">{details.latitude.toFixed(6)}, {details.longitude.toFixed(6)}</span></span>
+                    <span className="text-emerald-400 uppercase font-bold text-[9px] tracking-wide">Coordinates Locked</span>
+                  </div>
+                )}
+                {mapError && (
+                  <div className="text-xs text-red-400 font-medium">{mapError}</div>
+                )}
+              </div>
+            )}
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
