@@ -239,13 +239,13 @@ export default function Hero() {
           initial={{ opacity: 0, scale: 0.95, x: 20 }}
           animate={{ opacity: 1, scale: 1, x: 0 }}
           transition={{ duration: 0.8, delay: 0.8 }}
-          className="flex-1 w-full max-w-2xl relative z-20 mt-8 lg:-mt-[230px]"
+          className="flex-1 w-full max-w-2xl relative z-20 mt-12 lg:mt-0"
         >
           <div className="absolute inset-0 bg-white/5 rounded-3xl blur-2xl transform scale-105" />
           <img 
             src={heroImage} 
             alt="Dritzz Doorstep Car Wash" 
-            className="w-full h-auto rounded-3xl shadow-2xl relative z-10 border-0 object-cover aspect-[4/3] bg-black"
+            className="w-full h-auto rounded-[2rem] shadow-2xl relative z-10 border border-white/10 object-cover aspect-[4/3] bg-black"
           />
         </motion.div>
       </div>
