@@ -39,17 +39,21 @@ export default function PaymentModal({ isOpen, onClose, bookingDetails, pkg, amo
       });
 
       // 2. Send SMS Confirmation (existing logic)
-      await fetch(getApiUrl('/api/send-confirmation'), {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          name: bookingDetails.name,
-          phone: bookingDetails.phone,
-          packageName: pkg.name,
-          amount: amount,
-          refId: refId
-        })
-      });
+      try {
+        await fetch(getApiUrl('/api/send-confirmation'), {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            name: bookingDetails.name,
+            phone: bookingDetails.phone,
+            packageName: pkg.name,
+            amount: amount,
+            refId: refId
+          })
+        });
+      } catch (smsError) {
+        console.warn('SMS notification failed to send, but booking has been successfully saved:', smsError);
+      }
 
       setStep('success');
     } catch (error: any) {
@@ -60,13 +64,16 @@ export default function PaymentModal({ isOpen, onClose, bookingDetails, pkg, amo
     }
   };
 
-  const handleDownloadInvoice = () => {
+  const handleDownloadInvoice = async () => {
     if (!bookingDetails || !pkg) return;
     setIsGenerating(true);
-    setTimeout(() => {
-      generateInvoice(bookingDetails, pkg, amount, method, refId);
+    try {
+      await generateInvoice(bookingDetails, pkg, amount, method, refId);
+    } catch (err) {
+      console.error(err);
+    } finally {
       setIsGenerating(false);
-    }, 1000);
+    }
   };
 
   return (

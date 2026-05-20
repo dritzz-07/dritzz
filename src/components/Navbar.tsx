@@ -40,6 +40,15 @@ export default function Navbar({ openLogin, openSignup, openBookings }: NavbarPr
       </a>
       
       <ul className="hidden md:flex items-center gap-10 list-none">
+        <li>
+          <a
+            href="/"
+            onClick={handleNavClick}
+            className="text-sm font-medium text-neutral-400 hover:text-white transition-colors decoration-none relative"
+          >
+            Home
+          </a>
+        </li>
         {['Packages', 'How It Works', 'Why Us', 'Contact'].map((item) => (
           <li key={item}>
             <a 

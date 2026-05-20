@@ -2,7 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { db } from '../lib/firebase';
 import { collection, query, getDocs, updateDoc, doc, addDoc, serverTimestamp, deleteDoc } from 'firebase/firestore';
-import { Mail, Lock, LogIn, ArrowRight, TrendingUp, Calendar, CheckCircle2, Car, Search, Phone, Plus, X, Trash2 } from 'lucide-react';
+import { Mail, Lock, LogIn, ArrowRight, TrendingUp, Calendar, CheckCircle2, Car, Search, Phone, Plus, X, Trash2, Download, FileText } from 'lucide-react';
+import * as XLSX from 'xlsx';
+import { PACKAGES } from '../constants';
+import { generateInvoice } from '../lib/pdf';
 
 interface Booking {
   id: string;
@@ -37,6 +40,7 @@ export default function AdminDashboard() {
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
+  const [filterDate, setFilterDate] = useState('');
   const [isRefreshing, setIsRefreshing] = useState(false);
   
   // Add Booking State
@@ -114,7 +118,6 @@ export default function AdminDashboard() {
   };
 
   const handleDeleteBooking = async (bookingId: string) => {
-    if (!window.confirm("Are you sure you want to delete this booking?")) return;
     try {
       await deleteDoc(doc(db, 'bookings', bookingId));
       setBookings(prev => prev.filter(b => b.id !== bookingId));
@@ -126,16 +129,96 @@ export default function AdminDashboard() {
 
   const filteredBookings = bookings.filter(b => {
     const searchLower = searchTerm.toLowerCase();
-    return (b.refId || '').toLowerCase().includes(searchLower) ||
+    const matchesSearch = (b.refId || '').toLowerCase().includes(searchLower) ||
            (b.name || '').toLowerCase().includes(searchLower) ||
            (b.email || '').toLowerCase().includes(searchLower) ||
            (b.phone || '').includes(searchTerm);
+    
+    let matchesDate = true;
+    if (filterDate) {
+      if (b.createdAt?.toDate) {
+        const createdDate = b.createdAt.toDate();
+        const createdDateStr = `${createdDate.getFullYear()}-${String(createdDate.getMonth() + 1).padStart(2, '0')}-${String(createdDate.getDate()).padStart(2, '0')}`;
+        matchesDate = createdDateStr === filterDate;
+      } else {
+        matchesDate = false;
+      }
+    }
+    
+    return matchesSearch && matchesDate;
   });
 
+  const handleDownloadInvoice = async (b: Booking) => {
+    const pkg = PACKAGES.find(p => p.id === b.packageId);
+    if (!pkg) {
+      alert("Package details not found.");
+      return;
+    }
+    const details = {
+      name: b.name,
+      phone: b.phone,
+      email: b.email,
+      address: '',
+      date: b.date,
+      timeSlot: b.timeSlot,
+      vehicleType: b.vehicleType as any,
+      packageId: b.packageId,
+      notes: ''
+    };
+    await generateInvoice(details, pkg, b.amount, b.paymentMethod || 'Manual', b.refId, b.status);
+  };
+
+  const handleExportExcel = () => {
+    const exportData = filteredBookings.map(b => ({
+      'Ref ID': b.refId,
+      'Name': b.name,
+      'Email': b.email,
+      'Phone': b.phone,
+      'Vehicle Make': b.vehicleMake,
+      'Vehicle Model': b.vehicleModel,
+      'Vehicle Type': b.vehicleType,
+      'Package': b.packageId,
+      'Amount': b.amount,
+      'Date': b.date,
+      'Time Slot': b.timeSlot,
+      'Status': b.status,
+      'Payment Method': b.paymentMethod,
+      'Created At': b.createdAt?.toDate ? b.createdAt.toDate().toLocaleString() : ''
+    }));
+
+    const worksheet = XLSX.utils.json_to_sheet(exportData);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Bookings");
+    
+    const fileName = filterDate ? `bookings_${filterDate}.xlsx` : `all_bookings.xlsx`;
+    XLSX.writeFile(workbook, fileName);
+  };
+
+  const nonCancelledBookings = bookings.filter(b => b.status !== 'cancelled');
+  
   // Quick stats
-  const totalBookings = bookings.length;
-  const totalRevenue = bookings.reduce((sum, b) => sum + (b.amount || 0), 0);
-  const pendingBookings = bookings.filter(b => b.status === 'confirmed').length;
+  const totalBookings = nonCancelledBookings.length;
+  const totalRevenue = nonCancelledBookings.reduce((sum, b) => sum + (b.amount || 0), 0);
+  const pendingBookings = nonCancelledBookings.filter(b => b.status === 'confirmed').length;
+
+  let displayDateLabel = "Today";
+  const dateObj = new Date();
+  
+  const displayBookingsArr = nonCancelledBookings.filter(b => {
+    if (!b.createdAt?.toDate) return false;
+    const createdDate = b.createdAt.toDate();
+    
+    if (filterDate) {
+      const createdDateStr = `${createdDate.getFullYear()}-${String(createdDate.getMonth() + 1).padStart(2, '0')}-${String(createdDate.getDate()).padStart(2, '0')}`;
+      return createdDateStr === filterDate;
+    }
+    
+    return createdDate.getFullYear() === dateObj.getFullYear() &&
+           createdDate.getMonth() === dateObj.getMonth() &&
+           createdDate.getDate() === dateObj.getDate();
+  });
+  const displayBookingsCount = displayBookingsArr.length;
+  const displayRevenue = displayBookingsArr.reduce((sum, b) => sum + (b.amount || 0), 0);
 
   if (!isAdmin) {
     return (
@@ -264,6 +347,9 @@ export default function AdminDashboard() {
       <header className="bg-neutral-900 border-b border-white/5 sticky top-0 z-40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <div className="flex items-center gap-3">
+            <a href="/" className="px-3 py-1.5 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg text-xs font-bold text-neutral-300 hover:text-white transition-colors mr-2">
+              ← Home
+            </a>
             <div className="w-8 h-8 bg-white/10 rounded-lg flex items-center justify-center">
               <Lock className="w-4 h-4 text-white" />
             </div>
@@ -281,7 +367,21 @@ export default function AdminDashboard() {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
         
         {/* Stats Row */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
+          <div className="bg-neutral-900 border border-white/5 rounded-3xl p-6">
+            <div className="w-12 h-12 bg-white/5 rounded-xl flex items-center justify-center mb-4">
+              <Calendar className="w-6 h-6 text-neutral-400" />
+            </div>
+            <p className="text-neutral-500 text-sm font-medium mb-1">{filterDate ? 'Filtered Bookings' : "Today's Bookings"}</p>
+            <p className="text-4xl font-black tracking-tighter">{displayBookingsCount}</p>
+          </div>
+          <div className="bg-neutral-900 border border-white/5 rounded-3xl p-6">
+            <div className="w-12 h-12 bg-green-500/10 rounded-xl flex items-center justify-center mb-4">
+              <TrendingUp className="w-6 h-6 text-green-400" />
+            </div>
+            <p className="text-neutral-500 text-sm font-medium mb-1">{filterDate ? 'Filtered Revenue' : "Today's Revenue"}</p>
+            <p className="text-4xl font-black tracking-tighter">₹{displayRevenue}</p>
+          </div>
           <div className="bg-neutral-900 border border-white/5 rounded-3xl p-6">
             <div className="w-12 h-12 bg-white/5 rounded-xl flex items-center justify-center mb-4">
               <Calendar className="w-6 h-6 text-neutral-400" />
@@ -307,31 +407,59 @@ export default function AdminDashboard() {
 
         {/* Controls */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-          <div className="relative w-full sm:max-w-md">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-500" />
-            <input
-              type="text"
-              placeholder="Search by Ref, Name, Email, Phone..."
-              value={searchTerm}
-              onChange={e => setSearchTerm(e.target.value)}
-              className="w-full bg-neutral-900 border border-white/10 rounded-2xl py-3 pl-11 pr-4 text-sm focus:outline-none focus:border-white transition-colors"
-            />
+          <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
+            <div className="relative w-full sm:max-w-[200px]">
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-500" />
+              <input
+                type="text"
+                placeholder="Search..."
+                value={searchTerm}
+                onChange={e => setSearchTerm(e.target.value)}
+                className="w-full bg-neutral-900 border border-white/10 rounded-2xl py-3 pl-11 pr-4 text-sm focus:outline-none focus:border-white transition-colors"
+              />
+            </div>
+
+            <div className="relative w-full sm:max-w-[160px]">
+              <input
+                type="date"
+                value={filterDate}
+                onChange={e => setFilterDate(e.target.value)}
+                className="w-full bg-neutral-900 border border-white/10 rounded-2xl py-3 px-4 text-sm focus:outline-none focus:border-white transition-colors text-white"
+                style={{ colorScheme: 'dark' }}
+              />
+              {filterDate && (
+                <button 
+                  onClick={() => setFilterDate('')}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-500 hover:text-white"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              )}
+            </div>
           </div>
-          <div className="flex items-center gap-3 w-full sm:w-auto">
+
+          <div className="flex flex-wrap items-center gap-3 w-full sm:w-auto">
+            <button
+              onClick={handleExportExcel}
+              className="flex-1 sm:flex-none px-4 py-3 bg-green-500/10 text-green-400 border border-green-500/20 rounded-2xl text-xs font-bold uppercase tracking-wider hover:bg-green-500/20 transition-colors flex items-center justify-center gap-2"
+              title="Export to Excel"
+            >
+              <Download className="w-4 h-4" /> <span className="hidden sm:inline">Export</span>
+            </button>
             <button
               onClick={() => {
                 setIsRefreshing(true);
                 fetchBookings();
               }}
-              className="px-6 py-3 bg-neutral-900 border border-white/10 text-white rounded-2xl text-xs font-bold uppercase tracking-wider hover:bg-white/5 transition-colors shrink-0"
+              className="flex-1 sm:flex-none px-4 py-3 bg-neutral-900 border border-white/10 text-white rounded-2xl text-xs font-bold uppercase tracking-wider hover:bg-white/5 transition-colors shrink-0"
             >
-              {isRefreshing ? 'Refreshing...' : 'Refresh'}
+              {isRefreshing ? '...' : 'Refresh'}
             </button>
             <button
               onClick={() => setIsAddingBooking(true)}
-              className="flex-1 sm:flex-none px-6 py-3 bg-white text-black rounded-2xl text-xs font-black uppercase tracking-widest hover:bg-neutral-200 transition-colors flex items-center justify-center gap-2"
+              className="flex-1 sm:flex-none px-4 py-3 bg-white text-black rounded-2xl text-xs font-black uppercase tracking-widest hover:bg-neutral-200 transition-colors flex items-center justify-center gap-2"
             >
-              <Plus className="w-4 h-4" /> Add Booking
+              <Plus className="w-4 h-4" /> <span className="hidden sm:inline">Add</span>
             </button>
           </div>
         </div>
@@ -347,10 +475,10 @@ export default function AdminDashboard() {
               <table className="w-full text-left text-sm whitespace-nowrap">
                 <thead className="bg-white/5 text-neutral-400 text-xs uppercase tracking-wider">
                   <tr>
-                    <th className="px-6 py-4 font-bold">Ref ID</th>
+                    <th className="px-6 py-4 font-bold">Ref / Booking Date</th>
                     <th className="px-6 py-4 font-bold">Customer Info</th>
                     <th className="px-6 py-4 font-bold">Service Details</th>
-                    <th className="px-6 py-4 font-bold">Schedule</th>
+                    <th className="px-6 py-4 font-bold">Slot</th>
                     <th className="px-6 py-4 font-bold">Status</th>
                     <th className="px-6 py-4 font-bold">Actions</th>
                   </tr>
@@ -359,9 +487,19 @@ export default function AdminDashboard() {
                   {filteredBookings.map((b) => (
                     <tr key={b.id} className="hover:bg-white/[0.02] transition-colors">
                       <td className="px-6 py-4">
-                        <span className="font-mono text-xs bg-black/50 px-2 py-1 rounded inline-block text-neutral-300">
-                          {b.refId}
-                        </span>
+                        <div className="flex flex-col gap-1">
+                          <span className="font-mono text-xs bg-black/50 px-2 py-1 rounded inline-block text-neutral-300 w-fit">
+                            {b.refId}
+                          </span>
+                          <span className="text-[10px] text-neutral-500 font-medium tracking-wider">
+                            Booked for: {b.date ? new Date(b.date + 'T00:00:00').toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) : '—'}
+                          </span>
+                          {b.createdAt && b.createdAt.toDate && (
+                            <span className="text-[9px] text-neutral-600 font-medium tracking-wider">
+                              Created: {b.createdAt.toDate().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}
+                            </span>
+                          )}
+                        </div>
                       </td>
                       <td className="px-6 py-4">
                         <div className="font-bold text-white mb-1">{b.name}</div>
@@ -390,6 +528,7 @@ export default function AdminDashboard() {
                           className={`text-xs font-bold uppercase tracking-wider px-3 py-1.5 rounded-lg border-2 appearance-none cursor-pointer outline-none transition-colors
                             ${b.status === 'completed' ? 'bg-green-500/10 text-green-400 border-green-500/20' : 
                               b.status === 'confirmed' ? 'bg-orange-500/10 text-orange-400 border-orange-500/20' : 
+                              b.status === 'cancelled' ? 'bg-red-500/10 text-red-400 border-red-500/20' : 
                               'bg-neutral-800 text-neutral-300 border-neutral-700'}`}
                         >
                           <option value="confirmed">Confirmed</option>
@@ -399,13 +538,22 @@ export default function AdminDashboard() {
                         </select>
                       </td>
                       <td className="px-6 py-4">
-                        <button 
-                          onClick={() => handleDeleteBooking(b.id)}
-                          className="p-2 text-neutral-500 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-colors"
-                          title="Delete Booking"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </button>
+                        <div className="flex items-center gap-2">
+                          <button
+                            onClick={() => handleDownloadInvoice(b)}
+                            className="p-2 text-neutral-500 hover:text-white hover:bg-white/10 rounded-lg transition-colors"
+                            title="Download Invoice"
+                          >
+                            <FileText className="w-4 h-4" />
+                          </button>
+                          <button 
+                            onClick={() => handleDeleteBooking(b.id)}
+                            className="p-2 text-neutral-500 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-colors"
+                            title="Delete Booking"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        </div>
                       </td>
                     </tr>
                   ))}
