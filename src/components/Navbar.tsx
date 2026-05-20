@@ -35,7 +35,7 @@ export default function Navbar({ openLogin, openSignup, openBookings }: NavbarPr
           whileTap={{ scale: 0.95 }}
           src={logoImage} 
           alt="Dritzz Logo" 
-          className="w-[150px] h-[150px] object-contain transition-all" 
+          className="w-[100px] h-[100px] md:w-[150px] md:h-[150px] object-contain transition-all" 
         />
       </a>
       
@@ -53,7 +53,7 @@ export default function Navbar({ openLogin, openSignup, openBookings }: NavbarPr
         ))}
       </ul>
 
-      <div className="hidden md:flex items-center gap-6">
+      <div className="flex items-center gap-4 md:gap-6">
         {user ? (
           <div className="relative">
             <button 
