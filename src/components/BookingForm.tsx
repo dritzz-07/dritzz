@@ -686,9 +686,10 @@ export default function BookingForm({
             </div>
             <div className="md:col-span-2 mt-4">
                <MultiVehicleSelector 
-                  defaultPackageId={details.packageId || 'basic'}
+                  defaultPackageId={details.packageId}
                   selectedVehicles={details.vehicles}
                   onChange={(vehicles) => setDetails({ ...details, vehicles })}
+                  isDiscountApplied={isDiscountApplied}
                />
             </div>
           </div>

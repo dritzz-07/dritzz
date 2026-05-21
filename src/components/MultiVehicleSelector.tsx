@@ -10,9 +10,10 @@ interface Props {
   selectedVehicles: SelectedVehicleForBooking[];
   onChange: (vehicles: SelectedVehicleForBooking[]) => void;
   defaultPackageId: string;
+  isDiscountApplied?: boolean;
 }
 
-export default function MultiVehicleSelector({ selectedVehicles, onChange, defaultPackageId }: Props) {
+export default function MultiVehicleSelector({ selectedVehicles, onChange, defaultPackageId, isDiscountApplied }: Props) {
   const { user } = useAuth();
   const [savedVehicles, setSavedVehicles] = useState<SavedVehicle[]>([]);
   const [loading, setLoading] = useState(false);
@@ -85,6 +86,15 @@ export default function MultiVehicleSelector({ selectedVehicles, onChange, defau
      onChange(newV);
   };
 
+  if (!defaultPackageId) {
+    return (
+      <div className="p-8 bg-white/5 border border-white/10 rounded-xl text-center">
+        <Car className="w-8 h-8 text-white/20 mx-auto mb-3" />
+        <p className="text-sm font-bold text-white/60 uppercase tracking-widest">Select a package to add vehicles</p>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-4">
       {savedVehicles.length > 0 && (
@@ -109,7 +119,10 @@ export default function MultiVehicleSelector({ selectedVehicles, onChange, defau
                       <div className="text-white text-sm font-bold">{v.brand} {v.model}</div>
                       <div className="text-neutral-400 text-xs font-mono">{v.vehicleNumber} • <span className="uppercase">{v.type}</span></div>
                     </div>
-                    <div>
+                    <div className="flex items-center gap-4">
+                      <span className="text-white/70 font-mono text-sm">
+                         ₹{isDiscountApplied ? Math.round((PACKAGES.find(p => p.id === defaultPackageId) || PACKAGES[0]).price[v.type as VehicleType] * 0.75) : (PACKAGES.find(p => p.id === defaultPackageId) || PACKAGES[0]).price[v.type as VehicleType]}
+                      </span>
                       <div className={`w-5 h-5 rounded-md border flex items-center justify-center ${isSelected ? 'bg-emerald-500 border-emerald-500' : 'border-white/20'}`}>
                         {isSelected && <svg className="w-3 h-3 text-black" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>}
                       </div>
@@ -121,15 +134,23 @@ export default function MultiVehicleSelector({ selectedVehicles, onChange, defau
          </div>
       )}
 
-      <div>
-         <label className="block text-xs uppercase text-neutral-500 mb-3 font-bold">{savedVehicles.length > 0 ? 'Or Add Other Vehicle' : 'Add Vehicle'}</label>
+      <div className="pt-4 border-t border-white/10 mt-6">
+         <label className="block text-xs uppercase text-neutral-500 mb-3 font-bold">
+            {selectedVehicles.length > 0 ? 'Add Another Vehicle' : (savedVehicles.length > 0 ? 'Or Add A Vehicle' : 'Add Vehicle')}
+         </label>
          <div className="flex flex-wrap gap-2">
-            {(['hatchback', 'sedan', 'suv', 'muv'] as VehicleType[]).map(t => (
-               <button type="button" key={`add-${t}`} onClick={() => addCustomVehicle(t)} className="px-4 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-full text-xs text-white uppercase font-bold flex items-center gap-2 transition-all">
-                  <Plus className="w-3 h-3" /> {t}
-               </button>
-            ))}
+            {(['hatchback', 'sedan', 'suv', 'muv'] as VehicleType[]).map(t => {
+               const pkg = PACKAGES.find(p => p.id === defaultPackageId) || PACKAGES[0];
+               const basePrice = pkg.price[t];
+               const price = isDiscountApplied ? Math.round(basePrice * 0.75) : basePrice;
+               return (
+                  <button type="button" key={`add-${t}`} onClick={() => addCustomVehicle(t)} className="px-4 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-full text-xs text-white uppercase font-bold flex items-center gap-2 transition-all">
+                     <Plus className="w-3 h-3" /> Add {t} <span className="text-white/50 font-mono ml-1">₹{price}</span>
+                  </button>
+               );
+            })}
          </div>
+         {selectedVehicles.length > 0 && <p className="text-[10px] text-emerald-400/80 font-bold mt-3 font-mono">You can add multiple vehicles to this booking.</p>}
       </div>
       
       {/* Show newly added custom (non-saved) vehicles */}
