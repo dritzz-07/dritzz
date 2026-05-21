@@ -1,5 +1,12 @@
 import { initializeApp } from 'firebase/app';
-import { getAuth, GoogleAuthProvider } from 'firebase/auth';
+import { 
+  getAuth, 
+  GoogleAuthProvider, 
+  browserLocalPersistence, 
+  browserPopupRedirectResolver, 
+  inMemoryPersistence,
+  initializeAuth 
+} from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
 
 const firebaseConfig = {
@@ -13,5 +20,20 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 export const db = getFirestore(app);
-export const auth = getAuth(app);
+
+// Check if we are in an iframe where storage access might be restricted
+const isIframe = () => {
+    try {
+        return window.self !== window.top;
+    } catch (e) {
+        return true;
+    }
+}
+
+// Initialize auth with dependencies to avoid some environment-specific network errors
+export const auth = initializeAuth(app, {
+  persistence: [browserLocalPersistence, inMemoryPersistence],
+  popupRedirectResolver: browserPopupRedirectResolver
+});
+
 export const googleProvider = new GoogleAuthProvider();

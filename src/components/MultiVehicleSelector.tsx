@@ -1,0 +1,160 @@
+import React, { useState, useEffect } from 'react';
+import { useAuth } from '../context/AuthContext';
+import { db } from '../lib/firebase';
+import { collection, query, where, getDocs } from 'firebase/firestore';
+import { SavedVehicle, SelectedVehicleForBooking, VehicleType, Package } from '../types';
+import { Car, Plus, X } from 'lucide-react';
+import { PACKAGES } from '../constants';
+
+interface Props {
+  selectedVehicles: SelectedVehicleForBooking[];
+  onChange: (vehicles: SelectedVehicleForBooking[]) => void;
+  defaultPackageId: string;
+}
+
+export default function MultiVehicleSelector({ selectedVehicles, onChange, defaultPackageId }: Props) {
+  const { user } = useAuth();
+  const [savedVehicles, setSavedVehicles] = useState<SavedVehicle[]>([]);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (user?.uid) {
+      setLoading(true);
+      getDocs(query(collection(db, 'vehicles'), where('userId', '==', user.uid)))
+        .then(snap => {
+           const v = snap.docs.map(doc => ({ id: doc.id, ...doc.data() })) as SavedVehicle[];
+           setSavedVehicles(v);
+        })
+        .finally(() => setLoading(false));
+    }
+  }, [user]);
+
+  // Sync prices if default package changes
+  useEffect(() => {
+    if (selectedVehicles.length > 0) {
+      const pkg = PACKAGES.find(p => p.id === defaultPackageId) || PACKAGES[0];
+      const updated = selectedVehicles.map(v => ({
+         ...v,
+         packageId: defaultPackageId,
+         price: pkg.price[v.type] || 0
+      }));
+      // Check if price/package changed
+      if (updated.some((v, i) => v.price !== selectedVehicles[i].price || v.packageId !== selectedVehicles[i].packageId)) {
+        onChange(updated);
+      }
+    }
+  }, [defaultPackageId, selectedVehicles, onChange]);
+
+  const toggleVehicle = (v: SavedVehicle) => {
+    const existing = selectedVehicles.find(sv => sv.vehicleId === v.id);
+    if (existing) {
+       onChange(selectedVehicles.filter(sv => sv.vehicleId !== v.id));
+    } else {
+       const pkg = PACKAGES.find(p => p.id === defaultPackageId) || PACKAGES[0];
+       const sv: SelectedVehicleForBooking = {
+         vehicleId: v.id,
+         type: v.type,
+         brand: v.brand,
+         model: v.model,
+         vehicleNumber: v.vehicleNumber,
+         color: v.color,
+         date: '',
+         timeSlot: '',
+         packageId: defaultPackageId,
+         price: pkg.price[v.type] || 0
+       };
+       onChange([...selectedVehicles, sv]);
+    }
+  };
+
+  const addCustomVehicle = (type: VehicleType) => {
+     const pkg = PACKAGES.find(p => p.id === defaultPackageId) || PACKAGES[0];
+     const sv: SelectedVehicleForBooking = {
+       type,
+       date: '',
+       timeSlot: '',
+       packageId: defaultPackageId,
+       price: pkg.price[type] || 0
+     };
+     onChange([...selectedVehicles, sv]);
+  };
+
+  const removeCustom = (index: number) => {
+     const newV = [...selectedVehicles];
+     newV.splice(index, 1);
+     onChange(newV);
+  };
+
+  return (
+    <div className="space-y-4">
+      {savedVehicles.length > 0 && (
+         <div>
+           <label className="block text-xs uppercase text-neutral-500 mb-3 font-bold">Select Saved Vehicles</label>
+           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+             {savedVehicles.map(v => {
+                const isSelected = selectedVehicles.some(sv => sv.vehicleId === v.id);
+                return (
+                  <button 
+                    key={v.id} 
+                    type="button"
+                    onClick={() => toggleVehicle(v)}
+                    className={`flex items-center gap-3 p-4 rounded-xl border text-left transition-all ${
+                       isSelected ? 'bg-emerald-500/10 border-emerald-500/50 shadow-[0_0_15px_rgba(16,185,129,0.2)]' : 'bg-black/50 border-white/10 hover:border-white/30'
+                    }`}
+                  >
+                    <div className={`p-2 rounded-lg ${isSelected ? 'bg-emerald-500/20 text-emerald-400' : 'bg-white/5 text-white/50'}`}>
+                      <Car className="w-5 h-5" />
+                    </div>
+                    <div className="flex-1">
+                      <div className="text-white text-sm font-bold">{v.brand} {v.model}</div>
+                      <div className="text-neutral-400 text-xs font-mono">{v.vehicleNumber} • <span className="uppercase">{v.type}</span></div>
+                    </div>
+                    <div>
+                      <div className={`w-5 h-5 rounded-md border flex items-center justify-center ${isSelected ? 'bg-emerald-500 border-emerald-500' : 'border-white/20'}`}>
+                        {isSelected && <svg className="w-3 h-3 text-black" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>}
+                      </div>
+                    </div>
+                  </button>
+                )
+             })}
+           </div>
+         </div>
+      )}
+
+      <div>
+         <label className="block text-xs uppercase text-neutral-500 mb-3 font-bold">{savedVehicles.length > 0 ? 'Or Add Other Vehicle' : 'Add Vehicle'}</label>
+         <div className="flex flex-wrap gap-2">
+            {(['hatchback', 'sedan', 'suv', 'muv'] as VehicleType[]).map(t => (
+               <button type="button" key={`add-${t}`} onClick={() => addCustomVehicle(t)} className="px-4 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-full text-xs text-white uppercase font-bold flex items-center gap-2 transition-all">
+                  <Plus className="w-3 h-3" /> {t}
+               </button>
+            ))}
+         </div>
+      </div>
+      
+      {/* Show newly added custom (non-saved) vehicles */}
+      {selectedVehicles.filter(v => !v.vehicleId).length > 0 && (
+        <div className="mt-4 space-y-2">
+           {selectedVehicles.map((v, i) => {
+              if (v.vehicleId) return null;
+              return (
+                 <div key={i} className="flex items-center justify-between p-3 bg-white/5 border border-white/10 rounded-xl">
+                    <div className="flex items-center gap-3">
+                       <Car className="w-4 h-4 text-white/50" />
+                       <span className="text-white text-sm uppercase font-bold">{v.type}</span>
+                    </div>
+                    <button type="button" onClick={() => removeCustom(i)} className="text-red-400 p-1 hover:bg-red-500/10 rounded-full transition-colors"><X className="w-4 h-4" /></button>
+                 </div>
+              )
+           })}
+        </div>
+      )}
+
+      {selectedVehicles.length > 0 && (
+         <div className="mt-4 pt-4 border-t border-white/10">
+            <span className="text-xs text-neutral-400 font-bold uppercase tracking-widest">{selectedVehicles.length} vehicle{selectedVehicles.length > 1 ? 's' : ''} selected</span>
+         </div>
+      )}
+    </div>
+  )
+}

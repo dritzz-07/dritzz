@@ -117,18 +117,23 @@ export const generateInvoice = async (details: BookingDetails, pkg: Package, amo
   const splitAddr = doc.splitTextToSize(addrText, 70);
   doc.text(splitAddr, 28, 137);
   
-   // Service Details
+  // Service Details
    doc.setFontSize(10);
    doc.setFont('helvetica', 'bold');
   doc.setTextColor(120, 120, 120);
   doc.text('SERVICE SCHEDULE', 110, 106);
   doc.setTextColor(20, 20, 20);
   doc.setFont('helvetica', 'bold');
-  doc.text(details.date, 110, 114);
+  doc.text(details.date || '', 110, 114);
   doc.setFont('helvetica', 'normal');
   doc.setTextColor(60, 60, 60);
   doc.text(`Time: ${details.timeSlot}`, 110, 120);
-  doc.text(`Vehicle: ${details.vehicleType.toUpperCase()}`, 110, 126);
+  
+  if (details.vehicles && details.vehicles.length > 0) {
+     doc.text(`Vehicles: ${details.vehicles.length} Selected`, 110, 126);
+  } else {
+     doc.text(`Vehicle: ${(details.vehicleType || 'N/A').toUpperCase()}`, 110, 126);
+  }
   
   // Table Header
   doc.setFillColor(25, 25, 25);
@@ -145,37 +150,57 @@ export const generateInvoice = async (details: BookingDetails, pkg: Package, amo
   doc.setFont('helvetica', 'normal');
   doc.setFontSize(10);
   
-  doc.text(`${pkg.name} Package`, 28, 172);
-  doc.text('1', 125, 172);
-  doc.text(`Rs. ${amount.toFixed(2)}`, 182, 172, { align: 'right' });
+  let currentY = 172;
+  
+  if (details.vehicles && details.vehicles.length > 0) {
+     details.vehicles.forEach(v => {
+         doc.text(`${pkg.name} Package (${v.type.toUpperCase()})`, 28, currentY);
+         doc.setFontSize(8);
+         doc.setTextColor(100, 100, 100);
+         const subText = `${v.brand || 'Custom'} ${v.model || ''} ${v.vehicleNumber ? '- ' + v.vehicleNumber : ''}`;
+         doc.text(subText, 28, currentY + 4);
+         doc.setTextColor(40, 40, 40);
+         doc.setFontSize(10);
+         doc.text('1', 125, currentY);
+         doc.text(`Rs. ${v.price.toFixed(2)}`, 182, currentY, { align: 'right' });
+         currentY += 12;
+     });
+  } else {
+     doc.text(`${pkg.name} Package`, 28, currentY);
+     doc.text('1', 125, currentY);
+     doc.text(`Rs. ${amount.toFixed(2)}`, 182, currentY, { align: 'right' });
+     currentY += 12;
+  }
   
   // Summary Lines
+  const summaryTopIdx = Math.max(currentY + 10, 190);
+  
   doc.setLineWidth(0.3);
   doc.setDrawColor(220, 220, 220);
-  doc.line(110, 190, 190, 190);
+  doc.line(110, summaryTopIdx, 190, summaryTopIdx);
   
   doc.setFont('helvetica', 'bold');
-  doc.text('Subtotal:', 125, 198);
+  doc.text('Subtotal:', 125, summaryTopIdx + 8);
   doc.setFont('helvetica', 'normal');
-  doc.text(`Rs. ${amount.toFixed(2)}`, 182, 198, { align: 'right' });
+  doc.text(`Rs. ${amount.toFixed(2)}`, 182, summaryTopIdx + 8, { align: 'right' });
   
-  doc.line(110, 204, 190, 204);
+  doc.line(110, summaryTopIdx + 14, 190, summaryTopIdx + 14);
   
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(14);
   doc.setTextColor(20, 20, 20);
-  doc.text('TOTAL', 125, 214);
-  doc.text(`Rs. ${amount.toFixed(2)}`, 182, 214, { align: 'right' });
+  doc.text('TOTAL', 125, summaryTopIdx + 24);
+  doc.text(`Rs. ${amount.toFixed(2)}`, 182, summaryTopIdx + 24, { align: 'right' });
   
   // Payment Info
   doc.setFontSize(9);
   doc.setTextColor(120, 120, 120);
   doc.setFont('helvetica', 'bold');
-  doc.text('PAYMENT DETAILS', 20, 190);
+  doc.text('PAYMENT DETAILS', 20, summaryTopIdx);
   doc.setTextColor(60, 60, 60);
   doc.setFont('helvetica', 'normal');
-  doc.text(`Method: ${paymentMethod.toUpperCase()}`, 20, 196);
-  doc.text(`Status: ${status.charAt(0).toUpperCase() + status.slice(1)}`, 20, 201);
+  doc.text(`Method: ${paymentMethod.toUpperCase()}`, 20, summaryTopIdx + 6);
+  doc.text(`Status: ${status.charAt(0).toUpperCase() + status.slice(1)}`, 20, summaryTopIdx + 11);
   
   // Footer
   const pageHeight = doc.internal.pageSize.height;

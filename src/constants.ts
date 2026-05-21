@@ -6,9 +6,10 @@ export const PACKAGES: Package[] = [
     name: 'DRITZZ BASIC',
     tagline: 'Quick exterior refresh',
     price: {
-      hatchback: 399,
-      sedan: 465,
-      suv: 599
+      hatchback: 299,
+      sedan: 349,
+      suv: 449,
+      muv: 449
     },
     icon: 'Droplets',
     features: [
@@ -26,7 +27,8 @@ export const PACKAGES: Package[] = [
     price: {
       hatchback: 799,
       sedan: 932,
-      suv: 1132
+      suv: 1132,
+      muv: 1132
     },
     icon: 'Sparkles',
     features: [
@@ -46,7 +48,8 @@ export const PACKAGES: Package[] = [
     price: {
       hatchback: 1999,
       sedan: 2399,
-      suv: 2665
+      suv: 2665,
+      muv: 2665
     },
     icon: 'Gem',
     features: [

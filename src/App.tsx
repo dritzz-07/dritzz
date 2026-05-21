@@ -44,7 +44,17 @@ function MainApp() {
     const pkg = PACKAGES.find(p => p.id === details.packageId);
     if (!pkg) return;
 
-    let totalPrice = pkg.price[details.vehicleType];
+    let totalPrice = 0;
+    
+    if (details.vehicles && details.vehicles.length > 0) {
+      details.vehicles.forEach(v => {
+         const pId = v.packageId || details.packageId || 'basic';
+         const p = PACKAGES.find(x => x.id === pId) || pkg;
+         totalPrice += p.price[v.type] || p.price['hatchback'];
+      });
+    } else {
+      totalPrice = pkg.price[details.vehicleType || 'hatchback'];
+    }
     
     if (isDiscountApplied) {
       totalPrice = Math.round(totalPrice * 0.75);

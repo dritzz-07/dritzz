@@ -35,6 +35,8 @@ export default function AuthOverlay({ isOpen, onClose, initialMode = 'login' }: 
          setError(`This domain (${window.location.hostname}) is not authorized for Google OAuth inside your Firebase project. Please add it in the Firebase Console under Authentication > Settings > Authorized domains.`);
       } else if (err?.code === 'auth/popup-closed-by-user') {
          setError('Sign in cancelled.');
+      } else if (err?.code === 'auth/network-request-failed') {
+         setError('Network request failed. If you are using a preview environment in an iframe or an ad-blocker, try opening the app in a new tab.');
       } else {
          setError(err.message || 'Failed to login with Google');
       }
@@ -60,6 +62,8 @@ export default function AuthOverlay({ isOpen, onClose, initialMode = 'login' }: 
         setError('Invalid credentials. Please check your password or switch to "Sign Up" if you don\'t have an account yet.');
       } else if (err.code === 'auth/email-already-in-use') {
         setError('Email is already registered. Please switch to "Log in".');
+      } else if (err.code === 'auth/network-request-failed') {
+        setError('Network request failed. Try opening the app in a new tab or disable ad-blockers.');
       } else {
         setError(err.message || `Failed to ${mode} with Email and Password`);
       }

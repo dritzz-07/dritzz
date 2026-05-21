@@ -2,8 +2,9 @@ import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'motion/react';
 import { Lock, ChevronRight, MapPin, Navigation, Loader2 } from 'lucide-react';
 import { PACKAGES, TIME_SLOTS } from '../constants';
-import { BookingDetails, VehicleType } from '../types';
+import { BookingDetails, VehicleType, SelectedVehicleForBooking } from '../types';
 import { useAuth } from '../context/AuthContext';
+import MultiVehicleSelector from './MultiVehicleSelector';
 
 const GOOGLE_MAPS_KEY = process.env.GOOGLE_MAPS_PLATFORM_KEY || '';
 
@@ -105,7 +106,8 @@ export default function BookingForm({
     timeSlot: '',
     vehicleType: initialVehicle || 'hatchback',
     packageId: initialPackageId || '',
-    notes: ''
+    notes: '',
+    vehicles: []
   });
 
   const [showMapPicker, setShowMapPicker] = useState(false);
@@ -445,7 +447,9 @@ export default function BookingForm({
   }, [user]);
 
   const selectedPkg = PACKAGES.find(p => p.id === details.packageId);
-  const originalPrice = selectedPkg ? selectedPkg.price[details.vehicleType] : 0;
+  const originalPrice = details.vehicles && details.vehicles.length > 0
+    ? details.vehicles.reduce((sum, v) => sum + v.price, 0)
+    : selectedPkg ? selectedPkg.price[details.vehicleType || 'hatchback'] : 0;
   const totalPrice = isDiscountApplied ? Math.round(originalPrice * 0.75) : originalPrice;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
@@ -457,6 +461,10 @@ export default function BookingForm({
     e.preventDefault();
     if (!details.name || !details.phone || !details.address || !details.date || !details.timeSlot || !details.packageId) {
       alert('Please fill in all required fields.');
+      return;
+    }
+    if (!details.vehicles || details.vehicles.length === 0) {
+      alert('Please add at least one vehicle.');
       return;
     }
     onSubmit({ ...details, userId: user?.uid });
@@ -663,21 +671,7 @@ export default function BookingForm({
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div className="space-y-2">
-              <label className="text-[10px] uppercase tracking-widest text-neutral-500 font-bold block">Vehicle Type</label>
-              <select
-                required
-                name="vehicleType"
-                value={details.vehicleType}
-                onChange={handleChange}
-                className="w-full bg-white/5 border border-white/10 px-4 py-3 text-sm focus:border-white outline-none transition-colors appearance-none rounded-lg text-white"
-              >
-                <option value="hatchback" className="bg-black">Hatchback</option>
-                <option value="sedan" className="bg-black">Sedan</option>
-                <option value="suv" className="bg-black">SUV / MUV</option>
-              </select>
-            </div>
-            <div className="space-y-2">
+            <div className="space-y-2 md:col-span-2">
               <label className="text-[10px] uppercase tracking-widest text-neutral-500 font-bold block">Package</label>
               <select
                 required
@@ -689,6 +683,13 @@ export default function BookingForm({
                 <option value="" className="bg-black">Select a package</option>
                 {PACKAGES.map(p => <option key={p.id} value={p.id} className="bg-black">{p.name}</option>)}
               </select>
+            </div>
+            <div className="md:col-span-2 mt-4">
+               <MultiVehicleSelector 
+                  defaultPackageId={details.packageId || 'basic'}
+                  selectedVehicles={details.vehicles}
+                  onChange={(vehicles) => setDetails({ ...details, vehicles })}
+               />
             </div>
           </div>
 
@@ -714,10 +715,29 @@ export default function BookingForm({
                 <span className="text-[10px] uppercase tracking-widest text-neutral-500 font-bold">Package</span>
                 <span className="text-sm font-medium text-black">{selectedPkg?.name || '—'}</span>
               </div>
-              <div className="flex justify-between items-center py-2 border-b border-black/5">
-                <span className="text-[10px] uppercase tracking-widest text-neutral-500 font-bold">Vehicle</span>
-                <span className="text-sm font-medium text-black capitalize">{details.vehicleType}</span>
-              </div>
+              
+              {details.vehicles && details.vehicles.length > 0 ? (
+                 <div className="py-2 border-b border-black/5">
+                    <span className="text-[10px] uppercase tracking-widest text-neutral-500 font-bold block mb-2">Vehicles ({details.vehicles.length})</span>
+                    <div className="space-y-2">
+                       {details.vehicles.map((v, idx) => (
+                          <div key={idx} className="flex justify-between items-center text-sm">
+                             <div className="flex flex-col">
+                                <span className="text-black font-medium">{v.brand || 'Custom'} {v.model || 'Vehicle'} <span className="capitalize opacity-50 ml-1">({v.type})</span></span>
+                                {v.vehicleNumber && <span className="text-xs text-neutral-500 font-mono">{v.vehicleNumber}</span>}
+                             </div>
+                             <span className="font-bold text-black">₹{v.price}</span>
+                          </div>
+                       ))}
+                    </div>
+                 </div>
+              ) : (
+                <div className="flex justify-between items-center py-2 border-b border-black/5">
+                  <span className="text-[10px] uppercase tracking-widest text-neutral-500 font-bold">Vehicle</span>
+                  <span className="text-sm font-medium text-black capitalize">{details.vehicleType}</span>
+                </div>
+              )}
+              
               <div className="flex justify-between items-center py-2 border-b border-black/5">
                 <span className="text-[10px] uppercase tracking-widest text-neutral-500 font-bold">Date</span>
                 <span className="text-sm font-medium text-black">{details.date || '—'}</span>
@@ -726,6 +746,13 @@ export default function BookingForm({
                 <span className="text-[10px] uppercase tracking-widest text-neutral-500 font-bold">Slot</span>
                 <span className="text-sm font-medium text-black">{details.timeSlot || '—'}</span>
               </div>
+              
+              {details.vehicles && details.vehicles.length > 0 && (
+                  <div className="flex justify-between items-center py-2 pt-4">
+                     <span className="text-[10px] uppercase tracking-widest text-neutral-500 font-bold">Total Estimate</span>
+                     <span className="text-lg font-black text-black">₹{details.vehicles.reduce((sum, v) => sum + v.price, 0)}</span>
+                  </div>
+              )}
             </div>
 
             <div className="flex justify-between items-center pt-6 border-t border-black mb-10">

@@ -27,6 +27,7 @@ interface Booking {
   address?: string;
   latitude?: number;
   longitude?: number;
+  vehicles?: any[];
 }
 
 export default function AdminDashboard() {
@@ -166,6 +167,7 @@ export default function AdminDashboard() {
       timeSlot: b.timeSlot,
       vehicleType: b.vehicleType as any,
       packageId: b.packageId,
+      vehicles: b.vehicles || [],
       notes: ''
     };
     await generateInvoice(details, pkg, b.amount, b.paymentMethod || 'Manual', b.refId, b.status);
@@ -178,9 +180,8 @@ export default function AdminDashboard() {
       'Email': b.email,
       'Phone': b.phone,
       'Address': b.address || '',
-      'Vehicle Make': b.vehicleMake,
-      'Vehicle Model': b.vehicleModel,
-      'Vehicle Type': b.vehicleType,
+      'Vehicle Type': b.vehicles && b.vehicles.length > 0 ? b.vehicles.map(v => v.type).join(', ') : b.vehicleType,
+      'Vehicles Count': b.vehicles ? b.vehicles.length : 1,
       'Package': b.packageId,
       'Amount': b.amount,
       'Date': b.date,
@@ -548,7 +549,7 @@ export default function AdminDashboard() {
                           <span className="font-medium text-white capitalize">{b.vehicleMake} {b.vehicleModel}</span>
                         </div>
                         <div className="text-xs text-neutral-500 uppercase tracking-wider">
-                          {b.vehicleType} &bull; {b.packageId} &bull; ₹{b.amount}
+                          {(b.vehicles && b.vehicles.length > 0) ? `${b.vehicles.length} Vehicles` : b.vehicleType} &bull; {b.packageId} &bull; ₹{b.amount}
                         </div>
                       </td>
                       <td className="px-6 py-4 text-neutral-300">
@@ -687,7 +688,6 @@ function AddBookingModal({ onClose, onAdded }: { onClose: () => void, onAdded: (
                 <option value="hatchback">Hatchback</option>
                 <option value="sedan">Sedan</option>
                 <option value="suv">SUV</option>
-                <option value="luxury">Luxury</option>
               </select>
             </div>
             <div>
