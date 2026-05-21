@@ -511,20 +511,33 @@ export default function AdminDashboard() {
                           <span className="flex items-center gap-1"><Mail className="w-3 h-3"/> {b.email}</span>
                           <span className="flex items-center gap-1"><Phone className="w-3 h-3"/> {b.phone}</span>
                           {b.address && (
-                            <span className="flex items-start gap-1 mt-1 pt-1 border-t border-white/5 text-[11px] text-neutral-400 max-w-[200px] leading-tight" title={b.address}>
-                              <MapPin className="w-3 h-3 text-emerald-400 shrink-0 mt-0.5" />
-                              <span className="line-clamp-2">{b.address}</span>
-                            </span>
+                            b.latitude && b.longitude ? (
+                              <a
+                                href={`https://www.google.com/maps/dir/?api=1&destination=${b.latitude},${b.longitude}`}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="flex items-start gap-1 mt-1 pt-1 border-t border-white/5 text-[11px] text-emerald-400 hover:text-emerald-300 max-w-[200px] leading-tight transition-colors cursor-pointer group"
+                                title="Click to get directions on Google Maps"
+                              >
+                                <MapPin className="w-3 h-3 text-emerald-400 shrink-0 mt-0.5 group-hover:scale-110 transition-transform" />
+                                <span className="line-clamp-2 underline decoration-dashed decoration-emerald-500/30 group-hover:decoration-emerald-400">{b.address}</span>
+                              </a>
+                            ) : (
+                              <span className="flex items-start gap-1 mt-1 pt-1 border-t border-white/5 text-[11px] text-neutral-400 max-w-[200px] leading-tight" title={b.address}>
+                                <MapPin className="w-3 h-3 text-neutral-500 shrink-0 mt-0.5" />
+                                <span className="line-clamp-2">{b.address}</span>
+                              </span>
+                            )
                           )}
                           {b.latitude && b.longitude && (
                             <a
-                              href={`https://www.google.com/maps/search/?api=1&query=${b.latitude},${b.longitude}`}
+                              href={`https://www.google.com/maps/dir/?api=1&destination=${b.latitude},${b.longitude}`}
                               target="_blank"
                               rel="noreferrer"
                               className="inline-flex items-center gap-1 mt-1 text-[10px] text-emerald-400 hover:text-emerald-300 font-bold uppercase tracking-widest bg-emerald-500/10 hover:bg-emerald-500/20 px-2 py-1 rounded transition-all w-fit cursor-pointer"
                             >
                               <Navigation className="w-2.5 h-2.5 text-emerald-400 animate-pulse" />
-                              Track on Map
+                              Get Directions
                             </a>
                           )}
                         </div>

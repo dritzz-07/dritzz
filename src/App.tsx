@@ -7,6 +7,7 @@ import Pricing from './components/Pricing';
 import BookingForm from './components/BookingForm';
 import WhyUs from './components/WhyUs';
 import Testimonials from './components/Testimonials';
+import ShowcaseVideo from './components/ShowcaseVideo';
 import Footer from './components/Footer';
 import PaymentModal from './components/PaymentModal';
 import WaterSplashEffects from './components/WaterSplashEffects';
@@ -66,6 +67,7 @@ function MainApp() {
       
       <main className="relative z-10">
         <Hero />
+        <ShowcaseVideo />
         <HowItWorks />
         <Pricing 
           onSelectPackage={handleSelectPackage} 

@@ -5,6 +5,81 @@ import { PACKAGES, TIME_SLOTS } from '../constants';
 import { BookingDetails, VehicleType } from '../types';
 import { useAuth } from '../context/AuthContext';
 
+const GOOGLE_MAPS_KEY = process.env.GOOGLE_MAPS_PLATFORM_KEY || '';
+
+const loadGoogleMapsScript = (callback: () => void) => {
+  if (!GOOGLE_MAPS_KEY) return;
+  if ((window as any).google?.maps?.places) {
+    callback();
+    return;
+  }
+  const existingScript = document.getElementById('google-maps-sdk');
+  if (existingScript) {
+    // Check if loaded, or listen
+    if ((window as any).google?.maps?.places) {
+      callback();
+    } else {
+      existingScript.addEventListener('load', callback);
+    }
+    return;
+  }
+  const script = document.createElement('script');
+  script.id = 'google-maps-sdk';
+  script.src = `https://maps.googleapis.com/maps/api/js?key=${GOOGLE_MAPS_KEY}&libraries=places`;
+  script.async = true;
+  script.onload = () => {
+    callback();
+  };
+  document.body.appendChild(script);
+};
+
+const reverseGeocode = async (lat: number, lng: number): Promise<string> => {
+  if (GOOGLE_MAPS_KEY) {
+    return new Promise((resolve) => {
+      loadGoogleMapsScript(() => {
+        try {
+          const google = (window as any).google;
+          if (!google || !google.maps || !google.maps.Geocoder) {
+            fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`)
+              .then(res => res.json())
+              .then(data => resolve(data?.display_name || `${lat}, ${lng}`))
+              .catch(() => resolve(`${lat}, ${lng}`));
+            return;
+          }
+          const geocoder = new google.maps.Geocoder();
+          geocoder.geocode({ location: { lat, lng } }, (results: any, status: any) => {
+            if (status === 'OK' && results && results[0]) {
+              resolve(results[0].formatted_address);
+            } else {
+              fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`)
+                .then(res => res.json())
+                .then(data => resolve(data?.display_name || `${lat}, ${lng}`))
+                .catch(() => resolve(`${lat}, ${lng}`));
+            }
+          });
+        } catch (e) {
+          console.error('Error with Google reverse geocoding', e);
+          fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`)
+            .then(res => res.json())
+            .then(data => resolve(data?.display_name || `${lat}, ${lng}`))
+            .catch(() => resolve(`${lat}, ${lng}`));
+        }
+      });
+    });
+  } else {
+    try {
+      const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`);
+      if (res.ok) {
+        const data = await res.json();
+        return data?.display_name || `${lat}, ${lng}`;
+      }
+    } catch (err) {
+      console.error(err);
+    }
+    return `${lat}, ${lng}`;
+  }
+};
+
 interface BookingFormProps {
   initialVehicle?: VehicleType;
   initialPackageId?: string;
@@ -37,6 +112,155 @@ export default function BookingForm({
   const [locating, setLocating] = useState(false);
   const [mapError, setMapError] = useState<string | null>(null);
   const [leafletLoaded, setLeafletLoaded] = useState(false);
+
+  const [suggestions, setSuggestions] = useState<any[]>([]);
+  const [searching, setSearching] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  const selectInProgressRef = useRef(false);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsDropdownOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  useEffect(() => {
+    if (!details.address || details.address.length < 3 || selectInProgressRef.current) {
+      setSuggestions([]);
+      setIsDropdownOpen(false);
+      return;
+    }
+
+    const delayDebounce = setTimeout(async () => {
+      setSearching(true);
+      if (GOOGLE_MAPS_KEY) {
+        // High-accuracy Google Maps Autocomplete
+        loadGoogleMapsScript(() => {
+          try {
+            const google = (window as any).google;
+            if (!google?.maps?.places) {
+              setSearching(false);
+              return;
+            }
+            const autocompleteService = new google.maps.places.AutocompleteService();
+            const sessionToken = new google.maps.places.AutocompleteSessionToken();
+            
+            // Country-wide accurate suggestions without restricting only to Telangana
+            autocompleteService.getPlacePredictions(
+              {
+                input: details.address,
+                componentRestrictions: { country: 'in' },
+                sessionToken: sessionToken
+              },
+              (predictions: any, status: any) => {
+                if (status === 'OK' && predictions) {
+                  const formattedSuggestions = predictions.map((p: any) => ({
+                    display_name: p.description,
+                    isGooglePlace: true,
+                    place_id: p.place_id,
+                    address: {
+                      road: p.structured_formatting?.main_text || '',
+                      suburb: p.structured_formatting?.secondary_text || '',
+                      city: 'India'
+                    }
+                  }));
+                  setSuggestions(formattedSuggestions);
+                  setIsDropdownOpen(true);
+                } else {
+                  setSuggestions([]);
+                  setIsDropdownOpen(false);
+                }
+                setSearching(false);
+              }
+            );
+          } catch (e) {
+            console.error('Failed to get Google Autocomplete', e);
+            setSearching(false);
+          }
+        });
+      } else {
+        // High-accuracy OpenStreetMap (Nominatim) search across India
+        try {
+          const queryText = details.address;
+          const query = encodeURIComponent(queryText);
+          const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${query}&limit=5&addressdetails=1&countrycodes=in`);
+          if (res.ok) {
+            const data = await res.json();
+            setSuggestions(data || []);
+            setIsDropdownOpen((data && data.length > 0));
+          }
+        } catch (err) {
+          console.error('Error fetching address suggestions:', err);
+        } finally {
+          setSearching(false);
+        }
+      }
+    }, 600);
+
+    return () => clearTimeout(delayDebounce);
+  }, [details.address]);
+
+  const handleSelectSuggestion = (suggestion: any) => {
+    selectInProgressRef.current = true;
+    
+    if (suggestion.isGooglePlace) {
+      loadGoogleMapsScript(() => {
+        try {
+          const google = (window as any).google;
+          const geocoder = new google.maps.Geocoder();
+          geocoder.geocode({ placeId: suggestion.place_id }, (results: any, status: any) => {
+            if (status === 'OK' && results && results[0]) {
+              const loc = results[0].geometry.location;
+              const lat = loc.lat();
+              const lng = loc.lng();
+              
+              setDetails(prev => ({
+                ...prev,
+                address: results[0].formatted_address || suggestion.display_name,
+                latitude: lat,
+                longitude: lng
+              }));
+              
+              setSuggestions([]);
+              setIsDropdownOpen(false);
+              setShowMapPicker(true);
+              
+              // Centering the map on chosen coordinates and placing the marker
+              loadLeafletAndCentremap(lat, lng);
+            }
+          });
+        } catch (e) {
+          console.error(e);
+        }
+      });
+    } else {
+      const lat = parseFloat(suggestion.lat);
+      const lon = parseFloat(suggestion.lon);
+      
+      setDetails(prev => ({
+        ...prev,
+        address: suggestion.display_name,
+        latitude: lat,
+        longitude: lon
+      }));
+      
+      setSuggestions([]);
+      setIsDropdownOpen(false);
+      setShowMapPicker(true);
+      
+      // Centering the map on chosen coordinates and placing the marker
+      loadLeafletAndCentremap(lat, lon);
+    }
+    
+    setTimeout(() => {
+      selectInProgressRef.current = false;
+    }, 300);
+  };
 
   const pickerMapContainerRef = useRef<HTMLDivElement>(null);
   const pickerMapRef = useRef<any>(null);
@@ -80,15 +304,10 @@ export default function BookingForm({
         // Load Leaftlet dynamic and center map
         loadLeafletAndCentremap(latitude, longitude);
 
-        // Fetch reverse geocode address
+        // Fetch reverse geocode address via Google Maps or fallback
         try {
-          const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`);
-          if (res.ok) {
-            const data = await res.json();
-            if (data && data.display_name) {
-              setDetails(prev => ({ ...prev, address: data.display_name }));
-            }
-          }
+          const address = await reverseGeocode(latitude, longitude);
+          setDetails(prev => ({ ...prev, address }));
         } catch (err) {
           console.error('Error reverse geocoding:', err);
         } finally {
@@ -167,13 +386,8 @@ export default function BookingForm({
         }
 
         try {
-          const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${clickLat}&lon=${clickLng}`);
-          if (res.ok) {
-            const data = await res.json();
-            if (data && data.display_name) {
-              setDetails(prev => ({ ...prev, address: data.display_name }));
-            }
-          }
+          const address = await reverseGeocode(clickLat, clickLng);
+          setDetails(prev => ({ ...prev, address }));
         } catch (err) {
           console.error(err);
         }
@@ -206,13 +420,8 @@ export default function BookingForm({
       setDetails(prev => ({ ...prev, latitude: dragLat, longitude: dragLng }));
 
       try {
-        const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${dragLat}&lon=${dragLng}`);
-        if (res.ok) {
-          const data = await res.json();
-          if (data && data.display_name) {
-            setDetails(prev => ({ ...prev, address: data.display_name }));
-          }
-        }
+        const address = await reverseGeocode(dragLat, dragLng);
+        setDetails(prev => ({ ...prev, address }));
       } catch (err) {
         console.error(err);
       }
@@ -301,36 +510,91 @@ export default function BookingForm({
           </div>
 
           <div className="space-y-4">
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-              <label className="text-[10px] uppercase tracking-widest text-neutral-500 font-bold block">Service Address</label>
-              <button
-                type="button"
-                onClick={handleGetLiveLocation}
-                className="flex items-center gap-1.5 text-xs text-emerald-400 hover:text-emerald-300 font-black uppercase tracking-wider bg-emerald-500/10 hover:bg-emerald-500/25 px-3 py-1.5 rounded-lg border border-emerald-500/20 transition-all cursor-pointer shrink-0"
-              >
-                {locating ? (
-                  <>
-                    <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                    Locating...
-                  </>
-                ) : (
-                  <>
-                    <Navigation className="w-3.5 h-3.5 animate-pulse" />
-                    Detect Live Location
-                  </>
+            <div className="relative" ref={dropdownRef}>
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-2">
+                <div>
+                  <label className="text-[10px] uppercase tracking-widest text-neutral-500 font-bold block">Service Address</label>
+                  {GOOGLE_MAPS_KEY && (
+                    <div className="text-[9px] uppercase font-black tracking-widest text-emerald-400 mt-1 flex items-center gap-1">
+                      <span className="relative flex h-1.5 w-1.5">
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                        <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-500"></span>
+                      </span>
+                      Google Maps High-Accuracy
+                    </div>
+                  )}
+                </div>
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={handleGetLiveLocation}
+                    className="flex items-center gap-1.5 text-xs text-emerald-400 hover:text-emerald-300 font-black uppercase tracking-wider bg-emerald-500/10 hover:bg-emerald-500/25 px-3 py-1.5 rounded-lg border border-emerald-500/20 transition-all cursor-pointer shrink-0"
+                  >
+                    {locating ? (
+                      <>
+                        <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                        Locating...
+                      </>
+                    ) : (
+                      <>
+                        <Navigation className="w-3.5 h-3.5 animate-pulse" />
+                        Detect Live Location
+                      </>
+                    )}
+                  </button>
+                </div>
+              </div>
+              
+              <div className="relative">
+                <input
+                  required
+                  type="text"
+                  name="address"
+                  value={details.address}
+                  onChange={(e) => {
+                    handleChange(e);
+                    setIsDropdownOpen(true);
+                  }}
+                  onFocus={() => {
+                    if (suggestions.length > 0) {
+                      setIsDropdownOpen(true);
+                    }
+                  }}
+                  placeholder="Type service address (with auto-complete) or pinpoint on map..."
+                  className="w-full bg-white/5 border border-white/10 pl-4 pr-10 py-3 text-sm focus:border-white outline-none transition-colors rounded-lg text-white"
+                />
+                <div className="absolute right-3.5 top-1/2 -translate-y-1/2 flex items-center justify-center pointer-events-none">
+                  {searching ? (
+                    <Loader2 className="w-4 h-4 text-emerald-400 animate-spin" />
+                  ) : (
+                    <MapPin className="w-4 h-4 text-neutral-500" />
+                  )}
+                </div>
+
+                {isDropdownOpen && suggestions.length > 0 && (
+                  <div className="absolute left-0 right-0 z-[1100] mt-1.5 bg-zinc-900 border border-white/10 rounded-xl shadow-2xl max-h-60 overflow-y-auto divide-y divide-white/5">
+                    {suggestions.map((suggestion, idx) => (
+                      <button
+                        key={idx}
+                        type="button"
+                        onClick={() => handleSelectSuggestion(suggestion)}
+                        className="w-full text-left px-4 py-3 hover:bg-white/5 transition-colors flex items-start gap-2.5 group cursor-pointer"
+                      >
+                        <MapPin className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5 group-hover:scale-110 transition-transform" />
+                        <div className="flex-1 min-w-0">
+                          <div className="text-xs font-semibold text-neutral-200 truncate">
+                            {suggestion.address?.road || suggestion.address?.suburb || suggestion.address?.city || 'Search Result'}
+                          </div>
+                          <div className="text-[10px] text-neutral-400 font-medium truncate mt-0.5">
+                            {suggestion.display_name}
+                          </div>
+                        </div>
+                      </button>
+                    ))}
+                  </div>
                 )}
-              </button>
+              </div>
             </div>
-            
-            <input
-              required
-              type="text"
-              name="address"
-              value={details.address}
-              onChange={handleChange}
-              placeholder="Flat no, Building, Area, Hyderabad"
-              className="w-full bg-white/5 border border-white/10 px-4 py-3 text-sm focus:border-white outline-none transition-colors rounded-lg text-white"
-            />
 
             {showMapPicker && (
               <div className="border border-white/10 rounded-xl overflow-hidden bg-white/5 p-4 space-y-3">
@@ -345,7 +609,7 @@ export default function BookingForm({
                   <button
                     type="button"
                     onClick={() => setShowMapPicker(false)}
-                    className="text-neutral-400 hover:text-white text-xs font-bold"
+                    className="text-neutral-400 hover:text-white text-xs font-bold cursor-pointer"
                   >
                     Hide Map
                   </button>
