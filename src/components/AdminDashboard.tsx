@@ -82,9 +82,11 @@ export default function AdminDashboard() {
     }
   };
 
+  const [activeTab, setActiveTab] = useState<'bookings' | 'sub_tasks' | 'subscriptions'>('bookings');
+  const [subscriptions, setSubscriptions] = useState<any[]>([]);
+
   const fetchBookings = async () => {
     setLoading(true);
-    console.log("Fetching bookings for user:", user?.email, "uid:", user?.uid);
     try {
       const q = query(collection(db, 'bookings'));
       const snapshot = await getDocs(q);
@@ -93,7 +95,6 @@ export default function AdminDashboard() {
         ...doc.data()
       })) as Booking[];
       
-      // Sort by creation date (newest first)
       fetched.sort((a, b) => {
         const da = a.createdAt?.seconds || 0;
         const db = b.createdAt?.seconds || 0;
@@ -101,9 +102,24 @@ export default function AdminDashboard() {
       });
 
       setBookings(fetched);
+
+      const qs = query(collection(db, 'subscriptions'));
+      const s_snapshot = await getDocs(qs);
+      const fetched_s = s_snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      })) as any[];
+      
+      fetched_s.sort((a, b) => {
+        const da = a.createdAt?.seconds || 0;
+        const db = b.createdAt?.seconds || 0;
+        return db - da;
+      });
+
+      setSubscriptions(fetched_s);
     } catch (error: any) {
-      console.error('Error fetching bookings details:', error);
-      alert('Error fetching bookings: ' + error.message);
+      console.error('Error fetching data:', error);
+      alert('Error fetching data: ' + error.message);
     } finally {
       setLoading(false);
       setIsRefreshing(false);
@@ -113,6 +129,27 @@ export default function AdminDashboard() {
   const handleStatusChange = async (bookingId: string, newStatus: string) => {
     try {
       const bRef = doc(db, 'bookings', bookingId);
+      
+      // If marking as completed, check if it belongs to a subscription
+      if (newStatus === 'completed') {
+        const booking = bookings.find(b => b.id === bookingId);
+        if (booking && booking.subscriptionId) {
+          // decrement remaining washes
+          const subRef = doc(db, 'subscriptions', booking.subscriptionId);
+          // To be perfectly safe we could use a transaction, but standard update is fine for this demo
+          // First fetch the sub? Actually we can use a server-side increment or just get it
+          const subSnap = await getDocs(query(collection(db, 'subscriptions')));
+          const subscription = subSnap.docs.find(d => d.id === booking.subscriptionId)?.data();
+          if (subscription && subscription.remainingWashes > 0) {
+             await updateDoc(subRef, {
+                remainingWashes: subscription.remainingWashes - 1,
+                usedWashes: subscription.usedWashes + 1,
+                status: subscription.remainingWashes - 1 === 0 ? 'completed' : subscription.status
+             });
+          }
+        }
+      }
+
       await updateDoc(bRef, { status: newStatus });
       setBookings(prev => prev.map(b => b.id === bookingId ? { ...b, status: newStatus } : b));
     } catch (error) {
@@ -132,6 +169,15 @@ export default function AdminDashboard() {
   };
 
   const filteredBookings = bookings.filter(b => {
+    // Verify booking type matches tab selection
+    if (activeTab === 'bookings' && (b.paymentMethod === 'subscription' || !!b.subscriptionId)) {
+      // Exclude subscription tasks from one-time bookings and vice-versa
+      return false;
+    }
+    if (activeTab === 'sub_tasks' && (b.paymentMethod !== 'subscription' && !b.subscriptionId)) {
+      return false;
+    }
+
     const searchLower = searchTerm.toLowerCase();
     const matchesSearch = (b.refId || '').toLowerCase().includes(searchLower) ||
            (b.name || '').toLowerCase().includes(searchLower) ||
@@ -149,6 +195,27 @@ export default function AdminDashboard() {
       }
     }
     
+    return matchesSearch && matchesDate;
+  });
+
+  const filteredSubscriptions = subscriptions.filter(s => {
+    const searchLower = searchTerm.toLowerCase();
+    const matchesSearch = (s.customerName || '').toLowerCase().includes(searchLower) ||
+           (s.id || '').toLowerCase().includes(searchLower) ||
+           (s.customerPhone || '').includes(searchTerm);
+
+    // Also filter by date so Export and Table filters logic matches
+    let matchesDate = true;
+    if (filterDate) {
+      if (s.createdAt?.toDate) {
+        const createdDate = s.createdAt.toDate();
+        const createdDateStr = `${createdDate.getFullYear()}-${String(createdDate.getMonth() + 1).padStart(2, '0')}-${String(createdDate.getDate()).padStart(2, '0')}`;
+        matchesDate = createdDateStr === filterDate;
+      } else {
+        matchesDate = false;
+      }
+    }
+
     return matchesSearch && matchesDate;
   });
 
@@ -410,6 +477,28 @@ export default function AdminDashboard() {
           </div>
         </div>
 
+        {/* Tabs */}
+        <div className="flex gap-2 p-1 bg-white/5 w-fit rounded-xl border border-white/10 flex-wrap">
+          <button 
+            onClick={() => setActiveTab('bookings')}
+            className={`px-6 py-2.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-all ${activeTab === 'bookings' ? 'bg-white text-black' : 'text-neutral-400 hover:text-white'}`}
+          >
+            One-Time Bookings
+          </button>
+          <button 
+            onClick={() => setActiveTab('sub_tasks')}
+            className={`px-6 py-2.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-all ${activeTab === 'sub_tasks' ? 'bg-orange-500 text-white' : 'text-neutral-400 hover:text-white'}`}
+          >
+            Subscription Tasks
+          </button>
+          <button 
+            onClick={() => setActiveTab('subscriptions')}
+            className={`px-6 py-2.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-all ${activeTab === 'subscriptions' ? 'bg-blue-600 text-white' : 'text-neutral-400 hover:text-white'}`}
+          >
+            Active Subscriptions
+          </button>
+        </div>
+
         {/* Controls */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
@@ -472,128 +561,187 @@ export default function AdminDashboard() {
         {/* Table */}
         <div className="bg-neutral-900 border border-white/10 rounded-3xl overflow-hidden">
           <div className="overflow-x-auto">
-            {loading && bookings.length === 0 ? (
-              <div className="p-12 text-center text-neutral-500 text-sm font-medium">Loading bookings...</div>
-            ) : filteredBookings.length === 0 ? (
-              <div className="p-12 text-center text-neutral-500 text-sm font-medium">No bookings found.</div>
-            ) : (
-              <table className="w-full text-left text-sm whitespace-nowrap">
-                <thead className="bg-white/5 text-neutral-400 text-xs uppercase tracking-wider">
-                  <tr>
-                    <th className="px-6 py-4 font-bold">Ref / Booking Date</th>
-                    <th className="px-6 py-4 font-bold">Customer Info</th>
-                    <th className="px-6 py-4 font-bold">Service Details</th>
-                    <th className="px-6 py-4 font-bold">Slot</th>
-                    <th className="px-6 py-4 font-bold">Status</th>
-                    <th className="px-6 py-4 font-bold">Actions</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-white/5">
-                  {filteredBookings.map((b) => (
-                    <tr key={b.id} className="hover:bg-white/[0.02] transition-colors">
-                      <td className="px-6 py-4">
-                        <div className="flex flex-col gap-1">
-                          <span className="font-mono text-xs bg-black/50 px-2 py-1 rounded inline-block text-neutral-300 w-fit">
-                            {b.refId}
-                          </span>
-                          <span className="text-[10px] text-neutral-500 font-medium tracking-wider">
-                            Booked for: {b.date ? new Date(b.date + 'T00:00:00').toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) : '—'}
-                          </span>
-                          {b.createdAt && b.createdAt.toDate && (
-                            <span className="text-[9px] text-neutral-600 font-medium tracking-wider">
-                              Created: {b.createdAt.toDate().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}
+            {activeTab === 'bookings' || activeTab === 'sub_tasks' ? (
+              // Bookings Table
+              (loading && bookings.length === 0) ? (
+                <div className="p-12 text-center text-neutral-500 text-sm font-medium">Loading bookings...</div>
+              ) : filteredBookings.length === 0 ? (
+                <div className="p-12 text-center text-neutral-500 text-sm font-medium">No bookings found for this category.</div>
+              ) : (
+                <table className="w-full text-left text-sm whitespace-nowrap">
+                  <thead className="bg-white/5 text-neutral-400 text-xs uppercase tracking-wider">
+                    <tr>
+                      <th className="px-6 py-4 font-bold">Ref / Booking Date</th>
+                      <th className="px-6 py-4 font-bold">Customer Info</th>
+                      <th className="px-6 py-4 font-bold">Service Details</th>
+                      <th className="px-6 py-4 font-bold">Slot</th>
+                      <th className="px-6 py-4 font-bold">Status</th>
+                      <th className="px-6 py-4 font-bold">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-white/5">
+                    {filteredBookings.map((b) => (
+                      <tr key={b.id} className="hover:bg-white/[0.02] transition-colors">
+                        <td className="px-6 py-4">
+                          <div className="flex flex-col gap-1">
+                            <span className="font-mono text-xs bg-black/50 px-2 py-1 rounded inline-block text-neutral-300 w-fit">
+                              {b.refId}
                             </span>
-                          )}
-                        </div>
-                      </td>
-                      <td className="px-6 py-4">
-                        <div className="font-bold text-white mb-1">{b.name}</div>
-                        <div className="text-xs text-neutral-500 flex flex-col gap-1">
-                          <span className="flex items-center gap-1"><Mail className="w-3 h-3"/> {b.email}</span>
-                          <span className="flex items-center gap-1"><Phone className="w-3 h-3"/> {b.phone}</span>
-                          {b.address && (
-                            b.latitude && b.longitude ? (
+                            <span className="text-[10px] text-neutral-500 font-medium tracking-wider">
+                              Booked for: {b.date ? new Date(b.date + 'T00:00:00').toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) : '—'}
+                            </span>
+                            {b.createdAt && b.createdAt.toDate && (
+                              <span className="text-[9px] text-neutral-600 font-medium tracking-wider">
+                                Created: {b.createdAt.toDate().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}
+                              </span>
+                            )}
+                          </div>
+                        </td>
+                        <td className="px-6 py-4">
+                          <div className="font-bold text-white mb-1">{b.name}</div>
+                          <div className="text-xs text-neutral-500 flex flex-col gap-1">
+                            <span className="flex items-center gap-1"><Mail className="w-3 h-3"/> {b.email}</span>
+                            <span className="flex items-center gap-1"><Phone className="w-3 h-3"/> {b.phone}</span>
+                            {b.address && (
+                              b.latitude && b.longitude ? (
+                                <a
+                                  href={`https://www.google.com/maps/dir/?api=1&destination=${b.latitude},${b.longitude}`}
+                                  target="_blank"
+                                  rel="noreferrer"
+                                  className="flex items-start gap-1 mt-1 pt-1 border-t border-white/5 text-[11px] text-emerald-400 hover:text-emerald-300 max-w-[200px] leading-tight transition-colors cursor-pointer group"
+                                  title="Click to get directions on Google Maps"
+                                >
+                                  <MapPin className="w-3 h-3 text-emerald-400 shrink-0 mt-0.5 group-hover:scale-110 transition-transform" />
+                                  <span className="line-clamp-2 underline decoration-dashed decoration-emerald-500/30 group-hover:decoration-emerald-400">{b.address}</span>
+                                </a>
+                              ) : (
+                                <span className="flex items-start gap-1 mt-1 pt-1 border-t border-white/5 text-[11px] text-neutral-400 max-w-[200px] leading-tight" title={b.address}>
+                                  <MapPin className="w-3 h-3 text-neutral-500 shrink-0 mt-0.5" />
+                                  <span className="line-clamp-2">{b.address}</span>
+                                </span>
+                              )
+                            )}
+                            {b.latitude && b.longitude && (
                               <a
                                 href={`https://www.google.com/maps/dir/?api=1&destination=${b.latitude},${b.longitude}`}
                                 target="_blank"
                                 rel="noreferrer"
-                                className="flex items-start gap-1 mt-1 pt-1 border-t border-white/5 text-[11px] text-emerald-400 hover:text-emerald-300 max-w-[200px] leading-tight transition-colors cursor-pointer group"
-                                title="Click to get directions on Google Maps"
+                                className="inline-flex items-center gap-1 mt-1 text-[10px] text-emerald-400 hover:text-emerald-300 font-bold uppercase tracking-widest bg-emerald-500/10 hover:bg-emerald-500/20 px-2 py-1 rounded transition-all w-fit cursor-pointer"
                               >
-                                <MapPin className="w-3 h-3 text-emerald-400 shrink-0 mt-0.5 group-hover:scale-110 transition-transform" />
-                                <span className="line-clamp-2 underline decoration-dashed decoration-emerald-500/30 group-hover:decoration-emerald-400">{b.address}</span>
+                                <Navigation className="w-2.5 h-2.5 text-emerald-400 animate-pulse" />
+                                Get Directions
                               </a>
-                            ) : (
-                              <span className="flex items-start gap-1 mt-1 pt-1 border-t border-white/5 text-[11px] text-neutral-400 max-w-[200px] leading-tight" title={b.address}>
-                                <MapPin className="w-3 h-3 text-neutral-500 shrink-0 mt-0.5" />
-                                <span className="line-clamp-2">{b.address}</span>
-                              </span>
-                            )
-                          )}
-                          {b.latitude && b.longitude && (
-                            <a
-                              href={`https://www.google.com/maps/dir/?api=1&destination=${b.latitude},${b.longitude}`}
-                              target="_blank"
-                              rel="noreferrer"
-                              className="inline-flex items-center gap-1 mt-1 text-[10px] text-emerald-400 hover:text-emerald-300 font-bold uppercase tracking-widest bg-emerald-500/10 hover:bg-emerald-500/20 px-2 py-1 rounded transition-all w-fit cursor-pointer"
+                            )}
+                          </div>
+                        </td>
+                        <td className="px-6 py-4">
+                          <div className="flex items-center gap-2 mb-1">
+                            <Car className="w-4 h-4 text-neutral-400" />
+                            <span className="font-medium text-white capitalize">{b.vehicleMake} {b.vehicleModel}</span>
+                          </div>
+                          <div className="text-xs text-neutral-500 uppercase tracking-wider">
+                            {(b.vehicles && b.vehicles.length > 0) ? `${b.vehicles.length} Vehicles` : b.vehicleType} &bull; {b.packageId} &bull; ₹{b.amount}
+                          </div>
+                        </td>
+                        <td className="px-6 py-4 text-neutral-300">
+                          <div className="font-medium">{b.date}</div>
+                          <div className="text-xs text-neutral-500">{b.timeSlot}</div>
+                        </td>
+                        <td className="px-6 py-4">
+                          <select
+                            value={b.status}
+                            onChange={(e) => handleStatusChange(b.id, e.target.value)}
+                            className={`text-xs font-bold uppercase tracking-wider px-3 py-1.5 rounded-lg border-2 appearance-none cursor-pointer outline-none transition-colors
+                              ${b.status === 'completed' ? 'bg-green-500/10 text-green-400 border-green-500/20' : 
+                                b.status === 'confirmed' ? 'bg-orange-500/10 text-orange-400 border-orange-500/20' : 
+                                b.status === 'scheduled' ? 'bg-blue-500/10 text-blue-400 border-blue-500/20' : 
+                                b.status === 'cancelled' ? 'bg-red-500/10 text-red-400 border-red-500/20' : 
+                                'bg-neutral-800 text-neutral-300 border-neutral-700'}`}
+                          >
+                            <option value="pending">Pending</option>
+                            <option value="scheduled">Scheduled</option>
+                            <option value="confirmed">Confirmed</option>
+                            <option value="in-progress">In Progress</option>
+                            <option value="completed">Completed</option>
+                            <option value="cancelled">Cancelled</option>
+                          </select>
+                        </td>
+                        <td className="px-6 py-4">
+                          <div className="flex items-center gap-2">
+                            <button
+                              onClick={() => handleDownloadInvoice(b)}
+                              className="p-2 text-neutral-500 hover:text-white hover:bg-white/10 rounded-lg transition-colors"
+                              title="Download Invoice"
                             >
-                              <Navigation className="w-2.5 h-2.5 text-emerald-400 animate-pulse" />
-                              Get Directions
-                            </a>
-                          )}
-                        </div>
-                      </td>
-                      <td className="px-6 py-4">
-                        <div className="flex items-center gap-2 mb-1">
-                          <Car className="w-4 h-4 text-neutral-400" />
-                          <span className="font-medium text-white capitalize">{b.vehicleMake} {b.vehicleModel}</span>
-                        </div>
-                        <div className="text-xs text-neutral-500 uppercase tracking-wider">
-                          {(b.vehicles && b.vehicles.length > 0) ? `${b.vehicles.length} Vehicles` : b.vehicleType} &bull; {b.packageId} &bull; ₹{b.amount}
-                        </div>
-                      </td>
-                      <td className="px-6 py-4 text-neutral-300">
-                        <div className="font-medium">{b.date}</div>
-                        <div className="text-xs text-neutral-500">{b.timeSlot}</div>
-                      </td>
-                      <td className="px-6 py-4">
-                        <select
-                          value={b.status}
-                          onChange={(e) => handleStatusChange(b.id, e.target.value)}
-                          className={`text-xs font-bold uppercase tracking-wider px-3 py-1.5 rounded-lg border-2 appearance-none cursor-pointer outline-none transition-colors
-                            ${b.status === 'completed' ? 'bg-green-500/10 text-green-400 border-green-500/20' : 
-                              b.status === 'confirmed' ? 'bg-orange-500/10 text-orange-400 border-orange-500/20' : 
-                              b.status === 'cancelled' ? 'bg-red-500/10 text-red-400 border-red-500/20' : 
-                              'bg-neutral-800 text-neutral-300 border-neutral-700'}`}
-                        >
-                          <option value="confirmed">Confirmed</option>
-                          <option value="in-progress">In Progress</option>
-                          <option value="completed">Completed</option>
-                          <option value="cancelled">Cancelled</option>
-                        </select>
-                      </td>
-                      <td className="px-6 py-4">
-                        <div className="flex items-center gap-2">
-                          <button
-                            onClick={() => handleDownloadInvoice(b)}
-                            className="p-2 text-neutral-500 hover:text-white hover:bg-white/10 rounded-lg transition-colors"
-                            title="Download Invoice"
-                          >
-                            <FileText className="w-4 h-4" />
-                          </button>
-                          <button 
-                            onClick={() => handleDeleteBooking(b.id)}
-                            className="p-2 text-neutral-500 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-colors"
-                            title="Delete Booking"
-                          >
-                            <Trash2 className="w-4 h-4" />
-                          </button>
-                        </div>
-                      </td>
+                              <FileText className="w-4 h-4" />
+                            </button>
+                            <button 
+                              onClick={() => handleDeleteBooking(b.id)}
+                              className="p-2 text-neutral-500 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-colors"
+                              title="Delete Booking"
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              )
+            ) : (
+              // Subscriptions Table
+              (loading && subscriptions.length === 0) ? (
+                <div className="p-12 text-center text-neutral-500 text-sm font-medium">Loading subscriptions...</div>
+              ) : filteredSubscriptions.length === 0 ? (
+                <div className="p-12 text-center text-neutral-500 text-sm font-medium">No active subscriptions found.</div>
+              ) : (
+                <table className="w-full text-left text-sm whitespace-nowrap">
+                  <thead className="bg-white/5 text-neutral-400 text-xs uppercase tracking-wider">
+                    <tr>
+                      <th className="px-6 py-4 font-bold">Details</th>
+                      <th className="px-6 py-4 font-bold">Customer Info</th>
+                      <th className="px-6 py-4 font-bold">Status & Usage</th>
+                      <th className="px-6 py-4 font-bold">Dates</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody className="divide-y divide-white/5">
+                    {filteredSubscriptions.map((s) => {
+                      const isExpired = s.expiresAt?.toDate ? new Date() > s.expiresAt.toDate() : false;
+                      const activeStatus = isExpired ? 'Expired' : (s.remainingWashes > 0 ? 'Active' : 'Completed');
+
+                      return (
+                      <tr key={s.id} className="hover:bg-white/[0.02] transition-colors">
+                        <td className="px-6 py-4">
+                          <div className="font-bold text-white">Monthly Plan</div>
+                          <div className="text-xs text-neutral-500 uppercase tracking-widest mt-1">
+                             {s.vehicles?.length} Vehicle(s)
+                          </div>
+                        </td>
+                        <td className="px-6 py-4">
+                          <div className="font-bold text-white mb-1">{s.customerName}</div>
+                          <div className="text-xs text-neutral-500">
+                             {s.customerPhone} <br/>
+                             <span className="truncate block max-w-[200px]" title={s.address}>{s.address}</span>
+                          </div>
+                        </td>
+                        <td className="px-6 py-4">
+                          <span className={`px-2 py-1 rounded text-[10px] font-black uppercase tracking-widest ${activeStatus === 'Active' ? 'bg-emerald-500/20 text-emerald-400' : 'bg-red-500/20 text-red-500'}`}>
+                             {activeStatus}
+                          </span>
+                          <div className="text-xs text-neutral-300 mt-2 font-mono">
+                             Used: {s.usedWashes} / {s.totalWashes} (Rem: {s.remainingWashes})
+                          </div>
+                        </td>
+                        <td className="px-6 py-4 text-xs text-neutral-400">
+                          <div><span className="font-bold">Created:</span> {s.createdAt?.toDate?.()?.toLocaleDateString('en-GB') || 'N/A'}</div>
+                          <div><span className="font-bold">Expires:</span> {s.expiresAt?.toDate?.()?.toLocaleDateString('en-GB') || 'N/A'}</div>
+                        </td>
+                      </tr>
+                    )})}
+                  </tbody>
+                </table>
+              )
             )}
           </div>
         </div>

@@ -27,16 +27,55 @@ export default function PaymentModal({ isOpen, onClose, bookingDetails, pkg, amo
     
     setIsLoading(true);
     try {
+      let subscriptionId;
+
+      if (pkg.id === 'premium') {
+        const totalWashes = (bookingDetails.vehicles?.length || 1) * 4;
+        const expiresAtDate = new Date();
+        expiresAtDate.setMonth(expiresAtDate.getMonth() + 1);
+
+        const subPayload: any = {
+          userId: bookingDetails.userId || 'guest',
+          customerName: bookingDetails.name,
+          customerPhone: bookingDetails.phone,
+          address: bookingDetails.address,
+          packageId: pkg.id,
+          vehicles: bookingDetails.vehicles || [],
+          status: 'active',
+          totalWashes: totalWashes,
+          usedWashes: 0,
+          remainingWashes: totalWashes,
+          expiresAt: expiresAtDate,
+          createdAt: serverTimestamp(),
+          paymentId: refId
+        };
+        
+        Object.keys(subPayload).forEach(key => {
+          if (subPayload[key] === undefined) delete subPayload[key];
+        });
+
+        const subRef = await addDoc(collection(db, 'subscriptions'), subPayload);
+        subscriptionId = subRef.id;
+      }
+
       // 1. Save to Firestore
-      await addDoc(collection(db, 'bookings'), {
+      const bookingPayload: any = {
         ...bookingDetails,
+        userId: bookingDetails.userId || 'guest',
+        subscriptionId: subscriptionId || null,
         amount,
         refId,
         paymentMethod: method,
         status: 'pending',
         createdAt: serverTimestamp(),
         updatedAt: serverTimestamp()
+      };
+      
+      Object.keys(bookingPayload).forEach(key => {
+        if (bookingPayload[key] === undefined) delete bookingPayload[key];
       });
+
+      await addDoc(collection(db, 'bookings'), bookingPayload);
 
       // 2. Send SMS Confirmation (existing logic)
       try {

@@ -85,7 +85,6 @@ interface BookingFormProps {
   initialVehicle?: VehicleType;
   initialPackageId?: string;
   onSubmit: (details: BookingDetails) => void;
-  isDiscountApplied?: boolean;
   onRequireAuth?: () => void;
 }
 
@@ -93,7 +92,6 @@ export default function BookingForm({
   initialVehicle, 
   initialPackageId, 
   onSubmit, 
-  isDiscountApplied,
   onRequireAuth
 }: BookingFormProps) {
   const { user, loginWithGoogle } = useAuth();
@@ -450,7 +448,9 @@ export default function BookingForm({
   const originalPrice = details.vehicles && details.vehicles.length > 0
     ? details.vehicles.reduce((sum, v) => sum + v.price, 0)
     : selectedPkg ? selectedPkg.price[details.vehicleType || 'hatchback'] : 0;
-  const totalPrice = isDiscountApplied ? Math.round(originalPrice * 0.75) : originalPrice;
+    
+  const isSocietyOffer = details.vehicles && details.vehicles.length >= 3;
+  const totalPrice = isSocietyOffer ? Math.round(originalPrice * 0.80) : originalPrice;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -689,7 +689,6 @@ export default function BookingForm({
                   defaultPackageId={details.packageId}
                   selectedVehicles={details.vehicles}
                   onChange={(vehicles) => setDetails({ ...details, vehicles })}
-                  isDiscountApplied={isDiscountApplied}
                />
             </div>
           </div>
@@ -759,13 +758,13 @@ export default function BookingForm({
             <div className="flex justify-between items-center pt-6 border-t border-black mb-10">
               <div className="flex flex-col">
                 <span className="font-bold text-sm uppercase tracking-widest text-black">Total Amount</span>
-                {isDiscountApplied && (
-                  <span className="text-[9px] text-green-600 font-bold uppercase tracking-widest">25% Discount Applied</span>
+                {isSocietyOffer && (
+                  <span className="text-[9px] text-blue-600 font-bold uppercase tracking-widest">SOCIETY OFFER: 20% OFF</span>
                 )}
               </div>
               <div className="flex flex-col items-end">
                 <span className="text-4xl font-bold text-black tracking-tighter">₹{totalPrice}</span>
-                {isDiscountApplied && (
+                {isSocietyOffer && (
                   <span className="text-xs text-neutral-400 line-through decoration-black/20">₹{originalPrice}</span>
                 )}
               </div>

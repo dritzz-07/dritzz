@@ -25,7 +25,6 @@ function MainApp() {
   const [isAuthOpen, setIsAuthOpen] = useState(false);
   const [isBookingsOpen, setIsBookingsOpen] = useState(false);
   const [authMode, setAuthMode] = useState<'login' | 'signup'>('login');
-  const [isDiscountApplied] = useState(true);
   const [currentBookingDetails, setCurrentBookingDetails] = useState<BookingDetails | null>(null);
   const [currentPkg, setCurrentPkg] = useState<Package | null>(null);
   const [amount, setAmount] = useState(0);
@@ -56,8 +55,9 @@ function MainApp() {
       totalPrice = pkg.price[details.vehicleType || 'hatchback'];
     }
     
-    if (isDiscountApplied) {
-      totalPrice = Math.round(totalPrice * 0.75);
+    if (details.vehicles && details.vehicles.length >= 3) {
+      // Society offer: Book 3 Cars Together & Get Flat 20% OFF
+      totalPrice = Math.round(totalPrice * 0.80);
     }
     
     setCurrentBookingDetails(details);
@@ -81,13 +81,11 @@ function MainApp() {
         <HowItWorks />
         <Pricing 
           onSelectPackage={handleSelectPackage} 
-          isDiscountApplied={isDiscountApplied}
         />
         <BookingForm 
           initialVehicle={selectedVehicle} 
           initialPackageId={selectedPkgId} 
           onSubmit={handleBookingSubmit} 
-          isDiscountApplied={isDiscountApplied}
           onRequireAuth={() => { setAuthMode('login'); setIsAuthOpen(true); }}
         />
         <WhyUs />

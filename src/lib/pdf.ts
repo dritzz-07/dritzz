@@ -1,6 +1,8 @@
 import { jsPDF } from 'jspdf';
 import { BookingDetails, Package } from '../types';
 
+import logoImage from '../assets/images/regenerated_image_1779231339878.png';
+
 export const generateInvoice = async (details: BookingDetails, pkg: Package, amount: number, paymentMethod: string, refId: string, status: string = 'completed') => {
   const doc = new jsPDF();
   
@@ -8,44 +10,34 @@ export const generateInvoice = async (details: BookingDetails, pkg: Package, amo
   doc.setFillColor(15, 15, 15);
   doc.rect(0, 0, 210, 45, 'F');
   
-  // Try to load and add the logo from SVG
+  // Try to load and add the logo from PNG
   try {
-    const svgStr = `<svg width="600" height="400" viewBox="0 0 600 400" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M 100 220 L 164 60 H 420 C 500 60 436 220 356 220 H 180 L 196 180 H 372 C 412 180 444 100 404 100 H 188 L 140 220 Z" fill="white" fill-rule="evenodd" />
-      <text x="300" y="340" font-family="helvetica, -apple-system, sans-serif" font-weight="950" font-style="italic" font-size="110" fill="white" text-anchor="middle" style="letter-spacing: -0.02em; text-transform: uppercase;">DRITZZ</text>
-    </svg>`;
     const getLogoDataUrl = (): Promise<string> => {
       return new Promise((resolve, reject) => {
         const img = new Image();
-        const svgBlob = new Blob([svgStr], { type: 'image/svg+xml;charset=utf-8' });
-        const url = URL.createObjectURL(svgBlob);
         img.onload = () => {
           const canvas = document.createElement('canvas');
-          canvas.width = 600;
-          canvas.height = 400;
+          canvas.width = img.width;
+          canvas.height = img.height;
           const ctx = canvas.getContext('2d');
           if (ctx) {
             ctx.drawImage(img, 0, 0);
+            resolve(canvas.toDataURL('image/png'));
+          } else {
+            reject(new Error('Canvas context not available'));
           }
-          URL.revokeObjectURL(url);
-          resolve(canvas.toDataURL('image/png'));
         };
         img.onerror = () => {
-          URL.revokeObjectURL(url);
-          reject(new Error('Failed to load logo SVG'));
+          reject(new Error('Failed to load logo PNG'));
         };
-        img.src = url;
+        img.src = logoImage;
       });
     };
     
     const logoDataUrl = await getLogoDataUrl();
-    doc.addImage(logoDataUrl, 'PNG', 15, 8, 42, 28);
+    doc.addImage(logoDataUrl, 'PNG', 15, 8, 28, 28);
   } catch (err) {
     console.error('Failed to add logo to PDF', err);
-    doc.setFontSize(28);
-    doc.setTextColor(255, 255, 255);
-    doc.setFont('helvetica', 'bolditalic');
-    doc.text('DRITZZ', 20, 28);
   }
 
   doc.setFontSize(9);

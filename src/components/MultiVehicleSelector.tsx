@@ -10,10 +10,9 @@ interface Props {
   selectedVehicles: SelectedVehicleForBooking[];
   onChange: (vehicles: SelectedVehicleForBooking[]) => void;
   defaultPackageId: string;
-  isDiscountApplied?: boolean;
 }
 
-export default function MultiVehicleSelector({ selectedVehicles, onChange, defaultPackageId, isDiscountApplied }: Props) {
+export default function MultiVehicleSelector({ selectedVehicles, onChange, defaultPackageId }: Props) {
   const { user } = useAuth();
   const [savedVehicles, setSavedVehicles] = useState<SavedVehicle[]>([]);
   const [loading, setLoading] = useState(false);
@@ -121,7 +120,7 @@ export default function MultiVehicleSelector({ selectedVehicles, onChange, defau
                     </div>
                     <div className="flex items-center gap-4">
                       <span className="text-white/70 font-mono text-sm">
-                         ₹{isDiscountApplied ? Math.round((PACKAGES.find(p => p.id === defaultPackageId) || PACKAGES[0]).price[v.type as VehicleType] * 0.75) : (PACKAGES.find(p => p.id === defaultPackageId) || PACKAGES[0]).price[v.type as VehicleType]}
+                         ₹{(PACKAGES.find(p => p.id === defaultPackageId) || PACKAGES[0]).price[v.type as VehicleType]}
                       </span>
                       <div className={`w-5 h-5 rounded-md border flex items-center justify-center ${isSelected ? 'bg-emerald-500 border-emerald-500' : 'border-white/20'}`}>
                         {isSelected && <svg className="w-3 h-3 text-black" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>}
@@ -141,8 +140,7 @@ export default function MultiVehicleSelector({ selectedVehicles, onChange, defau
          <div className="flex flex-wrap gap-2">
             {(['hatchback', 'sedan', 'suv', 'muv'] as VehicleType[]).map(t => {
                const pkg = PACKAGES.find(p => p.id === defaultPackageId) || PACKAGES[0];
-               const basePrice = pkg.price[t];
-               const price = isDiscountApplied ? Math.round(basePrice * 0.75) : basePrice;
+               const price = pkg.price[t];
                return (
                   <button type="button" key={`add-${t}`} onClick={() => addCustomVehicle(t)} className="px-4 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-full text-xs text-white uppercase font-bold flex items-center gap-2 transition-all">
                      <Plus className="w-3 h-3" /> Add {t} <span className="text-white/50 font-mono ml-1">₹{price}</span>

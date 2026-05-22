@@ -53,4 +53,31 @@ export interface BookingDetails {
   latitude?: number;
   longitude?: number;
   amount?: number;
+  subscriptionId?: string;
+}
+
+export interface Subscription {
+  id?: string;
+  userId: string;
+  customerName: string;
+  customerPhone: string;
+  address: string;
+  packageId: string;
+  vehicles: SelectedVehicleForBooking[];
+  status: 'active' | 'expired' | 'completed' | 'cancelled';
+  totalWashes: number;
+  usedWashes: number;
+  remainingWashes: number;
+  expiresAt: any;
+  createdAt: any;
+  paymentId?: string;
+}
+
+export interface BookingDocument extends BookingDetails {
+  id?: string;
+  refId: string;
+  paymentMethod: string;
+  status: 'pending' | 'scheduled' | 'completed' | 'cancelled';
+  createdAt: any;
+  updatedAt: any;
 }

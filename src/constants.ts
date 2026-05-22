@@ -3,63 +3,63 @@ import { Package } from './types';
 export const PACKAGES: Package[] = [
   {
     id: 'basic',
-    name: 'DRITZZ BASIC',
+    name: 'Basic Wash',
     tagline: 'Quick exterior refresh',
     price: {
-      hatchback: 299,
-      sedan: 349,
-      suv: 449,
-      muv: 449
+      hatchback: 349,
+      sedan: 449,
+      suv: 549,
+      muv: 549
     },
     icon: 'Droplets',
     features: [
-      'Exterior hand wash',
-      'Wheel & tyre clean',
-      'Window wipe',
-      'Door sill wipe',
-      'Air freshener'
+      'Exterior Foam Wash',
+      'Interior Vacuum',
+      'Dashboard Cleaning',
+      'Tyre Cleaning',
+      'Doorstep Service',
+      'Water Efficient Cleaning'
     ]
   },
   {
     id: 'mid',
-    name: 'DRITZZ PREMIUM',
+    name: 'Premium Wash',
     tagline: 'Inside & out, spotless',
     price: {
       hatchback: 799,
-      sedan: 932,
-      suv: 1132,
-      muv: 1132
+      sedan: 899,
+      suv: 1099,
+      muv: 1099
     },
     icon: 'Sparkles',
     features: [
-      'Full exterior wash',
-      'Interior vacuum',
-      'Dashboard wipe',
-      'Glass cleaning inside & out',
-      'Tyre dressing',
-      'Air freshener'
+      'Exterior Foam Wash',
+      'Interior Vacuum',
+      'Dashboard Cleaning',
+      'Tyre Cleaning',
+      'Doorstep Service',
+      'Water Efficient Cleaning'
     ],
     featured: true
   },
   {
     id: 'premium',
-    name: 'DRITZZ MONTHLY SERVICE',
-    tagline: '3 washes monthly',
+    name: 'Monthly Plan',
+    tagline: '4 Washes Monthly',
     price: {
-      hatchback: 1999,
-      sedan: 2399,
-      suv: 2665,
-      muv: 2665
+      hatchback: 2199,
+      sedan: 2599,
+      suv: 2999,
+      muv: 2999
     },
     icon: 'Gem',
     features: [
-      'Everything in DRITZZ PREMIUM',
-      'Foam wash',
-      'Seat shampooing',
-      'Engine bay clean',
-      'Wax polish coat',
-      'Odour treatment',
-      'Rubber & plastic conditioning'
+      'Exterior Foam Wash',
+      'Interior Vacuum',
+      'Dashboard Cleaning',
+      'Tyre Cleaning',
+      'Doorstep Service',
+      'Water Efficient Cleaning'
     ]
   }
 ];

@@ -8,7 +8,7 @@ service cloud.firestore {
 
     // Helper Functions
     function isAdmin() {
-      return request.auth != null && request.auth.token != null && 'email' in request.auth.token && (
+      return request.auth != null && request.auth.token != null && request.auth.token.email != null && (
         request.auth.token.email == 'dritzz.info@gmail.com' ||
         request.auth.token.email == 'Dritzz.info@gmail.com' ||
         request.auth.token.email == 'sujitsinghguw@gmail.com' ||
@@ -28,13 +28,13 @@ service cloud.firestore {
     }
 
     match /bookings/{bookingId} {
-      // Admins have full access
-      allow read, write: if isAdmin();
-      
-      // Users can read, create, update, and delete their own bookings
-      allow read: if request.auth != null && resource.data.userId == request.auth.uid;
-      allow create: if request.auth != null && request.resource.data.userId == request.auth.uid;
-      allow update, delete: if request.auth != null && resource.data.userId == request.auth.uid;
+      allow read, update, delete: if isAdmin() || (request.auth != null && resource.data.userId == request.auth.uid);
+      allow create: if true;
+    }
+
+    match /subscriptions/{subId} {
+      allow read, update, delete: if isAdmin() || (request.auth != null && resource.data.userId == request.auth.uid);
+      allow create: if true;
     }
   }
 }
