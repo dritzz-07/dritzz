@@ -33,17 +33,13 @@ export default function Pricing({ onSelectPackage }: PricingProps) {
       {/* Background elements */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-4xl h-[400px] bg-blue-600/10 blur-[120px] rounded-full pointer-events-none" />
       
-      {/* Launch Offer Banner */}
-      <div className="flex justify-center mb-12">
-         <div className="px-6 py-2 rounded-full border border-blue-500/30 bg-blue-500/10 text-blue-400 text-xs font-bold uppercase tracking-widest inline-flex items-center gap-2">
-            <Sparkles className="w-4 h-4" />
-            First Wash Starting At Just ₹299
-         </div>
-      </div>
-
       <div className="text-center relative z-10 flex flex-col items-center">
-        <h2 className="text-4xl md:text-5xl font-black text-white tracking-tight mb-4">Affordable Premium Car Care</h2>
-        <p className="text-neutral-400 max-w-2xl mb-12 text-lg">Professional doorstep car wash services designed for busy lifestyles in Hyderabad.</p>
+        <h2 className="text-3xl md:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-br from-white via-neutral-100 to-neutral-500 tracking-tight mb-4 uppercase drop-shadow-md pb-1">
+          DRIVE CLEAN WITHOUT LEAVING HOME
+        </h2>
+        <p className="text-neutral-400 max-w-xl mb-12 text-base md:text-lg font-medium drop-shadow-sm">
+          Professional doorstep car wash services designed for busy lifestyles in Hyderabad.
+        </p>
         
         <div className="flex flex-wrap items-center justify-center gap-3 mb-16 bg-neutral-900/50 p-2 rounded-full border border-white/10 backdrop-blur-sm">
           {(['hatchback', 'sedan', 'suv'] as VehicleType[]).map((v) => (
@@ -153,14 +149,28 @@ export default function Pricing({ onSelectPackage }: PricingProps) {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="p-8 rounded-3xl bg-neutral-900/50 border border-white/10 backdrop-blur-md flex items-center gap-6"
+            whileHover={{ scale: 1.02 }}
+            className="relative overflow-hidden p-8 rounded-3xl bg-gradient-to-b from-neutral-900 to-black border border-white/10 backdrop-blur-md flex items-center gap-6 group shadow-2xl shadow-black/50"
          >
-            <div className="shrink-0 w-16 h-16 rounded-2xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center">
-               <Building2 className="w-8 h-8 text-blue-400" />
-            </div>
+            <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-blue-500/30 to-transparent" />
+            <motion.div 
+               animate={{ y: [0, -5, 0] }}
+               transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+               className="shrink-0 w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500/20 to-blue-600/5 border border-blue-500/30 flex items-center justify-center shadow-inner shadow-blue-500/20 group-hover:bg-blue-500/30 transition-colors"
+            >
+               <motion.div
+                  animate={{ scale: [1, 1.05, 1], rotate: [0, -5, 5, 0] }}
+                  transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+               >
+                  <Building2 className="w-8 h-8 text-blue-400 drop-shadow-md" />
+               </motion.div>
+            </motion.div>
             <div>
-               <div className="text-xs uppercase tracking-widest font-black text-blue-400 mb-2">Society Offer</div>
-               <h4 className="text-xl font-bold text-white leading-tight">Book 3 Cars Together &<br/>Get Flat 20% OFF</h4>
+               <div className="text-[10px] uppercase tracking-[0.2em] font-extrabold text-blue-400 mb-2 drop-shadow-sm">Society Offer</div>
+               <h4 className="text-xl font-medium text-neutral-300 leading-snug tracking-wide">
+                  <span className="text-white font-bold block mb-1">Book 3 Cars Together</span>
+                  Get Flat 20% OFF
+               </h4>
             </div>
          </motion.div>
          
@@ -169,14 +179,28 @@ export default function Pricing({ onSelectPackage }: PricingProps) {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.1 }}
-            className="p-8 rounded-3xl bg-neutral-900/50 border border-white/10 backdrop-blur-md flex items-center gap-6"
+            whileHover={{ scale: 1.02 }}
+            className="relative overflow-hidden p-8 rounded-3xl bg-gradient-to-b from-neutral-900 to-black border border-white/10 backdrop-blur-md flex items-center gap-6 group shadow-2xl shadow-black/50"
          >
-            <div className="shrink-0 w-16 h-16 rounded-2xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center">
-               <CalendarRange className="w-8 h-8 text-purple-400" />
-            </div>
+            <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-purple-500/30 to-transparent" />
+            <motion.div 
+               animate={{ y: [0, -5, 0] }}
+               transition={{ duration: 4, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+               className="shrink-0 w-16 h-16 rounded-2xl bg-gradient-to-br from-purple-500/20 to-purple-600/5 border border-purple-500/30 flex items-center justify-center shadow-inner shadow-purple-500/20 group-hover:bg-purple-500/30 transition-colors"
+            >
+               <motion.div
+                  animate={{ scale: [1, 1.05, 1], rotate: [0, 5, -5, 0] }}
+                  transition={{ duration: 3, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+               >
+                  <CalendarRange className="w-8 h-8 text-purple-400 drop-shadow-md" />
+               </motion.div>
+            </motion.div>
             <div>
-               <div className="text-xs uppercase tracking-widest font-black text-purple-400 mb-2">Subscription Offer</div>
-               <h4 className="text-xl font-bold text-white leading-tight">Monthly Members Save<br/>Up To ₹1,200</h4>
+               <div className="text-[10px] uppercase tracking-[0.2em] font-extrabold text-purple-400 mb-2 drop-shadow-sm">Subscription Offer</div>
+               <h4 className="text-xl font-medium text-neutral-300 leading-snug tracking-wide">
+                  <span className="text-white font-bold block mb-1">Monthly Members</span>
+                  Save Up To ₹1,200
+               </h4>
             </div>
          </motion.div>
       </div>

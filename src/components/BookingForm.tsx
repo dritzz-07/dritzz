@@ -471,13 +471,21 @@ export default function BookingForm({
   };
 
   return (
-    <section id="booking" className="bg-black px-6 md:px-16 py-24 border-t border-white/5">
-      <div className="section-label">Reserve Your Slot</div>
-      <h2 className="section-title text-white">BOOK NOW</h2>
-      <p className="text-neutral-400 max-w-md mb-16">Fill in your details and we'll be at your doorstep on time.</p>
+    <section id="booking" className="relative px-6 md:px-16 py-24 bg-black border-t border-white/5 overflow-hidden">
+      {/* Background soft glow */}
+      <div className="absolute top-1/4 -right-1/4 w-[800px] h-[800px] bg-blue-500/10 blur-[120px] rounded-full pointer-events-none" />
+      <div className="absolute bottom-0 -left-1/4 w-[600px] h-[600px] bg-purple-500/10 blur-[120px] rounded-full pointer-events-none" />
 
-      <div className="grid grid-cols-1 lg:grid-cols-5 gap-12 items-start">
-        <form onSubmit={handleFormSubmit} className="lg:col-span-3 bg-white/5 border border-white/10 p-8 md:p-12 space-y-8 rounded-2xl">
+      <div className="relative z-10 max-w-7xl mx-auto flex flex-col items-center text-center mb-16">
+        <div className="text-[10px] uppercase tracking-[0.3em] font-black text-blue-400 mb-4 drop-shadow-sm">Reserve Your Slot</div>
+        <h2 className="text-4xl md:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-white via-neutral-200 to-neutral-400 tracking-tight mb-4 pb-1">
+          BOOK YOUR WASH
+        </h2>
+        <p className="text-neutral-400 max-w-md text-sm md:text-base font-medium">Fill in your details and we'll arrive at your doorstep exactly when you need us.</p>
+      </div>
+
+      <div className="relative z-10 max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-5 gap-8 lg:gap-12 items-start">
+        <form onSubmit={handleFormSubmit} className="lg:col-span-3 bg-neutral-900/40 backdrop-blur-xl border border-white/10 p-6 md:p-10 space-y-8 rounded-3xl shadow-2xl shadow-black/50">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div className="space-y-2">
               <label className="text-[10px] uppercase tracking-widest text-neutral-500 font-bold block">Full Name</label>
@@ -569,7 +577,7 @@ export default function BookingForm({
                     }
                   }}
                   placeholder="Type service address (with auto-complete) or pinpoint on map..."
-                  className="w-full bg-white/5 border border-white/10 pl-4 pr-10 py-3 text-sm focus:border-white outline-none transition-colors rounded-lg text-white"
+                  className="w-full bg-black/40 border border-white/10 pl-4 pr-10 py-3.5 text-sm focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/50 outline-none transition-all rounded-xl text-white placeholder-neutral-600"
                 />
                 <div className="absolute right-3.5 top-1/2 -translate-y-1/2 flex items-center justify-center pointer-events-none">
                   {searching ? (
@@ -652,7 +660,7 @@ export default function BookingForm({
                 value={details.date}
                 min={new Date().toISOString().split('T')[0]}
                 onChange={handleChange}
-                className="w-full bg-white/5 border border-white/10 px-4 py-3 text-sm focus:border-white outline-none transition-colors rounded-lg text-white [color-scheme:dark]"
+                className="w-full bg-black/40 border border-white/10 px-4 py-3.5 text-sm focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/50 outline-none transition-all rounded-xl text-white [color-scheme:dark]"
               />
             </div>
             <div className="space-y-2">
@@ -701,71 +709,74 @@ export default function BookingForm({
               onChange={handleChange}
               rows={3}
               placeholder="Any specific areas to focus on..."
-              className="w-full bg-white/5 border border-white/10 px-4 py-3 text-sm focus:border-white outline-none transition-colors resize-none rounded-lg text-white"
+              className="w-full bg-black/40 border border-white/10 px-4 py-3.5 text-sm focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/50 outline-none transition-all resize-none rounded-xl text-white placeholder-neutral-600"
             />
           </div>
         </form>
 
         <div className="lg:col-span-2 space-y-6 lg:sticky lg:top-32">
-          <div className="bg-white text-black p-8 md:p-10 rounded-2xl shadow-2xl">
-            <h3 className="font-bold text-sm tracking-widest uppercase mb-8 pb-4 border-b border-black/10 text-black">Order Summary</h3>
+          <div className="relative overflow-hidden bg-neutral-900/60 backdrop-blur-xl border border-white/10 text-white p-8 md:p-10 rounded-3xl shadow-2xl shadow-black/50">
+            {/* Subtle glow inside card */}
+            <div className="absolute top-0 right-0 w-64 h-64 bg-blue-500/5 blur-[80px] rounded-full pointer-events-none" />
+
+            <h3 className="relative font-bold text-sm tracking-widest uppercase mb-8 pb-4 border-b border-white/10 text-neutral-300">Order Summary</h3>
             
-            <div className="space-y-4 mb-8">
-              <div className="flex justify-between items-center py-2 border-b border-black/5">
+            <div className="relative space-y-4 mb-8">
+              <div className="flex justify-between items-center py-2 border-b border-white/5">
                 <span className="text-[10px] uppercase tracking-widest text-neutral-500 font-bold">Package</span>
-                <span className="text-sm font-medium text-black">{selectedPkg?.name || '—'}</span>
+                <span className="text-sm font-medium text-white">{selectedPkg?.name || '—'}</span>
               </div>
               
               {details.vehicles && details.vehicles.length > 0 ? (
-                 <div className="py-2 border-b border-black/5">
+                 <div className="py-2 border-b border-white/5">
                     <span className="text-[10px] uppercase tracking-widest text-neutral-500 font-bold block mb-2">Vehicles ({details.vehicles.length})</span>
-                    <div className="space-y-2">
+                    <div className="space-y-3">
                        {details.vehicles.map((v, idx) => (
-                          <div key={idx} className="flex justify-between items-center text-sm">
+                          <div key={idx} className="flex justify-between items-center text-sm bg-black/20 p-3 rounded-xl border border-white/5">
                              <div className="flex flex-col">
-                                <span className="text-black font-medium">{v.brand || 'Custom'} {v.model || 'Vehicle'} <span className="capitalize opacity-50 ml-1">({v.type})</span></span>
-                                {v.vehicleNumber && <span className="text-xs text-neutral-500 font-mono">{v.vehicleNumber}</span>}
+                                <span className="text-white font-medium">{v.brand || 'Custom'} {v.model || 'Vehicle'} <span className="capitalize opacity-50 ml-1">({v.type})</span></span>
+                                {v.vehicleNumber && <span className="text-[11px] text-blue-400/80 font-mono mt-0.5">{v.vehicleNumber}</span>}
                              </div>
-                             <span className="font-bold text-black">₹{v.price}</span>
+                             <span className="font-bold text-white">₹{v.price}</span>
                           </div>
                        ))}
                     </div>
                  </div>
               ) : (
-                <div className="flex justify-between items-center py-2 border-b border-black/5">
+                <div className="flex justify-between items-center py-2 border-b border-white/5">
                   <span className="text-[10px] uppercase tracking-widest text-neutral-500 font-bold">Vehicle</span>
-                  <span className="text-sm font-medium text-black capitalize">{details.vehicleType}</span>
+                  <span className="text-sm font-medium text-white capitalize">{details.vehicleType}</span>
                 </div>
               )}
               
-              <div className="flex justify-between items-center py-2 border-b border-black/5">
+              <div className="flex justify-between items-center py-2 border-b border-white/5">
                 <span className="text-[10px] uppercase tracking-widest text-neutral-500 font-bold">Date</span>
-                <span className="text-sm font-medium text-black">{details.date || '—'}</span>
+                <span className="text-sm font-medium text-white">{details.date ? new Date(details.date).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric'}) : '—'}</span>
               </div>
-              <div className="flex justify-between items-center py-2 border-b border-black/5">
+              <div className="flex justify-between items-center py-2 border-b border-white/5">
                 <span className="text-[10px] uppercase tracking-widest text-neutral-500 font-bold">Slot</span>
-                <span className="text-sm font-medium text-black">{details.timeSlot || '—'}</span>
+                <span className="text-sm font-medium text-white">{details.timeSlot || '—'}</span>
               </div>
               
               {details.vehicles && details.vehicles.length > 0 && (
                   <div className="flex justify-between items-center py-2 pt-4">
-                     <span className="text-[10px] uppercase tracking-widest text-neutral-500 font-bold">Total Estimate</span>
-                     <span className="text-lg font-black text-black">₹{details.vehicles.reduce((sum, v) => sum + v.price, 0)}</span>
+                     <span className="text-[10px] uppercase tracking-[0.2em] text-neutral-400 font-bold">Total Estimate</span>
+                     <span className="text-lg font-black text-white">₹{details.vehicles.reduce((sum, v) => sum + v.price, 0)}</span>
                   </div>
               )}
             </div>
 
-            <div className="flex justify-between items-center pt-6 border-t border-black mb-10">
-              <div className="flex flex-col">
-                <span className="font-bold text-sm uppercase tracking-widest text-black">Total Amount</span>
+            <div className="relative flex justify-between items-end pt-6 border-t border-white/10 mb-10">
+              <div className="flex flex-col gap-1">
+                <span className="font-bold text-sm uppercase tracking-widest text-neutral-300">Total Amount</span>
                 {isSocietyOffer && (
-                  <span className="text-[9px] text-blue-600 font-bold uppercase tracking-widest">SOCIETY OFFER: 20% OFF</span>
+                  <span className="text-[9px] text-blue-400 font-black uppercase tracking-widest bg-blue-500/10 px-2 py-0.5 rounded border border-blue-500/20 inline-block w-fit">20% OFF APPLIED</span>
                 )}
               </div>
               <div className="flex flex-col items-end">
-                <span className="text-4xl font-bold text-black tracking-tighter">₹{totalPrice}</span>
+                <span className="text-4xl font-black text-white tracking-tighter drop-shadow-md">₹{totalPrice}</span>
                 {isSocietyOffer && (
-                  <span className="text-xs text-neutral-400 line-through decoration-black/20">₹{originalPrice}</span>
+                  <span className="text-xs text-neutral-500 line-through decoration-white/20">₹{originalPrice}</span>
                 )}
               </div>
             </div>
@@ -781,17 +792,18 @@ export default function BookingForm({
                   handleFormSubmit(e);
                 }
               }}
-              className="w-full bg-black text-white py-5 rounded-xl font-bold text-sm tracking-widest uppercase hover:bg-neutral-800 transition-all flex items-center justify-center gap-2 shadow-sm"
+              className="relative w-full overflow-hidden bg-white text-black py-4 rounded-xl font-bold text-sm tracking-widest uppercase hover:bg-neutral-200 transition-all flex items-center justify-center gap-2 shadow-xl shadow-white/10 group"
             >
+              <div className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/40 to-transparent -translate-x-full group-hover:animate-[shimmer_1.5s_infinite]" />
               {user ? (
-                <>Confirm Booking <ChevronRight className="w-5 h-5" /></>
+                <>Confirm Booking <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" /></>
               ) : (
-                <>Sign In to Book <ChevronRight className="w-5 h-5" /></>
+                <>Sign In to Book <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" /></>
               )}
             </button>
 
-            <div className="mt-6 flex items-center justify-center gap-2 text-neutral-500 text-[10px] uppercase tracking-widest font-bold">
-              <Lock className="w-3 h-3" /> 100% Secure Service
+            <div className="relative mt-6 flex items-center justify-center gap-2 text-neutral-500 text-[10px] uppercase tracking-widest font-bold">
+              <Lock className="w-3 h-3 text-neutral-400" /> 100% Secure & Encrypted
             </div>
           </div>
         </div>
