@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'motion/react';
-import { Lock, ChevronRight, MapPin, Navigation, Loader2 } from 'lucide-react';
+import { Lock, ChevronRight, MapPin, Navigation, Loader2, Car, Calendar, Clock } from 'lucide-react';
 import { PACKAGES, TIME_SLOTS } from '../constants';
 import { BookingDetails, VehicleType, SelectedVehicleForBooking } from '../types';
 import { useAuth } from '../context/AuthContext';
@@ -450,7 +450,10 @@ export default function BookingForm({
     : selectedPkg ? selectedPkg.price[details.vehicleType || 'hatchback'] : 0;
     
   const isSocietyOffer = details.vehicles && details.vehicles.length >= 3;
-  const totalPrice = isSocietyOffer ? Math.round(originalPrice * 0.80) : originalPrice;
+  const originalDiscountedPrice = isSocietyOffer ? Math.round(originalPrice * 0.80) : originalPrice;
+  const cgst = Math.round(originalDiscountedPrice * 0.09);
+  const sgst = Math.round(originalDiscountedPrice * 0.09);
+  const totalPrice = originalDiscountedPrice + cgst + sgst;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -722,61 +725,93 @@ export default function BookingForm({
             <h3 className="relative font-bold text-sm tracking-widest uppercase mb-8 pb-4 border-b border-white/10 text-neutral-300">Order Summary</h3>
             
             <div className="relative space-y-4 mb-8">
-              <div className="flex justify-between items-center py-2 border-b border-white/5">
-                <span className="text-[10px] uppercase tracking-widest text-neutral-500 font-bold">Package</span>
-                <span className="text-sm font-medium text-white">{selectedPkg?.name || '—'}</span>
-              </div>
-              
               {details.vehicles && details.vehicles.length > 0 ? (
-                 <div className="py-2 border-b border-white/5">
-                    <span className="text-[10px] uppercase tracking-widest text-neutral-500 font-bold block mb-2">Vehicles ({details.vehicles.length})</span>
-                    <div className="space-y-3">
-                       {details.vehicles.map((v, idx) => (
-                          <div key={idx} className="flex justify-between items-center text-sm bg-black/20 p-3 rounded-xl border border-white/5">
-                             <div className="flex flex-col">
-                                <span className="text-white font-medium">{v.brand || 'Custom'} {v.model || 'Vehicle'} <span className="capitalize opacity-50 ml-1">({v.type})</span></span>
-                                {v.vehicleNumber && <span className="text-[11px] text-blue-400/80 font-mono mt-0.5">{v.vehicleNumber}</span>}
+                 <div className="space-y-3">
+                    {details.vehicles.map((v, idx) => (
+                       <div key={idx} className="bg-[#111827]/80 rounded-2xl p-4 flex items-center justify-between shadow-inner shadow-white/5 border border-white/5">
+                          <div className="flex items-center gap-4">
+                             <div className="w-10 h-10 shrink-0 rounded-full bg-blue-500/10 border border-blue-500/20 flex items-center justify-center">
+                                <Car className="w-5 h-5 text-blue-400" />
                              </div>
-                             <span className="font-bold text-white">₹{v.price}</span>
+                             <div className="flex flex-col">
+                                <span className="text-white font-bold">{v.brand || 'Custom Vehicle'} {v.model || ''}</span>
+                                <span className="text-sm text-neutral-400 capitalize">({v.type})</span>
+                                {v.vehicleNumber && <span className="text-[11px] text-neutral-500 font-mono mt-0.5">{v.vehicleNumber}</span>}
+                             </div>
                           </div>
-                       ))}
-                    </div>
+                          <span className="text-lg font-bold text-white shrink-0 ml-4">₹{v.price}</span>
+                       </div>
+                    ))}
                  </div>
               ) : (
-                <div className="flex justify-between items-center py-2 border-b border-white/5">
-                  <span className="text-[10px] uppercase tracking-widest text-neutral-500 font-bold">Vehicle</span>
-                  <span className="text-sm font-medium text-white capitalize">{details.vehicleType}</span>
-                </div>
+                 <div className="bg-[#111827]/80 rounded-2xl p-4 flex items-center justify-between shadow-inner shadow-white/5 border border-white/5">
+                    <div className="flex items-center gap-4">
+                       <div className="w-10 h-10 shrink-0 rounded-full bg-blue-500/10 border border-blue-500/20 flex items-center justify-center">
+                          <Car className="w-5 h-5 text-blue-400" />
+                       </div>
+                       <div className="flex flex-col">
+                          <span className="text-white font-bold">Custom Vehicle</span>
+                          <span className="text-sm text-neutral-400 capitalize">({details.vehicleType})</span>
+                       </div>
+                    </div>
+                    <span className="text-lg font-bold text-white shrink-0 ml-4">₹{selectedPkg ? selectedPkg.price[details.vehicleType || 'hatchback'] : 0}</span>
+                 </div>
               )}
               
-              <div className="flex justify-between items-center py-2 border-b border-white/5">
-                <span className="text-[10px] uppercase tracking-widest text-neutral-500 font-bold">Date</span>
-                <span className="text-sm font-medium text-white">{details.date ? new Date(details.date).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric'}) : '—'}</span>
+              <div className="flex items-center gap-4 py-3 border-b border-white/5">
+                 <Calendar className="w-5 h-5 text-blue-400 shrink-0" />
+                 <div className="flex flex-col">
+                    <span className="text-[10px] uppercase tracking-[0.2em] text-neutral-500 font-bold mb-1">Date</span>
+                    <span className="text-white font-bold">{details.date ? new Date(details.date).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric'}) : '—'}</span>
+                 </div>
               </div>
-              <div className="flex justify-between items-center py-2 border-b border-white/5">
-                <span className="text-[10px] uppercase tracking-widest text-neutral-500 font-bold">Slot</span>
-                <span className="text-sm font-medium text-white">{details.timeSlot || '—'}</span>
+
+              <div className="flex items-center gap-4 py-3 border-b border-white/5">
+                 <Clock className="w-5 h-5 text-blue-400 shrink-0" />
+                 <div className="flex flex-col">
+                    <span className="text-[10px] uppercase tracking-[0.2em] text-neutral-500 font-bold mb-1">Slot</span>
+                    <span className="text-white font-bold">{details.timeSlot || '—'}</span>
+                 </div>
               </div>
               
-              {details.vehicles && details.vehicles.length > 0 && (
-                  <div className="flex justify-between items-center py-2 pt-4">
-                     <span className="text-[10px] uppercase tracking-[0.2em] text-neutral-400 font-bold">Total Estimate</span>
-                     <span className="text-lg font-black text-white">₹{details.vehicles.reduce((sum, v) => sum + v.price, 0)}</span>
-                  </div>
-              )}
+              <div className="pt-4">
+                 <span className="text-[10px] uppercase tracking-[0.2em] text-blue-400 font-bold mb-4 block">Price Breakdown</span>
+                 <div className="space-y-4">
+                    <div className="flex justify-between items-center text-sm border-b border-white/5 pb-3">
+                       <span className="text-neutral-400 font-medium tracking-wide">Service Amount</span>
+                       <span className="font-bold text-white text-base">₹{originalDiscountedPrice}</span>
+                    </div>
+                    <div className="flex justify-between items-center text-sm border-b border-white/5 pb-3">
+                       <span className="text-neutral-400 font-medium tracking-wide">CGST (9%)</span>
+                       <span className="font-bold text-white text-base">₹{cgst}</span>
+                    </div>
+                    <div className="flex justify-between items-center text-sm border-b border-white/5 pb-3">
+                       <span className="text-neutral-400 font-medium tracking-wide">SGST (9%)</span>
+                       <span className="font-bold text-white text-base">₹{sgst}</span>
+                    </div>
+                 </div>
+              </div>
+
+              <div className="bg-[#111827] rounded-xl p-5 flex justify-between items-center mt-2 border border-white/5 shadow-inner shadow-black/50">
+                 <span className="text-[11px] uppercase tracking-[0.2em] text-blue-400 font-bold">Total Estimate</span>
+                 <span className="text-2xl font-bold text-white">₹{originalDiscountedPrice}</span>
+              </div>
             </div>
 
-            <div className="relative flex justify-between items-end pt-6 border-t border-white/10 mb-10">
-              <div className="flex flex-col gap-1">
-                <span className="font-bold text-sm uppercase tracking-widest text-neutral-300">Total Amount</span>
+            <div className="relative overflow-hidden bg-[#0A192F] rounded-2xl p-6 md:p-8 flex justify-between items-end mb-10 border border-blue-500/20 shadow-2xl shadow-blue-900/10 hover:shadow-blue-500/20 transition-all duration-300">
+              <div className="absolute top-0 right-0 w-48 h-48 bg-blue-500/10 blur-[50px] rounded-full pointer-events-none" />
+              <div className="absolute bottom-0 left-0 w-32 h-32 bg-blue-400/5 blur-[40px] rounded-full pointer-events-none" />
+              <div className="flex flex-col gap-1.5 relative z-10">
+                <span className="font-bold text-sm uppercase tracking-widest text-blue-400 drop-shadow-sm">Total Amount</span>
+                <span className="text-[10px] uppercase tracking-[0.1em] text-neutral-400">Incl. of GST</span>
                 {isSocietyOffer && (
-                  <span className="text-[9px] text-blue-400 font-black uppercase tracking-widest bg-blue-500/10 px-2 py-0.5 rounded border border-blue-500/20 inline-block w-fit">20% OFF APPLIED</span>
+                  <span className="text-[9px] text-white font-black uppercase tracking-widest bg-blue-500/30 px-2 py-0.5 rounded border border-blue-400/30 mt-2 inline-block w-fit shadow-sm shadow-blue-500/20">20% OFF APPLIED</span>
                 )}
               </div>
-              <div className="flex flex-col items-end">
-                <span className="text-4xl font-black text-white tracking-tighter drop-shadow-md">₹{totalPrice}</span>
+              <div className="flex flex-col items-end relative z-10">
+                <span className="text-5xl font-black text-blue-400 tracking-tighter drop-shadow-lg">₹{totalPrice}</span>
                 {isSocietyOffer && (
-                  <span className="text-xs text-neutral-500 line-through decoration-white/20">₹{originalPrice}</span>
+                  <span className="text-sm text-blue-500/60 line-through decoration-blue-500/40 mt-1 font-medium">₹{Math.round(originalPrice * 1.18)}</span>
                 )}
               </div>
             </div>

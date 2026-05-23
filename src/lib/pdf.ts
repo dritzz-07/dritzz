@@ -167,22 +167,32 @@ export const generateInvoice = async (details: BookingDetails, pkg: Package, amo
   // Summary Lines
   const summaryTopIdx = Math.max(currentY + 10, 190);
   
+  const baseAmount = Math.round(amount / 1.18);
+  const cgst = Math.round(baseAmount * 0.09);
+  const sgst = amount - baseAmount - cgst;
+  
   doc.setLineWidth(0.3);
   doc.setDrawColor(220, 220, 220);
   doc.line(110, summaryTopIdx, 190, summaryTopIdx);
   
-  doc.setFont('helvetica', 'bold');
-  doc.text('Subtotal:', 125, summaryTopIdx + 8);
   doc.setFont('helvetica', 'normal');
-  doc.text(`Rs. ${amount.toFixed(2)}`, 182, summaryTopIdx + 8, { align: 'right' });
+  doc.setFontSize(9);
+  doc.text('Subtotal:', 125, summaryTopIdx + 6);
+  doc.text(`Rs. ${baseAmount.toFixed(2)}`, 182, summaryTopIdx + 6, { align: 'right' });
   
-  doc.line(110, summaryTopIdx + 14, 190, summaryTopIdx + 14);
+  doc.text('CGST (9%):', 125, summaryTopIdx + 11);
+  doc.text(`Rs. ${cgst.toFixed(2)}`, 182, summaryTopIdx + 11, { align: 'right' });
+  
+  doc.text('SGST (9%):', 125, summaryTopIdx + 16);
+  doc.text(`Rs. ${sgst.toFixed(2)}`, 182, summaryTopIdx + 16, { align: 'right' });
+  
+  doc.line(110, summaryTopIdx + 20, 190, summaryTopIdx + 20);
   
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(14);
   doc.setTextColor(20, 20, 20);
-  doc.text('TOTAL', 125, summaryTopIdx + 24);
-  doc.text(`Rs. ${amount.toFixed(2)}`, 182, summaryTopIdx + 24, { align: 'right' });
+  doc.text('TOTAL', 125, summaryTopIdx + 30);
+  doc.text(`Rs. ${amount.toFixed(2)}`, 182, summaryTopIdx + 30, { align: 'right' });
   
   // Payment Info
   doc.setFontSize(9);
