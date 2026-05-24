@@ -48,14 +48,14 @@ export default function Pricing({ onSelectPackage }: PricingProps) {
       <div className="absolute hidden md:block top-0 left-1/2 -translate-x-1/2 w-full max-w-5xl h-[500px] bg-zinc-600/10 opacity-10 rounded-full pointer-events-none" />
       <div className="absolute hidden md:block bottom-0 right-0 w-96 h-96 bg-zinc-500/5 opacity-10 rounded-full pointer-events-none" />
       
-      <div className="text-center relative z-10 flex flex-col items-center mb-20">
-        <div className="mb-6 inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-white/10 bg-white/5 ">
+      <div className="text-center relative z-10 flex flex-col items-center mb-20 animate-in fade-in slide-in-from-bottom-8 duration-700">
+        <div className="mb-6 inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-white/10 bg-white/5 animate-diamond-shine">
           <Sparkles className="w-3 h-3 text-white" />
           <span className="text-xs uppercase tracking-widest text-neutral-300 font-bold">Premium Doorstep Care</span>
         </div>
         <h2 className="text-3xl md:text-5xl font-extrabold mb-5 text-white tracking-tight leading-tight">
           Why Pay Every Time? <br className="hidden md:block" />
-          <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-zinc-200 to-zinc-400 drop-shadow-sm">
+          <span className="text-diamond-shine drop-shadow-sm">
             Go Monthly & Save More.
           </span>
         </h2>
@@ -64,15 +64,15 @@ export default function Pricing({ onSelectPackage }: PricingProps) {
         </p>
         
         {/* Vehicle Toggle */}
-        <div className="flex flex-wrap items-center justify-center gap-3 mt-12 bg-neutral-900/60 p-2 inset-shadow-sm rounded-full border border-white/10 ">
+        <div className="flex flex-wrap items-center justify-center gap-2 mt-12 bg-black/80 p-2 rounded-full border border-white/10 shadow-[0_0_30px_rgba(0,0,0,0.8)]">
           {(['hatchback', 'sedan', 'suv'] as VehicleType[]).map((v) => (
             <button
               key={v}
               onClick={() => setVehicle(v)}
-              className={`px-8 py-3.5 text-xs uppercase tracking-[0.15em] font-bold transition-all duration-300 rounded-full ${
+              className={`relative overflow-hidden px-8 py-3.5 text-xs uppercase tracking-[0.15em] font-bold transition-all duration-300 rounded-full ${
                 vehicle === v 
-                  ? 'bg-zinc-600 text-white shadow-[0_4px_25px_rgba(255,255,255,0.5)]' 
-                  : 'text-neutral-100 hover:text-white hover:bg-white/5'
+                  ? 'bg-gradient-to-tr from-zinc-100 via-white to-zinc-200 text-black animate-diamond-shine scale-105' 
+                  : 'text-neutral-300 hover:text-white hover:bg-white/10'
               }`}
             >
               <div className="flex items-center gap-3">

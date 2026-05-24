@@ -77,59 +77,66 @@ function MainApp() {
   };
 
   return (
-    <div className="min-h-screen selection:bg-gold selection:text-black">
-      <WaterSplashEffects />
-      <Navbar 
-        openLogin={() => { setIsAuthOpen(true); }} 
-        openBookings={(tab = 'upcoming') => { setBookingsTab(tab); setIsBookingsOpen(true); }}
-        openSettings={(tab = 'settings') => { setSettingsTab(tab); setIsSettingsOpen(true); }}
-      />
-      
-      <main className="relative z-10">
-        <Hero />
-        <ShowcaseVideo />
-        <HowItWorks />
-        <Pricing 
-          onSelectPackage={handleSelectPackage} 
+    <div className="min-h-screen bg-[#0A0A0C] text-white selection:bg-white selection:text-black relative overflow-x-hidden">
+      {/* Global Deep Space Glow based on the reference image */}
+      <div className="fixed inset-0 pointer-events-none z-0">
+        <div className="absolute bottom-[-10%] right-[-10%] w-[80vw] h-[80vh] bg-[radial-gradient(circle_at_center,_rgba(25,35,65,0.4),_transparent_60%)]" />
+        <div className="absolute bottom-[-20%] right-[-20%] w-[60vw] h-[60vh] bg-[radial-gradient(circle_at_center,_rgba(30,45,95,0.5),_transparent_70%)]" />
+      </div>
+      <div className="relative z-10 w-full h-full">
+        <WaterSplashEffects />
+        <Navbar 
+          openLogin={() => { setIsAuthOpen(true); }} 
+          openBookings={(tab = 'upcoming') => { setBookingsTab(tab); setIsBookingsOpen(true); }}
+          openSettings={(tab = 'settings') => { setSettingsTab(tab); setIsSettingsOpen(true); }}
         />
-        <BookingForm 
-          initialVehicle={selectedVehicle} 
-          initialPackageId={selectedPkgId} 
-          onSubmit={handleBookingSubmit} 
-          onRequireAuth={() => { setIsAuthOpen(true); }}
+        
+        <main className="relative z-10">
+          <Hero />
+          <ShowcaseVideo />
+          <HowItWorks />
+          <Pricing 
+            onSelectPackage={handleSelectPackage} 
+          />
+          <BookingForm 
+            initialVehicle={selectedVehicle} 
+            initialPackageId={selectedPkgId} 
+            onSubmit={handleBookingSubmit} 
+            onRequireAuth={() => { setIsAuthOpen(true); }}
+          />
+          <WhyUs />
+          <Testimonials />
+        </main>
+
+        <Footer />
+
+        <AuthOverlay 
+          isOpen={isAuthOpen} 
+          onClose={() => setIsAuthOpen(false)} 
         />
-        <WhyUs />
-        <Testimonials />
-      </main>
 
-      <Footer />
+        <ProfileSetupOverlay />
 
-      <AuthOverlay 
-        isOpen={isAuthOpen} 
-        onClose={() => setIsAuthOpen(false)} 
-      />
+        <MyBookingsModal 
+          isOpen={isBookingsOpen}
+          onClose={() => setIsBookingsOpen(false)}
+          initialTab={bookingsTab}
+        />
 
-      <ProfileSetupOverlay />
+        <AccountSettingsModal
+          isOpen={isSettingsOpen}
+          onClose={() => setIsSettingsOpen(false)}
+          initialTab={settingsTab}
+        />
 
-      <MyBookingsModal 
-        isOpen={isBookingsOpen}
-        onClose={() => setIsBookingsOpen(false)}
-        initialTab={bookingsTab}
-      />
-
-      <AccountSettingsModal
-        isOpen={isSettingsOpen}
-        onClose={() => setIsSettingsOpen(false)}
-        initialTab={settingsTab}
-      />
-
-      <PaymentModal 
-        isOpen={isPaymentOpen}
-        onClose={() => setIsPaymentOpen(false)}
-        bookingDetails={currentBookingDetails}
-        pkg={currentPkg}
-        amount={amount}
-      />
+        <PaymentModal 
+          isOpen={isPaymentOpen}
+          onClose={() => setIsPaymentOpen(false)}
+          bookingDetails={currentBookingDetails}
+          pkg={currentPkg}
+          amount={amount}
+        />
+      </div>
     </div>
   );
 }

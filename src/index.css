@@ -45,6 +45,52 @@
 }
 
 @layer utilities {
+  .animate-diamond-shine {
+    position: relative;
+    overflow: hidden;
+  }
+  .animate-diamond-shine::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(
+      to right,
+      rgba(255, 255, 255, 0) 0%,
+      rgba(255, 255, 255, 0.3) 50%,
+      rgba(255, 255, 255, 0) 100%
+    );
+    transform: skewX(-20deg);
+    animation: diamond-shine 3s infinite;
+  }
+  @keyframes diamond-shine {
+    0% { left: -100%; }
+    20% { left: 200%; }
+    100% { left: 200%; }
+  }
+
+  .text-diamond-shine {
+    background: linear-gradient(
+      110deg,
+      #e4e4e7 0%,
+      #ffffff 30%,
+      #ffffff 40%,
+      #e4e4e7 60%,
+      #a1a1aa 100%
+    );
+    background-size: 200% auto;
+    color: transparent;
+    -webkit-background-clip: text;
+    background-clip: text;
+    animation: text-diamond-shine 3s linear infinite;
+  }
+  @keyframes text-diamond-shine {
+    0% { background-position: 200% center; }
+    100% { background-position: -200% center; }
+  }
+
   .dropdown-scrollbar {
     -webkit-overflow-scrolling: touch;
   }
