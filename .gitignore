@@ -6,3 +6,6 @@ coverage/
 *.log
 .env*
 !.env.example
+assets/index.js
+assets/index.css
+assets/index.html
