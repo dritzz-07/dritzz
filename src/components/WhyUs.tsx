@@ -1,6 +1,5 @@
 import { motion } from 'motion/react';
 import { Home, Droplets, UserCheck, Clock, ShieldCheck, CreditCard } from 'lucide-react';
-import generatedImage from '../assets/images/regenerated_image_1779647073338.jpg';
 
 const reasons = [
   {
@@ -72,9 +71,12 @@ export default function WhyUs() {
           transition={{ duration: 1 }}
           className="relative group h-[300px] md:h-[500px] w-full"
         >
-          <img 
-            src={generatedImage} 
-            alt="Dritzz Service" 
+          <video 
+            autoPlay 
+            loop 
+            muted 
+            playsInline
+            src="https://assets.mixkit.co/videos/47588/47588-720.mp4" 
             className="w-full h-full object-cover rounded-3xl border border-white/10 grayscale group-hover:grayscale-0 transition-all duration-700 shadow-2xl"
           />
           <div className="absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-transparent rounded-3xl" />
