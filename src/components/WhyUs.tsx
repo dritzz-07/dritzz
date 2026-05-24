@@ -56,8 +56,8 @@ export default function WhyUs() {
                   <reason.icon className="w-5 h-5 text-white" />
                 </div>
                 <div>
-                  <h3 className="font-bold text-sm uppercase tracking-wider mb-2 text-white">{reason.title}</h3>
-                  <p className="text-sm text-neutral-500 leading-snug">{reason.desc}</p>
+                  <h3 className="font-bold text-xs uppercase tracking-wider mb-2 text-white">{reason.title}</h3>
+                  <p className="text-xs text-neutral-300 leading-snug">{reason.desc}</p>
                 </div>
               </motion.div>
             ))}
@@ -79,7 +79,7 @@ export default function WhyUs() {
           <div className="absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-transparent rounded-3xl" />
           <div className="absolute bottom-6 left-6 right-6 p-5 bg-black/40 backdrop-blur-md rounded-2xl border border-white/5">
             <p className="text-xs font-bold text-white uppercase tracking-widest mb-1">Premium Detailing</p>
-            <p className="text-[10px] text-neutral-400 uppercase tracking-[0.2em]">Quality you can trust, delivered to your door.</p>
+            <p className="text-xs text-neutral-100 uppercase tracking-[0.2em]">Quality you can trust, delivered to your door.</p>
           </div>
         </motion.div>
       </div>

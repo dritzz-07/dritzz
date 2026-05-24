@@ -29,7 +29,7 @@ export default function HowItWorks() {
     <section id="how-it-works" className="bg-black px-6 md:px-16 py-24 border-t border-white/5">
       <div className="section-label">Simple Process</div>
       <h2 className="section-title">HOW IT WORKS?</h2>
-      <p className="text-neutral-400 max-w-md mb-16 uppercase tracking-wider">FOUR EASY STEPS TO A SPOTLESS CAR — WITHOUT LEAVING YOUR HOME.</p>
+      <p className="text-neutral-100 max-w-md mb-16 uppercase tracking-wider">FOUR EASY STEPS TO A SPOTLESS CAR — WITHOUT LEAVING YOUR HOME.</p>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12">
         {steps.map((step, i) => (
@@ -45,8 +45,8 @@ export default function HowItWorks() {
               <step.icon className="w-5 h-5 text-white" />
             </div>
             <div>
-              <h3 className="font-bold text-sm uppercase tracking-wider mb-2 text-white">{step.title}</h3>
-              <p className="text-sm text-neutral-500 leading-snug">{step.desc}</p>
+              <h3 className="font-bold text-xs uppercase tracking-wider mb-2 text-white">{step.title}</h3>
+              <p className="text-xs text-neutral-300 leading-snug">{step.desc}</p>
             </div>
           </motion.div>
         ))}

@@ -138,14 +138,14 @@ export default function PaymentModal({ isOpen, onClose, bookingDetails, pkg, amo
                 <h3 className="text-white font-bold text-xl tracking-tight">
                   {step === 'method' ? 'Choose Payment Method' : 'Booking Successful'}
                 </h3>
-                <p className="text-neutral-500 text-xs font-medium uppercase tracking-widest mt-1">
+                <p className="text-neutral-300 text-xs font-medium uppercase tracking-widest mt-1">
                   Reference: {refId}
                 </p>
               </div>
               {step === 'method' && (
                 <button 
                   onClick={onClose}
-                  className="p-2 hover:bg-white/5 rounded-full transition-colors text-neutral-400 hover:text-white"
+                  className="p-2 hover:bg-white/5 rounded-full transition-colors text-neutral-100 hover:text-white"
                 >
                   <X className="w-5 h-5" />
                 </button>
@@ -157,12 +157,12 @@ export default function PaymentModal({ isOpen, onClose, bookingDetails, pkg, amo
                 <div className="space-y-8">
                   {/* Summary Card */}
                   <div className="bg-white/5 p-6 rounded-2xl border border-white/5 space-y-4">
-                    <div className="flex justify-between items-center text-sm">
-                      <span className="text-neutral-500 uppercase tracking-widest font-bold text-[10px]">Package</span>
+                    <div className="flex justify-between items-center text-xs">
+                      <span className="text-neutral-300 uppercase tracking-widest font-bold text-xs">Package</span>
                       <span className="text-white font-medium">{pkg?.name}</span>
                     </div>
-                    <div className="flex justify-between items-center text-sm">
-                      <span className="text-neutral-500 uppercase tracking-widest font-bold text-[10px]">Total Amount</span>
+                    <div className="flex justify-between items-center text-xs">
+                      <span className="text-neutral-300 uppercase tracking-widest font-bold text-xs">Total Amount</span>
                       <span className="text-white font-black text-2xl tracking-tighter">₹{amount}</span>
                     </div>
                   </div>
@@ -177,7 +177,7 @@ export default function PaymentModal({ isOpen, onClose, bookingDetails, pkg, amo
                       }`}
                     >
                       <QrCode className={`w-6 h-6 mb-3 ${method === 'upi' ? 'text-black' : 'text-white'}`} />
-                      <div className={`text-[10px] font-bold uppercase tracking-widest ${method === 'upi' ? 'text-black' : 'text-white'}`}>UPI Payment</div>
+                      <div className={`text-xs font-bold uppercase tracking-widest ${method === 'upi' ? 'text-black' : 'text-white'}`}>UPI Payment</div>
                       {method === 'upi' && (
                         <div className="absolute top-3 right-3 w-4 h-4 bg-black rounded-full flex items-center justify-center">
                           <CheckCircle2 className="w-2.5 h-2.5 text-white" />
@@ -194,7 +194,7 @@ export default function PaymentModal({ isOpen, onClose, bookingDetails, pkg, amo
                       }`}
                     >
                       <CreditCard className={`w-6 h-6 mb-3 ${method === 'stripe' ? 'text-black' : 'text-white'}`} />
-                      <div className={`text-[10px] font-bold uppercase tracking-widest ${method === 'stripe' ? 'text-black' : 'text-white'}`}>Stripe / Card</div>
+                      <div className={`text-xs font-bold uppercase tracking-widest ${method === 'stripe' ? 'text-black' : 'text-white'}`}>Stripe / Card</div>
                       {method === 'stripe' && (
                         <div className="absolute top-3 right-3 w-4 h-4 bg-black rounded-full flex items-center justify-center">
                           <CheckCircle2 className="w-2.5 h-2.5 text-white" />
@@ -211,7 +211,7 @@ export default function PaymentModal({ isOpen, onClose, bookingDetails, pkg, amo
                       }`}
                     >
                       <Wallet className={`w-6 h-6 mb-3 ${method === 'paypal' ? 'text-black' : 'text-white'}`} />
-                      <div className={`text-[10px] font-bold uppercase tracking-widest ${method === 'paypal' ? 'text-black' : 'text-white'}`}>PayPal</div>
+                      <div className={`text-xs font-bold uppercase tracking-widest ${method === 'paypal' ? 'text-black' : 'text-white'}`}>PayPal</div>
                       {method === 'paypal' && (
                         <div className="absolute top-3 right-3 w-4 h-4 bg-black rounded-full flex items-center justify-center">
                           <CheckCircle2 className="w-2.5 h-2.5 text-white" />
@@ -228,7 +228,7 @@ export default function PaymentModal({ isOpen, onClose, bookingDetails, pkg, amo
                       }`}
                     >
                       <Banknote className={`w-6 h-6 mb-3 ${method === 'cash' ? 'text-black' : 'text-white'}`} />
-                      <div className={`text-[10px] font-bold uppercase tracking-widest ${method === 'cash' ? 'text-black' : 'text-white'}`}>Cash on Delivery</div>
+                      <div className={`text-xs font-bold uppercase tracking-widest ${method === 'cash' ? 'text-black' : 'text-white'}`}>Cash on Delivery</div>
                       {method === 'cash' && (
                         <div className="absolute top-3 right-3 w-4 h-4 bg-black rounded-full flex items-center justify-center">
                           <CheckCircle2 className="w-2.5 h-2.5 text-white" />
@@ -240,7 +240,7 @@ export default function PaymentModal({ isOpen, onClose, bookingDetails, pkg, amo
                   <button
                     onClick={handleConfirm}
                     disabled={isLoading}
-                    className="w-full bg-white text-black py-5 rounded-2xl font-bold text-sm tracking-widest uppercase hover:brightness-90 transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="w-full bg-white text-black py-5 rounded-2xl font-bold text-xs tracking-widest uppercase hover:brightness-90 transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {isLoading ? (
                       <div className="flex items-center gap-2">
@@ -261,7 +261,7 @@ export default function PaymentModal({ isOpen, onClose, bookingDetails, pkg, amo
                     <CheckCircle2 className="w-10 h-10 text-black" />
                   </div>
                   <h3 className="text-3xl font-black text-white mb-4 tracking-tighter uppercase">Awesome!</h3>
-                  <p className="text-neutral-400 mb-12 max-w-sm mx-auto leading-relaxed">
+                  <p className="text-neutral-100 mb-12 max-w-sm mx-auto leading-relaxed">
                     Your car wash is scheduled. We've sent the details to {bookingDetails?.phone}.
                   </p>
 
@@ -269,7 +269,7 @@ export default function PaymentModal({ isOpen, onClose, bookingDetails, pkg, amo
                     <button
                       onClick={handleDownloadInvoice}
                       disabled={isGenerating}
-                      className="w-full bg-white/5 border border-white/10 text-white py-5 rounded-2xl font-bold text-sm tracking-widest uppercase hover:bg-white/10 transition-all flex items-center justify-center gap-3"
+                      className="w-full bg-white/5 border border-white/10 text-white py-5 rounded-2xl font-bold text-xs tracking-widest uppercase hover:bg-white/10 transition-all flex items-center justify-center gap-3"
                     >
                       {isGenerating ? (
                         <>Generating Bill...</>
@@ -283,7 +283,7 @@ export default function PaymentModal({ isOpen, onClose, bookingDetails, pkg, amo
                     
                     <button
                       onClick={onClose}
-                      className="w-full text-neutral-500 hover:text-white py-4 rounded-2xl font-bold text-[10px] tracking-[0.3em] uppercase transition-all"
+                      className="w-full text-neutral-300 hover:text-white py-4 rounded-2xl font-bold text-xs tracking-[0.3em] uppercase transition-all"
                     >
                       Done
                     </button>

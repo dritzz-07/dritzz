@@ -273,13 +273,13 @@ export default function LiveTracker({ bookingId, refId, address, status, onClose
         <div className="flex items-center gap-2.5">
           <div className="w-2.5 h-2.5 bg-zinc-500 rounded-full animate-ping shrink-0" />
           <div>
-            <h4 className="text-sm font-black text-white tracking-wide uppercase">Live Wash Tracker</h4>
-            <p className="text-neutral-500 font-mono text-[10px]">Reference: {refId}</p>
+            <h4 className="text-xs font-black text-white tracking-wide uppercase">Live Wash Tracker</h4>
+            <p className="text-neutral-300 font-mono text-xs">Reference: {refId}</p>
           </div>
         </div>
         <button 
           onClick={onClose}
-          className="text-neutral-500 hover:text-white text-xs font-bold uppercase tracking-wider bg-white/5 hover:bg-white/10 px-3 py-1.5 rounded-lg border border-white/10 transition-colors self-start sm:self-auto"
+          className="text-neutral-300 hover:text-white text-xs font-bold uppercase tracking-wider bg-white/5 hover:bg-white/10 px-3 py-1.5 rounded-lg border border-white/10 transition-colors self-start sm:self-auto"
         >
           Minimise Map
         </button>
@@ -291,16 +291,16 @@ export default function LiveTracker({ bookingId, refId, address, status, onClose
         
         {/* Dynamic Map HUD Overlays */}
         <div className="absolute top-3 left-3 z-[10] bg-black/75 backdrop-blur-md px-3 py-2 rounded-xl border border-white/10 flex items-center gap-2">
-          <Clock className="w-3.5 h-3.5 text-zinc-400" />
+          <Clock className="w-3.5 h-3.5 text-white" />
           <div className="text-left font-mono">
-            <div className="text-[9px] text-neutral-500 font-bold uppercase leading-none">ETA</div>
+            <div className="text-[11px] text-neutral-300 font-bold uppercase leading-none">ETA</div>
             <div className="text-xs font-black text-white leading-tight">{tracker.eta}</div>
           </div>
         </div>
 
         <div className="absolute bottom-3 right-3 z-[10] bg-black/75 backdrop-blur-md px-3 py-2 rounded-xl border border-white/10 flex items-center gap-2">
           <Compass className="w-3.5 h-3.5 text-amber-400" />
-          <div className="text-left font-mono text-[9px] text-neutral-400">
+          <div className="text-left font-mono text-[11px] text-neutral-100">
             {tracker.washerState === 'moving' ? 'WASHER EN ROUTE' : tracker.washerState === 'finished' ? 'SERVICES COMPLETE' : 'GPS LOCKED'}
           </div>
         </div>
@@ -327,13 +327,13 @@ export default function LiveTracker({ bookingId, refId, address, status, onClose
               <div key={name} className="relative z-10 flex flex-col items-center">
                 <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs shadow-md transition-colors duration-300
                   ${isCancelled ? 'bg-red-500/10 border-red-500 text-red-500' : 
-                    isCompleted ? 'bg-zinc-500/10 border-zinc-500 text-zinc-400 border-2' : 
-                    'bg-neutral-800 border-neutral-700 text-neutral-500 border border-dashed'}
+                    isCompleted ? 'bg-zinc-500/10 border-zinc-500 text-white border-2' : 
+                    'bg-neutral-800 border-neutral-700 text-neutral-300 border border-dashed'}
                   ${isActive ? 'scale-110 shadow-[0_0_12px_rgba(16,185,129,0.3)] ring-4 ring-zinc-500/15' : ''}`}
                 >
                   {isCancelled ? '✕' : isCompleted ? '✓' : idx + 1}
                 </div>
-                <span className="text-[9px] font-black uppercase tracking-wider text-neutral-500 mt-2">{name}</span>
+                <span className="text-[11px] font-black uppercase tracking-wider text-neutral-300 mt-2">{name}</span>
               </div>
             );
           })}
@@ -346,22 +346,22 @@ export default function LiveTracker({ bookingId, refId, address, status, onClose
               <User className="w-5 h-5 text-white" />
             </div>
             <div>
-              <div className="text-[10px] uppercase font-black tracking-widest text-neutral-500">Service Pro</div>
-              <div className="text-sm font-bold text-white">Amar & Vinay (Dritzz Crew)</div>
+              <div className="text-xs uppercase font-black tracking-widest text-neutral-300">Service Pro</div>
+              <div className="text-xs font-bold text-white">Amar & Vinay (Dritzz Crew)</div>
               <div className="flex items-center gap-1.5 mt-0.5">
                 <Star className="w-3 h-3 text-amber-400 fill-amber-400" />
-                <span className="text-[10px] text-neutral-400 font-bold">4.9 · Verified Wash Experts</span>
+                <span className="text-xs text-neutral-100 font-bold">4.9 · Verified Wash Experts</span>
               </div>
             </div>
           </div>
 
           <div className="flex flex-col sm:items-end justify-center">
-            <div className="text-[10px] uppercase font-black tracking-widest text-neutral-500">Service Location</div>
+            <div className="text-xs uppercase font-black tracking-widest text-neutral-300">Service Location</div>
             <div className="text-xs text-neutral-300 font-medium truncate max-w-[200px] mt-0.5">{address}</div>
           </div>
         </div>
 
-        <div className="text-center sm:text-left text-xs text-neutral-500 leading-relaxed flex items-center justify-center sm:justify-start gap-2">
+        <div className="text-center sm:text-left text-xs text-neutral-300 leading-relaxed flex items-center justify-center sm:justify-start gap-2">
           <Info className="w-4 h-4 text-neutral-600 shrink-0" />
           <span>{tracker.desc} For support call +91 7075504625.</span>
         </div>

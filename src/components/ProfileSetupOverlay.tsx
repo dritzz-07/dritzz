@@ -67,7 +67,7 @@ export default function ProfileSetupOverlay() {
               <h2 className="text-3xl font-black text-white tracking-tighter mb-2 uppercase">
                 COMPLETE PROFILE
               </h2>
-              <p className="text-neutral-500 text-sm">
+              <p className="text-neutral-300 text-xs">
                 Just a few more details to unlock your premium experience.
               </p>
             </div>
@@ -86,7 +86,7 @@ export default function ProfileSetupOverlay() {
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                  <User className="w-4 h-4 text-neutral-500" />
+                  <User className="w-4 h-4 text-neutral-300" />
                 </div>
                 <input
                   type="text"
@@ -94,46 +94,46 @@ export default function ProfileSetupOverlay() {
                   value={fullName}
                   onChange={(e) => setFullName(e.target.value)}
                   placeholder="Full Name (Required)"
-                  className="w-full bg-white/5 border border-white/10 rounded-xl py-3 pl-11 pr-4 text-sm text-white placeholder-neutral-500 focus:outline-none focus:border-white transition-colors"
+                  className="w-full bg-white/5 border border-white/10 rounded-xl py-3 pl-11 pr-4 text-xs text-white placeholder-neutral-500 focus:outline-none focus:border-white transition-colors"
                 />
               </div>
 
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                  <Mail className="w-4 h-4 text-neutral-500" />
+                  <Mail className="w-4 h-4 text-neutral-300" />
                 </div>
                 <input
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="Email Address (Optional)"
-                  className="w-full bg-white/5 border border-white/10 rounded-xl py-3 pl-11 pr-4 text-sm text-white placeholder-neutral-500 focus:outline-none focus:border-white transition-colors"
+                  className="w-full bg-white/5 border border-white/10 rounded-xl py-3 pl-11 pr-4 text-xs text-white placeholder-neutral-500 focus:outline-none focus:border-white transition-colors"
                 />
               </div>
 
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                  <Car className="w-4 h-4 text-neutral-500" />
+                  <Car className="w-4 h-4 text-neutral-300" />
                 </div>
                 <input
                   type="text"
                   value={carModel}
                   onChange={(e) => setCarModel(e.target.value)}
                   placeholder="Primary Car Model (Optional)"
-                  className="w-full bg-white/5 border border-white/10 rounded-xl py-3 pl-11 pr-4 text-sm text-white placeholder-neutral-500 focus:outline-none focus:border-white transition-colors"
+                  className="w-full bg-white/5 border border-white/10 rounded-xl py-3 pl-11 pr-4 text-xs text-white placeholder-neutral-500 focus:outline-none focus:border-white transition-colors"
                 />
               </div>
 
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                  <MapPin className="w-4 h-4 text-neutral-500" />
+                  <MapPin className="w-4 h-4 text-neutral-300" />
                 </div>
                 <input
                   type="text"
                   value={city}
                   onChange={(e) => setCity(e.target.value)}
                   placeholder="City (Optional)"
-                  className="w-full bg-white/5 border border-white/10 rounded-xl py-3 pl-11 pr-4 text-sm text-white placeholder-neutral-500 focus:outline-none focus:border-white transition-colors"
+                  className="w-full bg-white/5 border border-white/10 rounded-xl py-3 pl-11 pr-4 text-xs text-white placeholder-neutral-500 focus:outline-none focus:border-white transition-colors"
                 />
               </div>
 

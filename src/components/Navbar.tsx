@@ -20,11 +20,11 @@ const MenuButton = ({ icon: Icon, label, onClick }: { icon: any, label: string, 
   >
     <div className="flex items-center gap-3">
       <div className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-white/10 transition-colors">
-        <Icon className="w-4 h-4 text-neutral-400 group-hover:text-white transition-colors" />
+        <Icon className="w-4 h-4 text-neutral-100 group-hover:text-white transition-colors" />
       </div>
       {label}
     </div>
-    <ChevronRight className="w-4 h-4 text-neutral-600 group-hover:text-neutral-400 transition-colors" />
+    <ChevronRight className="w-4 h-4 text-neutral-600 group-hover:text-neutral-100 transition-colors" />
   </button>
 );
 
@@ -75,7 +75,7 @@ export default function Navbar({ openLogin, openBookings, openSettings }: Navbar
           <a
             href="/"
             onClick={handleNavClick}
-            className="text-sm font-medium text-neutral-400 hover:text-white transition-colors decoration-none relative"
+            className="text-xs font-medium text-neutral-100 hover:text-white transition-colors decoration-none relative"
           >
             Home
           </a>
@@ -85,7 +85,7 @@ export default function Navbar({ openLogin, openBookings, openSettings }: Navbar
             <a 
               href={`#${item.toLowerCase().replace(/\s+/g, '-')}`} 
               onClick={handleNavClick}
-              className="text-sm font-medium text-neutral-400 hover:text-white transition-colors decoration-none relative"
+              className="text-xs font-medium text-neutral-100 hover:text-white transition-colors decoration-none relative"
             >
               {item}
             </a>
@@ -102,11 +102,11 @@ export default function Navbar({ openLogin, openBookings, openSettings }: Navbar
               whileTap={{ scale: 0.98 }}
               className="flex items-center gap-2.5 px-1.5 py-1.5 pr-4 bg-gradient-to-r from-zinc-950/40 to-zinc-900/40 border border-white/5 rounded-full hover:border-white/10 hover:bg-white/5 transition-all shadow-sm"
             >
-              <div className="w-8 h-8 rounded-full overflow-hidden bg-gradient-to-br from-zinc-500/20 to-zinc-900/40 border border-zinc-500/30 flex items-center justify-center shadow-[inset_0_0_10px_rgba(255,255,255,0.2)]">
+              <div className="w-8 h-8 rounded-full overflow-hidden bg-gradient-to-br from-zinc-500/20 to-zinc-900/40 border border-white/10 flex items-center justify-center shadow-[inset_0_0_10px_rgba(255,255,255,0.2)]">
                 {user.photoURL ? (
                   <img src={user.photoURL} alt="Profile" referrerPolicy="no-referrer" className="w-full h-full object-cover" />
                 ) : (
-                  <span className="text-xs font-bold text-zinc-400">
+                  <span className="text-xs font-bold text-white">
                     {displayName.charAt(0).toUpperCase()}
                   </span>
                 )}
@@ -129,20 +129,20 @@ export default function Navbar({ openLogin, openBookings, openSettings }: Navbar
                   <div className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-zinc-500/10 to-transparent pointer-events-none" />
 
                   <div className="flex-shrink-0 relative p-5 border-b border-white/5 flex items-center gap-4">
-                    <div className="w-12 h-12 rounded-full overflow-hidden bg-gradient-to-br from-zinc-600/30 to-zinc-900/20 border border-zinc-500/30 flex items-center justify-center flex-shrink-0 shadow-[inset_0_0_20px_rgba(255,255,255,0.3)]">
+                    <div className="w-12 h-12 rounded-full overflow-hidden bg-gradient-to-br from-zinc-600/30 to-zinc-900/20 border border-white/10 flex items-center justify-center flex-shrink-0 shadow-[inset_0_0_20px_rgba(255,255,255,0.3)]">
                       {user.photoURL ? (
                         <img src={user.photoURL} alt="Profile" referrerPolicy="no-referrer" className="w-full h-full object-cover" />
                       ) : (
-                        <span className="text-lg font-bold text-zinc-400">
+                        <span className="text-lg font-bold text-white">
                           {displayName.charAt(0).toUpperCase()}
                         </span>
                       )}
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-[11px] text-neutral-400 mb-0.5">Good Evening,</p>
-                      <p className="text-base text-white font-medium truncate tracking-tight">{displayName}</p>
+                      <p className="text-[11px] text-neutral-100 mb-0.5">Good Evening,</p>
+                      <p className="text-xs text-white font-medium truncate tracking-tight">{displayName}</p>
                       <div className="flex items-center gap-1.5 mt-1.5">
-                        <span className="text-[10px] uppercase tracking-widest font-bold text-neutral-400 bg-white/5 border border-white/5 px-2 py-0.5 rounded-full">Member</span>
+                        <span className="text-xs uppercase tracking-widest font-bold text-neutral-100 bg-white/5 border border-white/5 px-2 py-0.5 rounded-full">Member</span>
                       </div>
                     </div>
                   </div>
@@ -151,17 +151,17 @@ export default function Navbar({ openLogin, openBookings, openSettings }: Navbar
                     <div className="p-2">
                       <div className="px-2 py-2 mb-1">
                         <div className="flex items-center justify-between text-xs mb-1 px-2">
-                          <span className="text-neutral-500 font-medium">Verified Phone</span>
+                          <span className="text-neutral-300 font-medium">Verified Phone</span>
                           <span className="text-neutral-300 font-medium">
                             {userProfile?.phone ? userProfile.phone.replace(/(\+\d{2})(\d{5})(\d{5})/, "$1 $2 $3") : (user?.phoneNumber?.replace(/(\+\d{2})(\d{5})(\d{5})/, "$1 $2 $3") || 'Not set')}
                           </span>
                         </div>
                         <div className="flex items-center justify-between text-xs mb-1 px-2 mt-4">
-                          <span className="text-neutral-500 font-medium">Your Vehicle</span>
+                          <span className="text-neutral-300 font-medium">Your Vehicle</span>
                           {userProfile?.carModel ? (
                             <span className="text-white font-medium">{userProfile.carModel}</span>
                           ) : (
-                            <button onClick={() => { openSettings?.('vehicles'); setShowProfileMenu(false); }} className="text-zinc-400 font-medium hover:text-zinc-300 transition-colors">
+                            <button onClick={() => { openSettings?.('vehicles'); setShowProfileMenu(false); }} className="text-white font-medium hover:text-neutral-300 transition-colors">
                               + Add Vehicle
                             </button>
                           )}
@@ -202,13 +202,13 @@ export default function Navbar({ openLogin, openBookings, openSettings }: Navbar
               onClick={openLogin}
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
-              className="group px-6 py-2.5 flex items-center gap-2.5 bg-gradient-to-r from-zinc-950/80 to-zinc-950 text-zinc-50 text-[11px] font-black rounded-full border border-zinc-500/30 hover:border-zinc-400/50 hover:shadow-[0_0_20px_rgba(255,255,255,0.2)] transition-all uppercase tracking-[0.2em] shadow-[0_4px_20px_rgba(0,0,0,0.5)] relative overflow-hidden"
+              className="group px-6 py-2.5 flex items-center gap-2.5 bg-gradient-to-r from-zinc-950/80 to-zinc-950 text-zinc-50 text-[11px] font-black rounded-full border border-white/10 hover:border-zinc-400/50 hover:shadow-[0_0_20px_rgba(255,255,255,0.2)] transition-all uppercase tracking-[0.2em] shadow-[0_4px_20px_rgba(0,0,0,0.5)] relative overflow-hidden"
             >
               <div className="absolute inset-0 bg-zinc-500/10 translate-x-[-100%] group-hover:translate-x-0 transition-transform duration-500 ease-out" />
               <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-zinc-400/40 to-transparent opacity-50" />
               <div className="relative z-10 w-4 h-4 overflow-hidden flex flex-col justify-center">
-                <Car className="w-4 h-4 text-zinc-400 absolute transition-all duration-500 ease-in-out group-hover:translate-x-[150%] opacity-100 group-hover:opacity-0" strokeWidth={2.5} />
-                <Car className="w-4 h-4 text-zinc-300 absolute -translate-x-[150%] transition-all duration-500 ease-in-out group-hover:translate-x-0 opacity-0 group-hover:opacity-100" strokeWidth={2.5} />
+                <Car className="w-4 h-4 text-white absolute transition-all duration-500 ease-in-out group-hover:translate-x-[150%] opacity-100 group-hover:opacity-0" strokeWidth={2.5} />
+                <Car className="w-4 h-4 text-neutral-300 absolute -translate-x-[150%] transition-all duration-500 ease-in-out group-hover:translate-x-0 opacity-0 group-hover:opacity-100" strokeWidth={2.5} />
               </div>
               <span className="relative z-10 transition-transform duration-300 group-hover:translate-x-0.5 text-zinc-50">Sign In</span>
             </motion.button>
@@ -235,7 +235,7 @@ export default function Navbar({ openLogin, openBookings, openSettings }: Navbar
                   transition={{ duration: 0.8, ease: "easeOut" }}
                   className="absolute"
                 >
-                  <Droplets size={20} className="text-zinc-400 fill-zinc-400/40 shadow-[0_0_10px_rgba(255,255,255,0.5)]" />
+                  <Droplets size={20} className="text-white fill-zinc-400/40 shadow-[0_0_10px_rgba(255,255,255,0.5)]" />
                 </motion.div>
               ))}
             </div>

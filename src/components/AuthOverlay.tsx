@@ -133,15 +133,15 @@ export default function AuthOverlay({ isOpen, onClose }: AuthOverlayProps) {
 
             <div className="relative p-8 pt-12">
               <div className="mb-10 flex flex-col items-center text-center">
-                <div className="w-16 h-16 bg-gradient-to-br from-zinc-600/20 to-zinc-900/10 rounded-[20px] flex items-center justify-center mb-6 border border-zinc-500/20 shadow-[inset_0_0_20px_rgba(255,255,255,0.2)] relative">
+                <div className="w-16 h-16 bg-gradient-to-br from-zinc-600/20 to-zinc-900/10 rounded-[20px] flex items-center justify-center mb-6 border border-white/5 shadow-[inset_0_0_20px_rgba(255,255,255,0.2)] relative">
                   <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-zinc-400 to-transparent opacity-50" />
-                  <Sparkles className="w-8 h-8 text-zinc-400" />
+                  <Sparkles className="w-8 h-8 text-white" />
                 </div>
                 
                 <h2 className="text-2xl font-medium text-white tracking-tight mb-2">
                   Welcome to Dritzz
                 </h2>
-                <p className="text-zinc-100/50 text-sm">
+                <p className="text-white/50 text-xs">
                   Sign in or create an account instantly.
                 </p>
               </div>
@@ -173,8 +173,8 @@ export default function AuthOverlay({ isOpen, onClose }: AuthOverlayProps) {
                   <div className="absolute inset-0 flex items-center">
                     <div className="w-full border-t border-zinc-900/40"></div>
                   </div>
-                  <div className="relative flex justify-center text-[10px] uppercase tracking-[0.2em] font-medium">
-                    <span className="bg-zinc-950 px-4 text-zinc-300/50">OR CONTINUE WITH PHONE</span>
+                  <div className="relative flex justify-center text-xs uppercase tracking-[0.2em] font-medium">
+                    <span className="bg-black px-4 text-neutral-300/50">OR CONTINUE WITH PHONE</span>
                   </div>
                 </div>
 
@@ -184,7 +184,7 @@ export default function AuthOverlay({ isOpen, onClose }: AuthOverlayProps) {
                     <>
                       <div className="relative group">
                         <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                          <User className="w-5 h-5 text-zinc-500/50 group-focus-within:text-zinc-400 transition-colors" />
+                          <User className="w-5 h-5 text-neutral-300/50 group-focus-within:text-white transition-colors" />
                         </div>
                         <input
                           type="text"
@@ -192,12 +192,12 @@ export default function AuthOverlay({ isOpen, onClose }: AuthOverlayProps) {
                           value={name}
                           onChange={(e) => setName(e.target.value)}
                           placeholder="Full Name"
-                          className="w-full h-14 bg-zinc-950/20 border border-zinc-900/30 rounded-2xl pl-12 pr-4 text-sm text-white placeholder-zinc-300/30 focus:outline-none focus:border-zinc-500/50 focus:bg-zinc-900/20 transition-all font-medium shadow-[inset_0_2px_4px_rgba(0,0,0,0.2)]"
+                          className="w-full h-14 bg-black/20 border border-zinc-900/30 rounded-2xl pl-12 pr-4 text-xs text-white placeholder-zinc-300/30 focus:outline-none focus:border-neutral-500/50 focus:bg-neutral-900/20 transition-all font-medium shadow-[inset_0_2px_4px_rgba(0,0,0,0.2)]"
                         />
                       </div>
                       <div className="relative group">
                         <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                          <Phone className="w-5 h-5 text-zinc-500/50 group-focus-within:text-zinc-400 transition-colors" />
+                          <Phone className="w-5 h-5 text-neutral-300/50 group-focus-within:text-white transition-colors" />
                         </div>
                         <input
                           type="tel"
@@ -205,13 +205,13 @@ export default function AuthOverlay({ isOpen, onClose }: AuthOverlayProps) {
                           value={phoneNumber}
                           onChange={(e) => setPhoneNumber(e.target.value)}
                           placeholder="Phone Number (e.g. +91 9876543210)"
-                          className="w-full h-14 bg-zinc-950/20 border border-zinc-900/30 rounded-2xl pl-12 pr-4 text-sm text-white placeholder-zinc-300/30 focus:outline-none focus:border-zinc-500/50 focus:bg-zinc-900/20 transition-all font-medium shadow-[inset_0_2px_4px_rgba(0,0,0,0.2)]"
+                          className="w-full h-14 bg-black/20 border border-zinc-900/30 rounded-2xl pl-12 pr-4 text-xs text-white placeholder-zinc-300/30 focus:outline-none focus:border-neutral-500/50 focus:bg-neutral-900/20 transition-all font-medium shadow-[inset_0_2px_4px_rgba(0,0,0,0.2)]"
                         />
                       </div>
                       <button
                         type="submit"
                         disabled={isLoading || !phoneNumber || !name.trim()}
-                        className="w-full h-14 bg-zinc-900/20 text-zinc-400 border border-zinc-500/30 rounded-2xl font-bold text-xs uppercase tracking-[0.1em] flex items-center justify-center gap-3 group transition-all hover:bg-zinc-800/30 hover:text-zinc-300 active:scale-[0.98] disabled:opacity-50 mt-2"
+                        className="w-full h-14 bg-neutral-900/20 text-white border border-white/10 rounded-2xl font-bold text-xs uppercase tracking-[0.1em] flex items-center justify-center gap-3 group transition-all hover:bg-zinc-800/30 hover:text-neutral-300 active:scale-[0.98] disabled:opacity-50 mt-2"
                       >
                         {isLoading ? 'Sending...' : 'Send Verification Code'}
                         <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
@@ -221,7 +221,7 @@ export default function AuthOverlay({ isOpen, onClose }: AuthOverlayProps) {
                     <>
                       <div className="relative group">
                         <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                          <Lock className="w-5 h-5 text-zinc-500/50 group-focus-within:text-zinc-400 transition-colors" />
+                          <Lock className="w-5 h-5 text-neutral-300/50 group-focus-within:text-white transition-colors" />
                         </div>
                         <input
                           type="text"
@@ -229,7 +229,7 @@ export default function AuthOverlay({ isOpen, onClose }: AuthOverlayProps) {
                           value={verificationCode}
                           onChange={(e) => setVerificationCode(e.target.value)}
                           placeholder="Enter 6-digit OTP"
-                          className="w-full h-14 bg-zinc-950/20 border border-zinc-900/30 rounded-2xl pl-12 pr-4 text-lg text-white placeholder-zinc-300/30 focus:outline-none focus:border-zinc-500/50 focus:bg-zinc-900/20 transition-all font-medium tracking-[0.3em] shadow-[inset_0_2px_4px_rgba(0,0,0,0.2)]"
+                          className="w-full h-14 bg-black/20 border border-zinc-900/30 rounded-2xl pl-12 pr-4 text-lg text-white placeholder-zinc-300/30 focus:outline-none focus:border-neutral-500/50 focus:bg-neutral-900/20 transition-all font-medium tracking-[0.3em] shadow-[inset_0_2px_4px_rgba(0,0,0,0.2)]"
                           maxLength={6}
                         />
                       </div>
@@ -251,7 +251,7 @@ export default function AuthOverlay({ isOpen, onClose }: AuthOverlayProps) {
                               setVerificationCode('');
                               setError(null);
                             }}
-                            className="text-xs font-medium text-zinc-400/60 hover:text-zinc-400 transition-colors underline-offset-4 hover:underline"
+                            className="text-xs font-medium text-white/60 hover:text-white transition-colors underline-offset-4 hover:underline"
                           >
                             Change Phone Number
                           </button>
@@ -263,9 +263,9 @@ export default function AuthOverlay({ isOpen, onClose }: AuthOverlayProps) {
 
             </div>
             
-            <div className="bg-zinc-950/20 p-6 text-center border-t border-zinc-900/30 flex items-center justify-center gap-2">
-              <Sparkles className="w-3 h-3 text-zinc-400/50" />
-              <span className="text-[9px] uppercase tracking-[0.2em] font-black text-zinc-400/50">
+            <div className="bg-black/20 p-6 text-center border-t border-zinc-900/30 flex items-center justify-center gap-2">
+              <Sparkles className="w-3 h-3 text-white/50" />
+              <span className="text-[11px] uppercase tracking-[0.2em] font-black text-white/50">
                 Encrypted & Secure with Firebase
               </span>
             </div>

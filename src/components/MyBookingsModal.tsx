@@ -159,7 +159,7 @@ export default function MyBookingsModal({ isOpen, onClose, initialTab = 'upcomin
               <div className="flex justify-between items-center">
                 <div>
                   <h2 className="text-2xl font-black text-white tracking-tighter uppercase">My Dashboard</h2>
-                  <p className="text-zinc-400 text-sm mt-1 font-medium">Welcome back, {userProfile?.fullName?.split(' ')[0] || user?.displayName?.split(' ')[0] || 'Customer'}</p>
+                  <p className="text-white text-xs mt-1 font-medium">Welcome back, {userProfile?.fullName?.split(' ')[0] || user?.displayName?.split(' ')[0] || 'Customer'}</p>
                 </div>
                 <button 
                   onClick={onClose}
@@ -175,7 +175,7 @@ export default function MyBookingsModal({ isOpen, onClose, initialTab = 'upcomin
                   className={`px-4 py-2 rounded-lg text-[11px] font-bold uppercase tracking-widest transition-all whitespace-nowrap ${
                     activeTab === 'upcoming' 
                       ? 'bg-zinc-500 text-black shadow-md' 
-                      : 'text-neutral-400 hover:text-white'
+                      : 'text-neutral-100 hover:text-white'
                   }`}
                 >
                   Upcoming Washes
@@ -185,7 +185,7 @@ export default function MyBookingsModal({ isOpen, onClose, initialTab = 'upcomin
                   className={`px-4 py-2 rounded-lg text-[11px] font-bold uppercase tracking-widest transition-all whitespace-nowrap ${
                     activeTab === 'history' 
                       ? 'bg-white/10 text-white shadow-md' 
-                      : 'text-neutral-400 hover:text-white'
+                      : 'text-neutral-100 hover:text-white'
                   }`}
                 >
                   Booking History
@@ -195,7 +195,7 @@ export default function MyBookingsModal({ isOpen, onClose, initialTab = 'upcomin
 
             <div className="flex-1 overflow-y-auto p-6 md:p-8">
               {loading ? (
-                <div className="flex flex-col items-center justify-center py-20 text-neutral-500">
+                <div className="flex flex-col items-center justify-center py-20 text-neutral-300">
                   <Loader2 className="w-8 h-8 animate-spin mb-4" />
                   <p className="text-xs uppercase tracking-widest font-bold">Loading Data...</p>
                 </div>
@@ -205,7 +205,7 @@ export default function MyBookingsModal({ isOpen, onClose, initialTab = 'upcomin
                     <Calendar className="w-6 h-6 text-white/30" />
                   </div>
                   <h3 className="text-white font-bold mb-2">No {activeTab} washes yet</h3>
-                  <p className="text-neutral-500 text-sm">You haven't made any reservations that appear here.</p>
+                  <p className="text-neutral-300 text-xs">You haven't made any reservations that appear here.</p>
                 </div>
               ) : (
                 <div className="space-y-4">
@@ -217,24 +217,24 @@ export default function MyBookingsModal({ isOpen, onClose, initialTab = 'upcomin
                         <div className="flex flex-col md:flex-row justify-between gap-6">
                           <div className="space-y-4 flex-1">
                             <div className="flex items-center gap-3">
-                              <span className="px-3 py-1 bg-white border border-white text-black text-[10px] font-black uppercase tracking-widest rounded-full">
+                              <span className="px-3 py-1 bg-white border border-white text-black text-xs font-black uppercase tracking-widest rounded-full">
                                 {booking.status}
                               </span>
-                              <span className="text-neutral-500 text-xs font-mono">Ref: {booking.refId}</span>
+                              <span className="text-neutral-300 text-xs font-mono">Ref: {booking.refId}</span>
                               {booking.subscriptionId && (
-                                 <span className="px-2 py-1 bg-zinc-500/20 text-zinc-400 text-[9px] font-black uppercase tracking-widest rounded flex items-center gap-1">
+                                 <span className="px-2 py-1 bg-zinc-500/20 text-white text-[11px] font-black uppercase tracking-widest rounded flex items-center gap-1">
                                     <Gem className="w-3 h-3" /> Plan Wash
                                  </span>
                               )}
                             </div>
                             
                             <div className="grid grid-cols-2 gap-x-8 gap-y-3 pt-1">
-                              <div className="flex items-center gap-2 text-sm text-neutral-300">
-                                <PackageOpen className="w-4 h-4 text-neutral-500" />
+                              <div className="flex items-center gap-2 text-xs text-neutral-300">
+                                <PackageOpen className="w-4 h-4 text-neutral-300" />
                                 <span className="font-medium text-white">{pkgName}</span>
                               </div>
-                              <div className="flex items-center gap-2 text-sm text-neutral-300">
-                                <Car className="w-4 h-4 text-neutral-500" />
+                              <div className="flex items-center gap-2 text-xs text-neutral-300">
+                                <Car className="w-4 h-4 text-neutral-300" />
                                 <span className="capitalize">{booking.vehicles && booking.vehicles.length > 0 ? `${booking.vehicles.length} Vehicle(s)` : booking.vehicleType}</span>
                               </div>
                               {booking.vehicles && booking.vehicles.length > 0 && (
@@ -244,32 +244,32 @@ export default function MyBookingsModal({ isOpen, onClose, initialTab = 'upcomin
                                          <div key={i} className="flex justify-between items-center text-xs bg-white/5 p-2 rounded-lg border border-white/5">
                                             <div>
                                                <span className="font-bold text-white">{v.brand || 'Custom'} {v.model || 'Vehicle'}</span>
-                                               <span className="text-neutral-500 ml-2 uppercase">[{v.type}]</span>
+                                               <span className="text-neutral-300 ml-2 uppercase">[{v.type}]</span>
                                             </div>
-                                            {(v.vehicleNumber) && <span className="text-neutral-400 font-mono">{v.vehicleNumber}</span>}
+                                            {(v.vehicleNumber) && <span className="text-neutral-100 font-mono">{v.vehicleNumber}</span>}
                                          </div>
                                       ))}
                                    </div>
                                 </div>
                               )}
-                              <div className="flex items-center gap-2 text-sm text-neutral-300">
-                                <Calendar className="w-4 h-4 text-neutral-500" />
+                              <div className="flex items-center gap-2 text-xs text-neutral-300">
+                                <Calendar className="w-4 h-4 text-neutral-300" />
                                 {booking.date} at {booking.timeSlot}
                               </div>
-                              <div className="flex items-center gap-2 text-sm text-neutral-300">
-                                <CreditCard className="w-4 h-4 text-neutral-500" />
+                              <div className="flex items-center gap-2 text-xs text-neutral-300">
+                                <CreditCard className="w-4 h-4 text-neutral-300" />
                                 <span className="capitalize">{booking.paymentMethod}</span>
                               </div>
                               
                               {/* Service Location Tab Section */}
                               <div className="col-span-2 pt-3 border-t border-white/5 space-y-3">
                                 <div className="flex items-center justify-between bg-white/[0.02] border border-white/5 rounded-xl p-3">
-                                  <div className="flex items-start gap-3 text-sm text-neutral-300 max-w-[65%]">
-                                    <div className="p-2 bg-zinc-500/10 border border-zinc-500/20 rounded-lg shrink-0">
-                                      <MapPin className="w-4 h-4 text-zinc-400" />
+                                  <div className="flex items-start gap-3 text-xs text-neutral-300 max-w-[65%]">
+                                    <div className="p-2 bg-zinc-500/10 border border-white/5 rounded-lg shrink-0">
+                                      <MapPin className="w-4 h-4 text-white" />
                                     </div>
                                     <div className="text-left">
-                                      <div className="text-[10px] uppercase font-black text-zinc-400 tracking-wider mb-1">Service Location</div>
+                                      <div className="text-xs uppercase font-black text-white tracking-wider mb-1">Service Location</div>
                                       <span className="line-clamp-2 text-xs text-neutral-300 font-medium leading-relaxed">
                                         {booking.address || 'Doorstep Service Location'}
                                       </span>
@@ -282,7 +282,7 @@ export default function MyBookingsModal({ isOpen, onClose, initialTab = 'upcomin
                                       className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-black uppercase tracking-wider transition-all shrink-0 cursor-pointer border
                                         ${activeTrackId === booking.id 
                                           ? 'bg-zinc-500 text-black border-zinc-400 shadow-[0_0_20px_rgba(16,185,129,0.5)] hover:brightness-95' 
-                                          : 'bg-zinc-500/10 text-zinc-400 border-zinc-500/25 hover:bg-zinc-500/20 hover:border-zinc-500/40 animate-pulse'
+                                          : 'bg-zinc-500/10 text-white border-zinc-500/25 hover:bg-zinc-500/20 hover:border-zinc-500/40 animate-pulse'
                                         }`}
                                     >
                                       <span className="relative flex h-2 w-2">
@@ -298,11 +298,11 @@ export default function MyBookingsModal({ isOpen, onClose, initialTab = 'upcomin
                           </div>
                           
                           <div className="md:text-right border-t md:border-t-0 md:border-l border-white/5 pt-4 md:pt-0 md:pl-6 flex flex-col justify-center shrink-0 min-w-[100px]">
-                            <div className="text-[10px] uppercase tracking-widest text-neutral-500 font-bold mb-1">Amount</div>
+                            <div className="text-xs uppercase tracking-widest text-neutral-300 font-bold mb-1">Amount</div>
                             <div className="text-2xl font-black text-white tracking-tighter">₹{booking.amount}</div>
                             <button
                               onClick={() => handleDownloadInvoice(booking, pkgName)}
-                              className="mt-3 flex items-center gap-2 justify-center md:justify-end text-[10px] uppercase font-bold tracking-widest text-zinc-400 hover:text-zinc-300 transition-colors"
+                              className="mt-3 flex items-center gap-2 justify-center md:justify-end text-xs uppercase font-bold tracking-widest text-white hover:text-neutral-300 transition-colors"
                             >
                               <Download className="w-3 h-3" />
                               Invoice

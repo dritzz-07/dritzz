@@ -106,7 +106,7 @@ export default function Hero() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="inline-block px-3 py-1 mb-6 rounded-full bg-white/5 border border-white/10 text-[10px] font-bold uppercase tracking-widest text-neutral-400"
+          className="inline-block px-3 py-1 mb-6 rounded-full bg-white/5 border border-white/10 text-xs font-bold uppercase tracking-widest text-neutral-100"
         >
           Now Serving Hyderabad
         </motion.div>
@@ -146,7 +146,7 @@ export default function Hero() {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.8 }}
-          className="text-sm md:text-base text-neutral-400 leading-relaxed max-w-2xl mb-12 uppercase font-display tracking-[0.2em] font-medium"
+          className="text-sm md:text-xs text-neutral-100 leading-relaxed max-w-2xl mb-12 uppercase font-display tracking-[0.2em] font-medium"
         >
           PROFESSIONAL CLEANING AT YOUR HOME, OFFICE, OR APARTMENT — FAST, AFFORDABLE, AND HASSLE-FREE.
         </motion.p>
@@ -168,13 +168,13 @@ export default function Hero() {
                 repeat: Infinity,
                 ease: "easeInOut"
               }}
-              className="w-12 h-12 rounded-full bg-zinc-500/20 flex items-center justify-center border border-zinc-500/30 shadow-[0_0_15px_rgba(255,255,255,0.3)]"
+              className="w-12 h-12 rounded-full bg-zinc-500/20 flex items-center justify-center border border-white/10 shadow-[0_0_15px_rgba(255,255,255,0.3)]"
             >
-              <Droplets className="w-6 h-6 text-zinc-400" />
+              <Droplets className="w-6 h-6 text-white" />
             </motion.div>
             <div className="flex flex-col">
-              <span className="text-xs uppercase tracking-[0.2em] text-zinc-300 font-bold border-none text-shadow-none">WE USE OUR OWN</span>
-              <span className="text-base uppercase tracking-widest text-white font-black border-none text-shadow-none">WATER SOURCE</span>
+              <span className="text-xs uppercase tracking-[0.2em] text-neutral-300 font-bold border-none text-shadow-none">WE USE OUR OWN</span>
+              <span className="text-xs uppercase tracking-widest text-white font-black border-none text-shadow-none">WATER SOURCE</span>
             </div>
           </div>
 
@@ -196,7 +196,7 @@ export default function Hero() {
             </motion.div>
             <div className="flex flex-col">
               <span className="text-xs uppercase tracking-[0.2em] text-yellow-300 font-bold border-none text-shadow-none">WE USE OUR OWN</span>
-              <span className="text-base uppercase tracking-widest text-white font-black border-none text-shadow-none">ELECTRICITY</span>
+              <span className="text-xs uppercase tracking-widest text-white font-black border-none text-shadow-none">ELECTRICITY</span>
             </div>
           </div>
         </motion.div>
@@ -227,7 +227,7 @@ export default function Hero() {
                 {stat.value}
                 {stat.icon && <Star className="w-6 h-6 fill-white" />}
               </div>
-              <div className="text-[10px] uppercase tracking-widest text-neutral-500 font-bold">
+              <div className="text-xs uppercase tracking-widest text-neutral-300 font-bold">
                 {stat.label}
               </div>
             </div>
@@ -241,7 +241,7 @@ export default function Hero() {
           transition={{ duration: 0.8, delay: 0.8 }}
           className="flex-1 w-full max-w-2xl relative z-20 mt-12 lg:mt-0"
         >
-          <div className="absolute inset-0 bg-white/5 rounded-3xl blur-2xl transform scale-105" />
+          <div className="absolute hidden md:block inset-0 bg-white/5 rounded-3xl blur-2xl transform scale-105" />
           <img 
             src={heroImage} 
             alt="Dritzz Doorstep Car Wash" 

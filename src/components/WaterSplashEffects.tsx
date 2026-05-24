@@ -53,7 +53,7 @@ export default function WaterSplashEffects() {
           >
             <Droplets 
               size={p.size + 4} 
-              className="text-zinc-300 fill-zinc-400/30" 
+              className="text-neutral-300 fill-zinc-400/30" 
               strokeWidth={1} 
             />
           </motion.div>

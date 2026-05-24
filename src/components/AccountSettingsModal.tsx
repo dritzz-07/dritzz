@@ -142,10 +142,10 @@ export default function AccountSettingsModal({ isOpen, onClose, initialTab = 'se
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id as any)}
-                className={`flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all font-medium text-sm ${
+                className={`flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all font-medium text-xs ${
                   activeTab === tab.id
-                    ? 'bg-zinc-500/10 text-zinc-400'
-                    : 'text-neutral-400 hover:bg-white/5 hover:text-white'
+                    ? 'bg-zinc-500/10 text-white'
+                    : 'text-neutral-100 hover:bg-white/5 hover:text-white'
                 }`}
               >
                 <tab.icon className="w-4 h-4" />
@@ -158,7 +158,7 @@ export default function AccountSettingsModal({ isOpen, onClose, initialTab = 'se
           <div className="flex-1 overflow-y-auto bg-neutral-900 relative">
             <button
               onClick={onClose}
-              className="absolute top-4 right-4 p-2 text-neutral-400 hover:text-white hover:bg-white/10 rounded-full transition-colors z-10"
+              className="absolute top-4 right-4 p-2 text-neutral-100 hover:text-white hover:bg-white/10 rounded-full transition-colors z-10"
             >
               <X className="w-5 h-5" />
             </button>
@@ -167,11 +167,11 @@ export default function AccountSettingsModal({ isOpen, onClose, initialTab = 'se
               {activeTab === 'vehicles' && (
                 <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
                   <h3 className="text-2xl font-bold text-white mb-2">Saved Vehicles</h3>
-                  <p className="text-sm text-neutral-400 mb-8">Manage your registered vehicles for quick bookings.</p>
+                  <p className="text-xs text-neutral-100 mb-8">Manage your registered vehicles for quick bookings.</p>
                   
                   <div className="space-y-4 max-w-md">
                     <div>
-                      <label className="block text-xs font-semibold text-neutral-400 uppercase tracking-wider mb-2">Primary Vehicle Model</label>
+                      <label className="block text-xs font-semibold text-neutral-100 uppercase tracking-wider mb-2">Primary Vehicle Model</label>
                       <input 
                         type="text"
                         value={carModel}
@@ -194,11 +194,11 @@ export default function AccountSettingsModal({ isOpen, onClose, initialTab = 'se
               {activeTab === 'addresses' && (
                 <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
                   <h3 className="text-2xl font-bold text-white mb-2">Saved Addresses</h3>
-                  <p className="text-sm text-neutral-400 mb-8">Manage your default location.</p>
+                  <p className="text-xs text-neutral-100 mb-8">Manage your default location.</p>
                   
                   <div className="space-y-4 max-w-md">
                     <div>
-                      <label className="block text-xs font-semibold text-neutral-400 uppercase tracking-wider mb-2">Primary Address</label>
+                      <label className="block text-xs font-semibold text-neutral-100 uppercase tracking-wider mb-2">Primary Address</label>
                       <textarea 
                         value={address}
                         onChange={(e) => setAddress(e.target.value)}
@@ -220,17 +220,17 @@ export default function AccountSettingsModal({ isOpen, onClose, initialTab = 'se
               {activeTab === 'invoices' && (
                 <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
                   <h3 className="text-2xl font-bold text-white mb-2">Invoices</h3>
-                  <p className="text-sm text-neutral-400 mb-8">Download past billing statements.</p>
+                  <p className="text-xs text-neutral-100 mb-8">Download past billing statements.</p>
                   
                   {loadingBookings ? (
-                    <div className="flex flex-col items-center justify-center py-10 text-neutral-500">
+                    <div className="flex flex-col items-center justify-center py-10 text-neutral-300">
                       <Loader2 className="w-6 h-6 animate-spin mb-2" />
                       <p className="text-xs uppercase tracking-widest font-bold">Loading Data...</p>
                     </div>
                   ) : pastBookings.length === 0 ? (
                     <div className="p-8 border border-white/5 border-dashed rounded-2xl flex flex-col items-center justify-center text-center">
                       <FileText className="w-8 h-8 text-neutral-600 mb-4" />
-                      <p className="text-neutral-400 font-medium">No invoices available.</p>
+                      <p className="text-neutral-100 font-medium">No invoices available.</p>
                     </div>
                   ) : (
                     <div className="space-y-4">
@@ -240,7 +240,7 @@ export default function AccountSettingsModal({ isOpen, onClose, initialTab = 'se
                           <div key={booking.id} className="bg-white/5 border border-white/10 p-4 rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-4 transition-all duration-300 hover:bg-white/10">
                             <div>
                               <p className="font-bold text-white mb-1">{pkgName}</p>
-                              <div className="flex items-center gap-2 text-xs text-neutral-400">
+                              <div className="flex items-center gap-2 text-xs text-neutral-100">
                                 <span>{booking.date ? new Date(booking.date).toLocaleDateString('en-GB') : 'Unknown date'}</span>
                                 <span className="w-1 h-1 rounded-full bg-neutral-600"></span>
                                 <span>Ref: {booking.refId}</span>
@@ -249,7 +249,7 @@ export default function AccountSettingsModal({ isOpen, onClose, initialTab = 'se
                               </div>
                             </div>
                             <div className="flex items-center gap-4">
-                              <span className="font-bold text-zinc-400 font-mono">₹{booking.amount}</span>
+                              <span className="font-bold text-white font-mono">₹{booking.amount}</span>
                               {booking.status !== 'cancelled' && (
                                 <button
                                   onClick={() => {
@@ -286,15 +286,15 @@ export default function AccountSettingsModal({ isOpen, onClose, initialTab = 'se
               {activeTab === 'support' && (
                 <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
                   <h3 className="text-2xl font-bold text-white mb-2">Support</h3>
-                  <p className="text-sm text-neutral-400 mb-8">Get help with your bookings or account.</p>
+                  <p className="text-xs text-neutral-100 mb-8">Get help with your bookings or account.</p>
                   <div className="space-y-4">
                     <button className="w-full p-4 bg-black/30 border border-white/5 hover:border-white/20 rounded-xl text-left transition-colors">
                       <p className="font-bold text-white">Chat with us</p>
-                      <p className="text-xs text-neutral-400 mt-1">Typically replies in 5 minutes</p>
+                      <p className="text-xs text-neutral-100 mt-1">Typically replies in 5 minutes</p>
                     </button>
                     <button className="w-full p-4 bg-black/30 border border-white/5 hover:border-white/20 rounded-xl text-left transition-colors">
                       <p className="font-bold text-white">Email Support</p>
-                      <p className="text-xs text-neutral-400 mt-1">support@dritzz.com</p>
+                      <p className="text-xs text-neutral-100 mt-1">support@dritzz.com</p>
                     </button>
                   </div>
                 </motion.div>
@@ -303,11 +303,11 @@ export default function AccountSettingsModal({ isOpen, onClose, initialTab = 'se
               {activeTab === 'settings' && (
                 <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
                   <h3 className="text-2xl font-bold text-white mb-2">Account Settings</h3>
-                  <p className="text-sm text-neutral-400 mb-8">Manage your base account preferences.</p>
+                  <p className="text-xs text-neutral-100 mb-8">Manage your base account preferences.</p>
                   
                   <div className="space-y-4 max-w-md">
                     <div>
-                      <p className="text-xs font-semibold text-neutral-400 uppercase tracking-wider mb-2">Full Name</p>
+                      <p className="text-xs font-semibold text-neutral-100 uppercase tracking-wider mb-2">Full Name</p>
                       <input 
                         type="text"
                         value={fullName}
@@ -317,7 +317,7 @@ export default function AccountSettingsModal({ isOpen, onClose, initialTab = 'se
                       />
                     </div>
                     <div>
-                      <p className="text-xs font-semibold text-neutral-400 uppercase tracking-wider mb-2">Email Address</p>
+                      <p className="text-xs font-semibold text-neutral-100 uppercase tracking-wider mb-2">Email Address</p>
                       <input 
                         type="email"
                         value={email}
@@ -327,7 +327,7 @@ export default function AccountSettingsModal({ isOpen, onClose, initialTab = 'se
                       />
                     </div>
                     <div>
-                      <p className="text-xs font-semibold text-neutral-400 uppercase tracking-wider mb-2">Phone Number</p>
+                      <p className="text-xs font-semibold text-neutral-100 uppercase tracking-wider mb-2">Phone Number</p>
                       <input 
                         type="tel"
                         value={phone}

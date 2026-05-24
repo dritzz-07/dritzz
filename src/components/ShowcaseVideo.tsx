@@ -39,7 +39,7 @@ export default function ShowcaseVideo() {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="inline-block px-3 py-1 mb-6 rounded-full bg-zinc-500/10 border border-zinc-500/20 text-[10px] font-bold uppercase tracking-widest text-zinc-400"
+          className="inline-block px-3 py-1 mb-6 rounded-full bg-zinc-500/10 border border-white/5 text-xs font-bold uppercase tracking-widest text-white"
         >
           Premium Experience
         </motion.div>
@@ -50,14 +50,14 @@ export default function ShowcaseVideo() {
           transition={{ delay: 0.1 }}
           className="font-sporty font-black text-4xl md:text-5xl uppercase tracking-tighter text-white mb-6"
         >
-          SEE THE <span className="text-transparent bg-clip-text bg-gradient-to-r from-zinc-400 to-zinc-400">DETAIL</span> IN ACTION
+          SEE THE <span className="text-transparent bg-clip-text bg-gradient-to-r from-white to-zinc-400">DETAIL</span> IN ACTION
         </motion.h2>
         <motion.p
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ delay: 0.2 }}
-          className="text-neutral-400 max-w-2xl text-sm md:text-base font-medium tracking-wide"
+          className="text-neutral-100 max-w-2xl text-sm md:text-xs font-medium tracking-wide"
         >
           WITNESS THE PREMIUM CARE YOUR VEHICLE DESERVES. EVERY WIPE, EVERY SPRAY, DELIVERED WITH METICULOUS PRECISION.
         </motion.p>

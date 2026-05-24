@@ -38,12 +38,12 @@ export default function Testimonials() {
                 />
               ))}
             </div>
-            <p className="text-neutral-400 italic mb-10 leading-relaxed text-[0.95rem]">
+            <p className="text-neutral-100 italic mb-10 leading-relaxed text-[0.95rem]">
               "{review.text}"
             </p>
             <div>
-              <div className="font-bold text-sm tracking-wide text-white">{review.author}</div>
-              <div className="text-[10px] uppercase tracking-widest text-neutral-500 mt-2 font-bold">{review.location}</div>
+              <div className="font-bold text-xs tracking-wide text-white">{review.author}</div>
+              <div className="text-xs uppercase tracking-widest text-neutral-300 mt-2 font-bold">{review.location}</div>
             </div>
           </div>
         ))}

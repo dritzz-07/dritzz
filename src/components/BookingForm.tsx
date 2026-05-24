@@ -477,22 +477,22 @@ export default function BookingForm({
   return (
     <section id="booking" className="relative px-6 md:px-16 py-24 bg-black border-t border-white/5 overflow-hidden">
       {/* Background soft glow */}
-      <div className="absolute top-1/4 -right-1/4 w-[800px] h-[800px] bg-zinc-500/10 blur-[120px] rounded-full pointer-events-none" />
-      <div className="absolute bottom-0 -left-1/4 w-[600px] h-[600px] bg-purple-500/10 blur-[120px] rounded-full pointer-events-none" />
+      <div className="absolute hidden md:block top-1/4 -right-1/4 w-[800px] h-[800px] bg-zinc-500/10 blur-2xl rounded-full pointer-events-none" />
+      <div className="absolute hidden md:block bottom-0 -left-1/4 w-[600px] h-[600px] bg-purple-500/10 blur-2xl rounded-full pointer-events-none" />
 
       <div className="relative z-10 max-w-7xl mx-auto flex flex-col items-center text-center mb-16">
-        <div className="text-[10px] uppercase tracking-[0.3em] font-black text-zinc-400 mb-4 drop-shadow-sm">Reserve Your Slot</div>
+        <div className="text-xs uppercase tracking-[0.3em] font-black text-white mb-4 drop-shadow-sm">Reserve Your Slot</div>
         <h2 className="text-4xl md:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-white via-neutral-200 to-neutral-400 tracking-tight mb-4 pb-1">
           BOOK YOUR WASH
         </h2>
-        <p className="text-neutral-400 max-w-md text-sm md:text-base font-medium">Fill in your details and we'll arrive at your doorstep exactly when you need us.</p>
+        <p className="text-neutral-100 max-w-md text-sm md:text-xs font-medium">Fill in your details and we'll arrive at your doorstep exactly when you need us.</p>
       </div>
 
       <div className="relative z-10 max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-5 gap-8 lg:gap-12 items-start">
         <form onSubmit={handleFormSubmit} className="lg:col-span-3 bg-neutral-900/40 backdrop-blur-xl border border-white/10 p-6 md:p-10 space-y-8 rounded-3xl shadow-2xl shadow-black/50">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div className="space-y-2">
-              <label className="text-[10px] uppercase tracking-widest text-neutral-500 font-bold block">Full Name</label>
+              <label className="text-xs uppercase tracking-widest text-neutral-300 font-bold block">Full Name</label>
               <input
                 required
                 type="text"
@@ -500,11 +500,11 @@ export default function BookingForm({
                 value={details.name}
                 onChange={handleChange}
                 placeholder="John Doe"
-                className="w-full bg-white/5 border border-white/10 px-4 py-3 text-sm focus:border-white outline-none transition-colors rounded-lg text-white"
+                className="w-full bg-white/5 border border-white/10 px-4 py-3 text-xs focus:border-white outline-none transition-colors rounded-lg text-white"
               />
             </div>
             <div className="space-y-2">
-              <label className="text-[10px] uppercase tracking-widest text-neutral-500 font-bold block">Phone Number</label>
+              <label className="text-xs uppercase tracking-widest text-neutral-300 font-bold block">Phone Number</label>
               <input
                 required
                 type="tel"
@@ -512,20 +512,20 @@ export default function BookingForm({
                 value={details.phone}
                 onChange={handleChange}
                 placeholder="+91 XXXXX XXXXX"
-                className="w-full bg-white/5 border border-white/10 px-4 py-3 text-sm focus:border-white outline-none transition-colors rounded-lg text-white"
+                className="w-full bg-white/5 border border-white/10 px-4 py-3 text-xs focus:border-white outline-none transition-colors rounded-lg text-white"
               />
             </div>
           </div>
 
           <div className="space-y-2">
-            <label className="text-[10px] uppercase tracking-widest text-neutral-500 font-bold block">Email Address (optional)</label>
+            <label className="text-xs uppercase tracking-widest text-neutral-300 font-bold block">Email Address (optional)</label>
             <input
               type="email"
               name="email"
               value={details.email}
               onChange={handleChange}
               placeholder="john@example.com"
-              className="w-full bg-white/5 border border-white/10 px-4 py-3 text-sm focus:border-white outline-none transition-colors rounded-lg text-white"
+              className="w-full bg-white/5 border border-white/10 px-4 py-3 text-xs focus:border-white outline-none transition-colors rounded-lg text-white"
             />
           </div>
 
@@ -533,9 +533,9 @@ export default function BookingForm({
             <div className="relative" ref={dropdownRef}>
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-2">
                 <div>
-                  <label className="text-[10px] uppercase tracking-widest text-neutral-500 font-bold block">Service Address</label>
+                  <label className="text-xs uppercase tracking-widest text-neutral-300 font-bold block">Service Address</label>
                   {GOOGLE_MAPS_KEY && (
-                    <div className="text-[9px] uppercase font-black tracking-widest text-zinc-400 mt-1 flex items-center gap-1">
+                    <div className="text-[11px] uppercase font-black tracking-widest text-white mt-1 flex items-center gap-1">
                       <span className="relative flex h-1.5 w-1.5">
                         <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-zinc-400 opacity-75"></span>
                         <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-zinc-500"></span>
@@ -548,7 +548,7 @@ export default function BookingForm({
                   <button
                     type="button"
                     onClick={handleGetLiveLocation}
-                    className="flex items-center gap-1.5 text-xs text-zinc-400 hover:text-zinc-300 font-black uppercase tracking-wider bg-zinc-500/10 hover:bg-zinc-500/25 px-3 py-1.5 rounded-lg border border-zinc-500/20 transition-all cursor-pointer shrink-0"
+                    className="flex items-center gap-1.5 text-xs text-white hover:text-neutral-300 font-black uppercase tracking-wider bg-zinc-500/10 hover:bg-zinc-500/25 px-3 py-1.5 rounded-lg border border-white/5 transition-all cursor-pointer shrink-0"
                   >
                     {locating ? (
                       <>
@@ -581,18 +581,18 @@ export default function BookingForm({
                     }
                   }}
                   placeholder="Type service address (with auto-complete) or pinpoint on map..."
-                  className="w-full bg-black/40 border border-white/10 pl-4 pr-10 py-3.5 text-sm focus:border-zinc-500/50 focus:ring-1 focus:ring-zinc-500/50 outline-none transition-all rounded-xl text-white placeholder-neutral-600"
+                  className="w-full bg-black/40 border border-white/10 pl-4 pr-10 py-3.5 text-xs focus:border-neutral-500/50 focus:ring-1 focus:ring-zinc-500/50 outline-none transition-all rounded-xl text-white placeholder-neutral-600"
                 />
                 <div className="absolute right-3.5 top-1/2 -translate-y-1/2 flex items-center justify-center pointer-events-none">
                   {searching ? (
-                    <Loader2 className="w-4 h-4 text-zinc-400 animate-spin" />
+                    <Loader2 className="w-4 h-4 text-white animate-spin" />
                   ) : (
-                    <MapPin className="w-4 h-4 text-neutral-500" />
+                    <MapPin className="w-4 h-4 text-neutral-300" />
                   )}
                 </div>
 
                 {isDropdownOpen && suggestions.length > 0 && (
-                  <div className="absolute left-0 right-0 z-[1100] mt-1.5 bg-zinc-900 border border-white/10 rounded-xl shadow-2xl max-h-60 overflow-y-auto divide-y divide-white/5">
+                  <div className="absolute left-0 right-0 z-[1100] mt-1.5 bg-neutral-900 border border-white/10 rounded-xl shadow-2xl max-h-60 overflow-y-auto divide-y divide-white/5">
                     {suggestions.map((suggestion, idx) => (
                       <button
                         key={idx}
@@ -600,12 +600,12 @@ export default function BookingForm({
                         onClick={() => handleSelectSuggestion(suggestion)}
                         className="w-full text-left px-4 py-3 hover:bg-white/5 transition-colors flex items-start gap-2.5 group cursor-pointer"
                       >
-                        <MapPin className="w-4 h-4 text-zinc-400 shrink-0 mt-0.5 group-hover:scale-110 transition-transform" />
+                        <MapPin className="w-4 h-4 text-white shrink-0 mt-0.5 group-hover:scale-110 transition-transform" />
                         <div className="flex-1 min-w-0">
-                          <div className="text-xs font-semibold text-neutral-200 truncate">
+                          <div className="text-xs font-semibold text-neutral-100 truncate">
                             {suggestion.address?.road || suggestion.address?.suburb || suggestion.address?.city || 'Search Result'}
                           </div>
-                          <div className="text-[10px] text-neutral-400 font-medium truncate mt-0.5">
+                          <div className="text-xs text-neutral-100 font-medium truncate mt-0.5">
                             {suggestion.display_name}
                           </div>
                         </div>
@@ -619,7 +619,7 @@ export default function BookingForm({
             {showMapPicker && (
               <div className="border border-white/10 rounded-xl overflow-hidden bg-white/5 p-4 space-y-3">
                 <div className="flex justify-between items-center mr-1">
-                  <div className="text-[10px] uppercase font-black text-zinc-400 tracking-wider flex items-center gap-1.5">
+                  <div className="text-xs uppercase font-black text-white tracking-wider flex items-center gap-1.5">
                     <span className="relative flex h-2 w-2">
                       <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-zinc-400 opacity-75"></span>
                       <span className="relative inline-flex rounded-full h-2 w-2 bg-zinc-500"></span>
@@ -629,7 +629,7 @@ export default function BookingForm({
                   <button
                     type="button"
                     onClick={() => setShowMapPicker(false)}
-                    className="text-neutral-400 hover:text-white text-xs font-bold cursor-pointer"
+                    className="text-neutral-100 hover:text-white text-xs font-bold cursor-pointer"
                   >
                     Hide Map
                   </button>
@@ -642,9 +642,9 @@ export default function BookingForm({
                 />
                 
                 {details.latitude && details.longitude && (
-                  <div className="flex items-center justify-between text-[11px] font-mono text-neutral-400 bg-black/20 px-3 py-2 rounded-lg">
-                    <span className="text-neutral-500">GPS Coords: <span className="text-neutral-300">{details.latitude.toFixed(6)}, {details.longitude.toFixed(6)}</span></span>
-                    <span className="text-zinc-400 uppercase font-bold text-[9px] tracking-wide">Coordinates Locked</span>
+                  <div className="flex items-center justify-between text-[11px] font-mono text-neutral-100 bg-black/20 px-3 py-2 rounded-lg">
+                    <span className="text-neutral-300">GPS Coords: <span className="text-neutral-300">{details.latitude.toFixed(6)}, {details.longitude.toFixed(6)}</span></span>
+                    <span className="text-white uppercase font-bold text-[11px] tracking-wide">Coordinates Locked</span>
                   </div>
                 )}
                 {mapError && (
@@ -656,7 +656,7 @@ export default function BookingForm({
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div className="space-y-2">
-              <label className="text-[10px] uppercase tracking-widest text-neutral-500 font-bold block">Preferred Date</label>
+              <label className="text-xs uppercase tracking-widest text-neutral-300 font-bold block">Preferred Date</label>
               <input
                 required
                 type="date"
@@ -664,17 +664,17 @@ export default function BookingForm({
                 value={details.date}
                 min={new Date().toISOString().split('T')[0]}
                 onChange={handleChange}
-                className="w-full bg-black/40 border border-white/10 px-4 py-3.5 text-sm focus:border-zinc-500/50 focus:ring-1 focus:ring-zinc-500/50 outline-none transition-all rounded-xl text-white [color-scheme:dark]"
+                className="w-full bg-black/40 border border-white/10 px-4 py-3.5 text-xs focus:border-neutral-500/50 focus:ring-1 focus:ring-zinc-500/50 outline-none transition-all rounded-xl text-white [color-scheme:dark]"
               />
             </div>
             <div className="space-y-2">
-              <label className="text-[10px] uppercase tracking-widest text-neutral-500 font-bold block">Time Slot</label>
+              <label className="text-xs uppercase tracking-widest text-neutral-300 font-bold block">Time Slot</label>
               <select
                 required
                 name="timeSlot"
                 value={details.timeSlot}
                 onChange={handleChange}
-                className="w-full bg-white/10 border border-white/20 px-4 py-3.5 text-sm font-medium focus:border-zinc-500/50 focus:ring-1 focus:ring-zinc-500/50 outline-none transition-all appearance-none rounded-xl text-white shadow-sm"
+                className="w-full bg-white/10 border border-white/20 px-4 py-3.5 text-xs font-medium focus:border-neutral-500/50 focus:ring-1 focus:ring-zinc-500/50 outline-none transition-all appearance-none rounded-xl text-white shadow-sm"
               >
                 <option value="" className="bg-black">Select a slot</option>
                 {TIME_SLOTS.map(s => <option key={s} value={s} className="bg-black">{s}</option>)}
@@ -684,7 +684,7 @@ export default function BookingForm({
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div className="space-y-4 md:col-span-2">
-              <label className="text-[10px] uppercase tracking-widest text-neutral-500 font-bold block mb-2">Package</label>
+              <label className="text-xs uppercase tracking-widest text-neutral-300 font-bold block mb-2">Package</label>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 {PACKAGES.map(p => {
                   const isMonthly = p.id === 'monthly';
@@ -710,7 +710,7 @@ export default function BookingForm({
                         className="sr-only"
                       />
                       {isMonthly && (
-                        <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-1 bg-gradient-to-r from-zinc-700 to-zinc-500 text-white text-[9px] font-semibold uppercase tracking-[0.3em] rounded-full shadow-lg border border-zinc-400/50 whitespace-nowrap">
+                        <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-1 bg-gradient-to-r from-zinc-700 to-zinc-500 text-white text-[11px] font-semibold uppercase tracking-[0.3em] rounded-full shadow-lg border border-zinc-400/50 whitespace-nowrap">
                           Dritzz Black Membership
                         </div>
                       )}
@@ -718,7 +718,7 @@ export default function BookingForm({
                         <span className={`font-bold uppercase tracking-[0.15em] text-[14px] ${isSelected ? 'text-white' : 'text-neutral-300'}`}>{p.name}</span>
                         {isSelected && <div className={`w-2.5 h-2.5 rounded-full ${isMonthly ? 'bg-zinc-400 shadow-[0_0_12px_rgba(255,255,255,0.8)]' : 'bg-white shadow-[0_0_12px_rgba(255,255,255,0.8)]'}`} />}
                       </div>
-                      <span className="text-[11px] uppercase tracking-wider text-neutral-400 font-medium leading-relaxed">{p.tagline}</span>
+                      <span className="text-[11px] uppercase tracking-wider text-neutral-100 font-medium leading-relaxed">{p.tagline}</span>
                     </label>
                   );
                 })}
@@ -734,14 +734,14 @@ export default function BookingForm({
           </div>
 
           <div className="space-y-2">
-            <label className="text-[10px] uppercase tracking-widest text-neutral-500 font-bold block">Special Instructions</label>
+            <label className="text-xs uppercase tracking-widest text-neutral-300 font-bold block">Special Instructions</label>
             <textarea
               name="notes"
               value={details.notes}
               onChange={handleChange}
               rows={3}
               placeholder="Any specific areas to focus on..."
-              className="w-full bg-black/40 border border-white/10 px-4 py-3.5 text-sm focus:border-zinc-500/50 focus:ring-1 focus:ring-zinc-500/50 outline-none transition-all resize-none rounded-xl text-white placeholder-neutral-600"
+              className="w-full bg-black/40 border border-white/10 px-4 py-3.5 text-xs focus:border-neutral-500/50 focus:ring-1 focus:ring-zinc-500/50 outline-none transition-all resize-none rounded-xl text-white placeholder-neutral-600"
             />
           </div>
         </form>
@@ -749,9 +749,9 @@ export default function BookingForm({
         <div className="lg:col-span-2 space-y-6 lg:sticky lg:top-32">
           <div className="relative overflow-hidden bg-neutral-900/60 backdrop-blur-xl border border-white/10 text-white p-8 md:p-10 rounded-3xl shadow-2xl shadow-black/50">
             {/* Subtle glow inside card */}
-            <div className="absolute top-0 right-0 w-64 h-64 bg-zinc-500/5 blur-[80px] rounded-full pointer-events-none" />
+            <div className="absolute hidden md:block top-0 right-0 w-64 h-64 bg-zinc-500/5 blur-2xl rounded-full pointer-events-none" />
 
-            <h3 className="relative font-bold text-sm tracking-widest uppercase mb-8 pb-4 border-b border-white/10 text-neutral-300">Order Summary</h3>
+            <h3 className="relative font-bold text-xs tracking-widest uppercase mb-8 pb-4 border-b border-white/10 text-neutral-300">Order Summary</h3>
             
             <div className="relative space-y-4 mb-8">
               {details.vehicles && details.vehicles.length > 0 ? (
@@ -759,13 +759,13 @@ export default function BookingForm({
                     {details.vehicles.map((v, idx) => (
                        <div key={idx} className="bg-[#111827]/80 rounded-2xl p-4 flex items-center justify-between shadow-inner shadow-white/5 border border-white/5">
                           <div className="flex items-center gap-4">
-                             <div className="w-10 h-10 shrink-0 rounded-full bg-zinc-500/10 border border-zinc-500/20 flex items-center justify-center">
-                                <Car className="w-5 h-5 text-zinc-400" />
+                             <div className="w-10 h-10 shrink-0 rounded-full bg-zinc-500/10 border border-white/5 flex items-center justify-center">
+                                <Car className="w-5 h-5 text-white" />
                              </div>
                              <div className="flex flex-col">
                                 <span className="text-white font-bold">{v.brand || 'Custom Vehicle'} {v.model || ''}</span>
-                                <span className="text-sm text-neutral-400 capitalize">({v.type})</span>
-                                {v.vehicleNumber && <span className="text-[11px] text-neutral-500 font-mono mt-0.5">{v.vehicleNumber}</span>}
+                                <span className="text-xs text-neutral-100 capitalize">({v.type})</span>
+                                {v.vehicleNumber && <span className="text-[11px] text-neutral-300 font-mono mt-0.5">{v.vehicleNumber}</span>}
                              </div>
                           </div>
                           <span className="text-lg font-bold text-white shrink-0 ml-4">₹{v.price}</span>
@@ -775,12 +775,12 @@ export default function BookingForm({
               ) : (
                  <div className="bg-[#111827]/80 rounded-2xl p-4 flex items-center justify-between shadow-inner shadow-white/5 border border-white/5">
                     <div className="flex items-center gap-4">
-                       <div className="w-10 h-10 shrink-0 rounded-full bg-zinc-500/10 border border-zinc-500/20 flex items-center justify-center">
-                          <Car className="w-5 h-5 text-zinc-400" />
+                       <div className="w-10 h-10 shrink-0 rounded-full bg-zinc-500/10 border border-white/5 flex items-center justify-center">
+                          <Car className="w-5 h-5 text-white" />
                        </div>
                        <div className="flex flex-col">
                           <span className="text-white font-bold">Custom Vehicle</span>
-                          <span className="text-sm text-neutral-400 capitalize">({details.vehicleType})</span>
+                          <span className="text-xs text-neutral-100 capitalize">({details.vehicleType})</span>
                        </div>
                     </div>
                     <span className="text-lg font-bold text-white shrink-0 ml-4">₹{selectedPkg ? selectedPkg.price[details.vehicleType || 'hatchback'] : 0}</span>
@@ -788,70 +788,70 @@ export default function BookingForm({
               )}
               
               <div className="flex items-center gap-4 py-3 border-b border-white/5">
-                 <Calendar className="w-5 h-5 text-zinc-400 shrink-0" />
+                 <Calendar className="w-5 h-5 text-white shrink-0" />
                  <div className="flex flex-col">
-                    <span className="text-[10px] uppercase tracking-[0.2em] text-neutral-500 font-bold mb-1">Date</span>
+                    <span className="text-xs uppercase tracking-[0.2em] text-neutral-300 font-bold mb-1">Date</span>
                     <span className="text-white font-bold">{details.date ? new Date(details.date).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric'}) : '—'}</span>
                  </div>
               </div>
 
               <div className="flex items-center gap-4 py-3 border-b border-white/5">
-                 <Clock className="w-5 h-5 text-zinc-400 shrink-0" />
+                 <Clock className="w-5 h-5 text-white shrink-0" />
                  <div className="flex flex-col">
-                    <span className="text-[10px] uppercase tracking-[0.2em] text-neutral-500 font-bold mb-1">Slot</span>
+                    <span className="text-xs uppercase tracking-[0.2em] text-neutral-300 font-bold mb-1">Slot</span>
                     <span className="text-white font-bold">{details.timeSlot || '—'}</span>
                  </div>
               </div>
               
               <div className="pt-4">
-                 <span className="text-[10px] uppercase tracking-[0.2em] text-zinc-400 font-bold mb-4 block">Price Breakdown</span>
+                 <span className="text-xs uppercase tracking-[0.2em] text-white font-bold mb-4 block">Price Breakdown</span>
                  <div className="space-y-4">
-                    <div className="flex justify-between items-center text-sm border-b border-white/5 pb-3">
-                       <span className="text-neutral-400 font-medium tracking-wide">Service Amount</span>
-                       <span className="font-bold text-white text-base">₹{originalDiscountedPrice}</span>
+                    <div className="flex justify-between items-center text-xs border-b border-white/5 pb-3">
+                       <span className="text-neutral-100 font-medium tracking-wide">Service Amount</span>
+                       <span className="font-bold text-white text-xs">₹{originalDiscountedPrice}</span>
                     </div>
-                    <div className="flex justify-between items-center text-sm border-b border-white/5 pb-3">
-                       <span className="text-neutral-400 font-medium tracking-wide">CGST (9%)</span>
-                       <span className="font-bold text-white text-base">₹{cgst}</span>
+                    <div className="flex justify-between items-center text-xs border-b border-white/5 pb-3">
+                       <span className="text-neutral-100 font-medium tracking-wide">CGST (9%)</span>
+                       <span className="font-bold text-white text-xs">₹{cgst}</span>
                     </div>
-                    <div className="flex justify-between items-center text-sm border-b border-white/5 pb-3">
-                       <span className="text-neutral-400 font-medium tracking-wide">SGST (9%)</span>
-                       <span className="font-bold text-white text-base">₹{sgst}</span>
+                    <div className="flex justify-between items-center text-xs border-b border-white/5 pb-3">
+                       <span className="text-neutral-100 font-medium tracking-wide">SGST (9%)</span>
+                       <span className="font-bold text-white text-xs">₹{sgst}</span>
                     </div>
                  </div>
               </div>
 
               <div className="mt-6 border-t border-white/5 pt-6">
-                 <label className="text-[10px] uppercase tracking-widest text-neutral-500 font-bold block mb-3">Apply Promo Code</label>
+                 <label className="text-xs uppercase tracking-widest text-neutral-300 font-bold block mb-3">Apply Promo Code</label>
                  <div className="flex gap-3">
                     <div className="relative flex-1">
                       <input 
                         type="text" 
                         placeholder="ENTER DISCOUNT CODE" 
-                        className="w-full bg-black/40 border border-white/10 px-4 py-3.5 text-sm focus:border-zinc-500/50 focus:ring-1 focus:ring-zinc-500/50 outline-none transition-all rounded-xl text-white font-mono uppercase placeholder-neutral-600"
+                        className="w-full bg-black/40 border border-white/10 px-4 py-3.5 text-xs focus:border-neutral-500/50 focus:ring-1 focus:ring-zinc-500/50 outline-none transition-all rounded-xl text-white font-mono uppercase placeholder-neutral-600"
                       />
                     </div>
-                    <button type="button" className="px-5 py-3.5 bg-zinc-600/10 hover:bg-zinc-600/20 text-zinc-400 border border-zinc-500/30 text-[11px] font-black uppercase tracking-widest rounded-xl transition-colors shrink-0">
+                    <button type="button" className="px-5 py-3.5 bg-zinc-600/10 hover:bg-zinc-600/20 text-white border border-white/10 text-[11px] font-black uppercase tracking-widest rounded-xl transition-colors shrink-0">
                       Apply
                     </button>
                  </div>
               </div>
             </div>
 
-            <div className="relative overflow-hidden bg-[#0a0a0a] rounded-2xl p-6 md:p-8 flex justify-between items-end mb-10 border border-zinc-500/30 shadow-[0_0_40px_rgba(255,255,255,0.03)] transition-all duration-300">
-              <div className="absolute top-0 right-0 w-48 h-48 bg-zinc-500/10 blur-[50px] rounded-full pointer-events-none" />
-              <div className="absolute bottom-0 left-0 w-32 h-32 bg-zinc-400/5 blur-[40px] rounded-full pointer-events-none" />
+            <div className="relative overflow-hidden bg-[#0a0a0a] rounded-2xl p-6 md:p-8 flex justify-between items-end mb-10 border border-white/10 shadow-[0_0_40px_rgba(255,255,255,0.03)] transition-all duration-300">
+              <div className="absolute hidden md:block top-0 right-0 w-48 h-48 bg-zinc-500/10 blur-2xl rounded-full pointer-events-none" />
+              <div className="absolute hidden md:block bottom-0 left-0 w-32 h-32 bg-zinc-400/5 blur-2xl rounded-full pointer-events-none" />
               <div className="flex flex-col gap-1.5 relative z-10">
-                <span className="font-bold text-sm uppercase tracking-widest text-zinc-400 drop-shadow-sm">Total Amount</span>
-                <span className="text-[10px] uppercase tracking-[0.1em] text-neutral-400">Incl. of GST</span>
+                <span className="font-bold text-xs uppercase tracking-widest text-white drop-shadow-sm">Total Amount</span>
+                <span className="text-xs uppercase tracking-[0.1em] text-neutral-100">Incl. of GST</span>
                 {isSocietyOffer && (
-                  <span className="text-[9px] text-white font-black uppercase tracking-widest bg-zinc-500/30 px-2 py-0.5 rounded border border-zinc-400/30 mt-2 inline-block w-fit shadow-sm shadow-zinc-500/20">20% OFF APPLIED</span>
+                  <span className="text-[11px] text-white font-black uppercase tracking-widest bg-zinc-500/30 px-2 py-0.5 rounded border border-zinc-400/30 mt-2 inline-block w-fit shadow-sm shadow-zinc-500/20">20% OFF APPLIED</span>
                 )}
               </div>
               <div className="flex flex-col items-end relative z-10">
-                <span className="text-5xl font-black text-zinc-400 tracking-tighter drop-shadow-lg">₹{totalPrice}</span>
+                <span className="text-5xl font-black text-white tracking-tighter drop-shadow-lg">₹{totalPrice}</span>
                 {isSocietyOffer && (
-                  <span className="text-sm text-zinc-500/60 line-through decoration-zinc-500/40 mt-1 font-medium">₹{Math.round(originalPrice * 1.18)}</span>
+                  <span className="text-xs text-neutral-300/60 line-through decoration-zinc-500/40 mt-1 font-medium">₹{Math.round(originalPrice * 1.18)}</span>
                 )}
               </div>
             </div>
@@ -867,7 +867,7 @@ export default function BookingForm({
                   handleFormSubmit(e);
                 }
               }}
-              className="relative w-full overflow-hidden bg-white text-black py-4 rounded-xl font-bold text-sm tracking-widest uppercase hover:bg-neutral-200 transition-all flex items-center justify-center gap-2 shadow-xl shadow-white/10 group"
+              className="relative w-full overflow-hidden bg-white text-black py-4 rounded-xl font-bold text-xs tracking-widest uppercase hover:bg-neutral-200 transition-all flex items-center justify-center gap-2 shadow-xl shadow-white/10 group"
             >
               <div className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/40 to-transparent -translate-x-full group-hover:animate-[shimmer_1.5s_infinite]" />
               {user ? (
@@ -877,8 +877,8 @@ export default function BookingForm({
               )}
             </button>
 
-            <div className="relative mt-6 flex items-center justify-center gap-2 text-neutral-500 text-[10px] uppercase tracking-widest font-bold">
-              <Lock className="w-3 h-3 text-neutral-400" /> 100% Secure & Encrypted
+            <div className="relative mt-6 flex items-center justify-center gap-2 text-neutral-300 text-xs uppercase tracking-widest font-bold">
+              <Lock className="w-3 h-3 text-neutral-100" /> 100% Secure & Encrypted
             </div>
           </div>
         </div>

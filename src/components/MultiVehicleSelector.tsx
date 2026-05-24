@@ -89,7 +89,7 @@ export default function MultiVehicleSelector({ selectedVehicles, onChange, defau
     return (
       <div className="p-8 bg-white/5 border border-white/10 rounded-xl text-center">
         <Car className="w-8 h-8 text-white/20 mx-auto mb-3" />
-        <p className="text-sm font-bold text-white/60 uppercase tracking-widest">Select a package to add vehicles</p>
+        <p className="text-xs font-bold text-white/60 uppercase tracking-widest">Select a package to add vehicles</p>
       </div>
     );
   }
@@ -98,7 +98,7 @@ export default function MultiVehicleSelector({ selectedVehicles, onChange, defau
     <div className="space-y-4">
       {savedVehicles.length > 0 && (
          <div>
-           <label className="block text-xs uppercase text-neutral-500 mb-3 font-bold">Select Saved Vehicles</label>
+           <label className="block text-xs uppercase text-neutral-300 mb-3 font-bold">Select Saved Vehicles</label>
            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
              {savedVehicles.map(v => {
                 const isSelected = selectedVehicles.some(sv => sv.vehicleId === v.id);
@@ -108,18 +108,18 @@ export default function MultiVehicleSelector({ selectedVehicles, onChange, defau
                     type="button"
                     onClick={() => toggleVehicle(v)}
                     className={`flex items-center gap-3 p-4 rounded-xl border text-left transition-all ${
-                       isSelected ? 'bg-zinc-500/10 border-zinc-500/50 shadow-[0_0_15px_rgba(16,185,129,0.2)]' : 'bg-black/50 border-white/10 hover:border-white/30'
+                       isSelected ? 'bg-zinc-500/10 border-neutral-500/50 shadow-[0_0_15px_rgba(16,185,129,0.2)]' : 'bg-black/50 border-white/10 hover:border-white/30'
                     }`}
                   >
-                    <div className={`p-2 rounded-lg ${isSelected ? 'bg-zinc-500/20 text-zinc-400' : 'bg-white/5 text-white/50'}`}>
+                    <div className={`p-2 rounded-lg ${isSelected ? 'bg-zinc-500/20 text-white' : 'bg-white/5 text-white/50'}`}>
                       <Car className="w-5 h-5" />
                     </div>
                     <div className="flex-1">
-                      <div className="text-white text-sm font-bold">{v.brand} {v.model}</div>
-                      <div className="text-neutral-400 text-xs font-mono">{v.vehicleNumber} • <span className="uppercase">{v.type}</span></div>
+                      <div className="text-white text-xs font-bold">{v.brand} {v.model}</div>
+                      <div className="text-neutral-100 text-xs font-mono">{v.vehicleNumber} • <span className="uppercase">{v.type}</span></div>
                     </div>
                     <div className="flex items-center gap-4">
-                      <span className="text-white/70 font-mono text-sm">
+                      <span className="text-white/70 font-mono text-xs">
                          ₹{(PACKAGES.find(p => p.id === defaultPackageId) || PACKAGES[0]).price[v.type as VehicleType]}
                       </span>
                       <div className={`w-5 h-5 rounded-md border flex items-center justify-center ${isSelected ? 'bg-zinc-500 border-zinc-500' : 'border-white/20'}`}>
@@ -134,7 +134,7 @@ export default function MultiVehicleSelector({ selectedVehicles, onChange, defau
       )}
 
       <div className="pt-4 border-t border-white/10 mt-6">
-         <label className="block text-xs uppercase text-neutral-500 mb-3 font-bold">
+         <label className="block text-xs uppercase text-neutral-300 mb-3 font-bold">
             {selectedVehicles.length > 0 ? 'Add Another Vehicle' : (savedVehicles.length > 0 ? 'Or Add A Vehicle' : 'Add Vehicle')}
          </label>
          <div className="flex flex-wrap gap-2">
@@ -148,7 +148,7 @@ export default function MultiVehicleSelector({ selectedVehicles, onChange, defau
                );
             })}
          </div>
-         {selectedVehicles.length > 0 && <p className="text-[10px] text-zinc-400/80 font-bold mt-3 font-mono">You can add multiple vehicles to this booking.</p>}
+         {selectedVehicles.length > 0 && <p className="text-xs text-white/80 font-bold mt-3 font-mono">You can add multiple vehicles to this booking.</p>}
       </div>
       
       {/* Show newly added custom (non-saved) vehicles */}
@@ -161,9 +161,9 @@ export default function MultiVehicleSelector({ selectedVehicles, onChange, defau
                     <div className="flex items-center justify-between relative z-10">
                        <div className="flex items-center gap-3">
                           <div className="w-8 h-8 rounded-full bg-zinc-500/20 flex items-center justify-center">
-                             <Car className="w-4 h-4 text-zinc-400" />
+                             <Car className="w-4 h-4 text-white" />
                           </div>
-                          <span className="text-white text-sm uppercase font-bold tracking-widest">{v.type} <span className="text-neutral-500 font-medium lowercase">({PACKAGES.find(p => p.id === defaultPackageId)?.name})</span></span>
+                          <span className="text-white text-xs uppercase font-bold tracking-widest">{v.type} <span className="text-neutral-300 font-medium lowercase">({PACKAGES.find(p => p.id === defaultPackageId)?.name})</span></span>
                        </div>
                        <button type="button" onClick={() => removeCustom(i)} className="text-red-400 p-2 hover:bg-red-500/20 rounded-full transition-colors"><X className="w-4 h-4" /></button>
                     </div>
@@ -177,7 +177,7 @@ export default function MultiVehicleSelector({ selectedVehicles, onChange, defau
                              newV[i] = { ...newV[i], brand: e.target.value };
                              onChange(newV);
                           }}
-                          className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2.5 text-sm text-white focus:outline-none focus:border-zinc-500/50 focus:ring-1 focus:ring-zinc-500/50 transition-all placeholder-neutral-500"
+                          className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2.5 text-xs text-white focus:outline-none focus:border-neutral-500/50 focus:ring-1 focus:ring-zinc-500/50 transition-all placeholder-neutral-500"
                        />
                        <input 
                           type="text" 
@@ -188,7 +188,7 @@ export default function MultiVehicleSelector({ selectedVehicles, onChange, defau
                              newV[i] = { ...newV[i], vehicleNumber: e.target.value.toUpperCase() };
                              onChange(newV);
                           }}
-                          className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2.5 text-sm text-white uppercase focus:outline-none focus:border-zinc-500/50 focus:ring-1 focus:ring-zinc-500/50 transition-all placeholder-neutral-500"
+                          className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2.5 text-xs text-white uppercase focus:outline-none focus:border-neutral-500/50 focus:ring-1 focus:ring-zinc-500/50 transition-all placeholder-neutral-500"
                        />
                     </div>
                  </div>
@@ -199,7 +199,7 @@ export default function MultiVehicleSelector({ selectedVehicles, onChange, defau
 
       {selectedVehicles.length > 0 && (
          <div className="mt-4 pt-4 border-t border-white/10">
-            <span className="text-xs text-neutral-400 font-bold uppercase tracking-widest">{selectedVehicles.length} vehicle{selectedVehicles.length > 1 ? 's' : ''} selected</span>
+            <span className="text-xs text-neutral-100 font-bold uppercase tracking-widest">{selectedVehicles.length} vehicle{selectedVehicles.length > 1 ? 's' : ''} selected</span>
          </div>
       )}
     </div>

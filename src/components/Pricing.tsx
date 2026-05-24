@@ -45,21 +45,21 @@ export default function Pricing({ onSelectPackage }: PricingProps) {
   return (
     <section id="packages" className="px-6 md:px-16 py-32 bg-[#0a0a0a] border-t border-white/5 relative overflow-hidden">
       {/* Premium Background elements */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-5xl h-[500px] bg-zinc-600/10 blur-[150px] rounded-full pointer-events-none" />
-      <div className="absolute bottom-0 right-0 w-96 h-96 bg-zinc-500/5 blur-[120px] rounded-full pointer-events-none" />
+      <div className="absolute hidden md:block top-0 left-1/2 -translate-x-1/2 w-full max-w-5xl h-[500px] bg-zinc-600/10 blur-2xl rounded-full pointer-events-none" />
+      <div className="absolute hidden md:block bottom-0 right-0 w-96 h-96 bg-zinc-500/5 blur-2xl rounded-full pointer-events-none" />
       
       <div className="text-center relative z-10 flex flex-col items-center mb-20">
         <div className="mb-6 inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-white/10 bg-white/5 backdrop-blur-sm">
-          <Sparkles className="w-3 h-3 text-zinc-400" />
-          <span className="text-[10px] uppercase tracking-widest text-neutral-300 font-bold">Premium Doorstep Care</span>
+          <Sparkles className="w-3 h-3 text-white" />
+          <span className="text-xs uppercase tracking-widest text-neutral-300 font-bold">Premium Doorstep Care</span>
         </div>
         <h2 className="text-3xl md:text-5xl font-extrabold mb-5 text-white tracking-tight leading-tight">
           Why Pay Every Time? <br className="hidden md:block" />
-          <span className="text-transparent bg-clip-text bg-gradient-to-r from-zinc-300 via-zinc-400 to-zinc-500 drop-shadow-sm">
+          <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-zinc-200 to-zinc-400 drop-shadow-sm">
             Go Monthly & Save More.
           </span>
         </h2>
-        <p className="text-neutral-400 max-w-2xl text-base md:text-lg font-medium drop-shadow-sm">
+        <p className="text-neutral-100 max-w-2xl text-xs md:text-lg font-medium drop-shadow-sm">
           Professional doorstep car care designed for busy lifestyles.
         </p>
         
@@ -72,7 +72,7 @@ export default function Pricing({ onSelectPackage }: PricingProps) {
               className={`px-8 py-3.5 text-xs uppercase tracking-[0.15em] font-bold transition-all duration-300 rounded-full ${
                 vehicle === v 
                   ? 'bg-zinc-600 text-white shadow-[0_4px_25px_rgba(255,255,255,0.5)]' 
-                  : 'text-neutral-400 hover:text-white hover:bg-white/5'
+                  : 'text-neutral-100 hover:text-white hover:bg-white/5'
               }`}
             >
               <div className="flex items-center gap-3">
@@ -107,7 +107,7 @@ export default function Pricing({ onSelectPackage }: PricingProps) {
                 }}
                 className={`group relative flex flex-col w-full max-w-md lg:w-1/3 transition-all duration-500 rounded-[2rem] 
                   ${isMonthly 
-                    ? 'p-10 lg:-mt-8 lg:mb-8 bg-gradient-to-b from-zinc-900/40 to-neutral-900/80 border-2 border-zinc-500/50 shadow-[0_0_60px_-15px_rgba(255,255,255,0.5)] z-20 scale-100 lg:scale-105' 
+                    ? 'p-10 lg:-mt-8 lg:mb-8 bg-gradient-to-b from-zinc-900/40 to-neutral-900/80 border-2 border-neutral-500/50 shadow-[0_0_60px_-15px_rgba(255,255,255,0.5)] z-20 scale-100 lg:scale-105' 
                     : 'p-8 lg:mt-8 bg-neutral-900/30 backdrop-blur-xl border border-white/10 shadow-xl hover:border-white/20 z-10'
                   }`}
               >
@@ -119,7 +119,7 @@ export default function Pricing({ onSelectPackage }: PricingProps) {
                 {/* Badges */}
                 {badgeText && (
                   <div className={`absolute -top-4 left-1/2 -translate-x-1/2 px-5 py-1.5 rounded-full text-xs font-black uppercase tracking-widest whitespace-nowrap shadow-xl
-                    ${isMonthly ? 'bg-gradient-to-r from-zinc-500 to-zinc-600 text-white shadow-zinc-500/40 border border-zinc-400/50' : 'bg-neutral-800 text-neutral-200 border border-white/10'}`}>
+                    ${isMonthly ? 'bg-gradient-to-r from-zinc-500 to-zinc-600 text-white shadow-zinc-500/40 border border-zinc-400/50' : 'bg-neutral-800 text-neutral-100 border border-white/10'}`}>
                     {badgeText}
                   </div>
                 )}
@@ -130,8 +130,8 @@ export default function Pricing({ onSelectPackage }: PricingProps) {
                     transition={{ repeat: Infinity, duration: 3, ease: "easeInOut" }}
                     className="absolute top-8 right-8"
                   >
-                    <div className="absolute inset-0 bg-zinc-500 blur-[20px] opacity-20 rounded-full" />
-                    <Icon className="w-10 h-10 text-zinc-400 relative z-10 drop-shadow-[0_0_15px_rgba(255,255,255,0.6)]" />
+                    <div className="absolute hidden md:block inset-0 bg-zinc-500 blur-2xl opacity-20 rounded-full" />
+                    <Icon className="w-10 h-10 text-white relative z-10 drop-shadow-[0_0_15px_rgba(255,255,255,0.6)]" />
                   </motion.div>
                 )}
                 {!isMonthly && (
@@ -143,7 +143,7 @@ export default function Pricing({ onSelectPackage }: PricingProps) {
                 <h3 className={`font-black tracking-tight mb-2 uppercase ${isMonthly ? 'text-2xl text-white' : 'text-2xl text-neutral-100'}`}>
                   {pkg.name}
                 </h3>
-                <p className={`text-sm mb-8 leading-relaxed font-medium ${isMonthly ? 'text-zinc-200/80' : 'text-neutral-400'}`}>
+                <p className={`text-xs mb-8 leading-relaxed font-medium ${isMonthly ? 'text-white/80' : 'text-neutral-100'}`}>
                   {pkg.tagline}
                 </p>
                 
@@ -154,7 +154,7 @@ export default function Pricing({ onSelectPackage }: PricingProps) {
                     </span>
                   </div>
                   <div className="flex items-center gap-2 mt-3">
-                    <div className={`text-[11px] uppercase tracking-widest font-bold ${isMonthly ? 'text-zinc-300' : 'text-neutral-500'}`}>
+                    <div className={`text-[11px] uppercase tracking-widest font-bold ${isMonthly ? 'text-neutral-300' : 'text-neutral-300'}`}>
                        {isMonthly ? 'per month' : 'per wash'} · {vehicle === 'suv' ? 'SUV / MUV' : vehicle}
                     </div>
                   </div>
@@ -164,8 +164,8 @@ export default function Pricing({ onSelectPackage }: PricingProps) {
 
                 <ul className="flex-1 space-y-4 mb-10">
                   {pkg.features.map((feature, idx) => (
-                    <li key={idx} className={`flex items-start gap-4 text-sm font-medium ${isMonthly && idx === 0 ? 'text-white' : 'text-neutral-300'}`}>
-                      <div className={`w-5 h-5 rounded-full flex items-center justify-center shrink-0 mt-0.5 ${isMonthly && idx === 0 ? 'bg-zinc-500 text-white' : 'bg-zinc-500/20 text-zinc-400'}`}>
+                    <li key={idx} className={`flex items-start gap-4 text-xs font-medium ${isMonthly && idx === 0 ? 'text-white' : 'text-neutral-300'}`}>
+                      <div className={`w-5 h-5 rounded-full flex items-center justify-center shrink-0 mt-0.5 ${isMonthly && idx === 0 ? 'bg-zinc-500 text-white' : 'bg-zinc-500/20 text-white'}`}>
                         <Check className="w-3 h-3" />
                       </div>
                       <span className={isMonthly && idx === 0 ? 'font-bold' : ''}>{feature}</span>
@@ -174,9 +174,9 @@ export default function Pricing({ onSelectPackage }: PricingProps) {
                 </ul>
 
                 {isMonthly && (
-                  <div className="mb-6 p-4 rounded-xl bg-zinc-500/10 border border-zinc-500/20 flex items-center gap-3">
-                    <Sparkles className="w-5 h-5 text-zinc-400 shrink-0" />
-                    <span className="text-sm font-bold text-zinc-200">Save Up To ₹1,500+ Monthly</span>
+                  <div className="mb-6 p-4 rounded-xl bg-zinc-500/10 border border-white/5 flex items-center gap-3">
+                    <Sparkles className="w-5 h-5 text-white shrink-0" />
+                    <span className="text-xs font-bold text-white">Save Up To ₹1,500+ Monthly</span>
                   </div>
                 )}
 
@@ -211,8 +211,8 @@ export default function Pricing({ onSelectPackage }: PricingProps) {
           className="relative px-8 py-16 md:p-24 rounded-[3rem] bg-[#050505] border border-white/10 overflow-hidden group shadow-[0_0_80px_-20px_rgba(255,255,255,0.3)] text-center"
         >
           {/* Animated Background Gradients & Glows */}
-          <div className="absolute -top-40 -right-40 w-[500px] h-[500px] bg-zinc-600/20 blur-[120px] rounded-full group-hover:bg-zinc-500/30 transition-colors duration-1000 pointer-events-none" />
-          <div className="absolute -bottom-40 -left-40 w-[500px] h-[500px] bg-zinc-900/20 blur-[120px] rounded-full group-hover:bg-zinc-800/30 transition-colors duration-1000 pointer-events-none" />
+          <div className="absolute hidden md:block -top-40 -right-40 w-[500px] h-[500px] bg-zinc-600/20 blur-2xl rounded-full group-hover:bg-zinc-500/30 transition-colors duration-1000 pointer-events-none" />
+          <div className="absolute hidden md:block -bottom-40 -left-40 w-[500px] h-[500px] bg-neutral-900/20 blur-2xl rounded-full group-hover:bg-zinc-800/30 transition-colors duration-1000 pointer-events-none" />
 
           {/* Premium Grid/Texture */}
           <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff05_1px,transparent_1px),linear-gradient(to_bottom,#ffffff05_1px,transparent_1px)] bg-[size:24px_24px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_50%,#000_70%,transparent_100%)] pointer-events-none" />
@@ -222,31 +222,31 @@ export default function Pricing({ onSelectPackage }: PricingProps) {
 
           <div className="relative z-10 flex flex-col items-center">
             {/* VIP Badge */}
-            <div className="mb-8 inline-flex items-center gap-2 px-4 py-2 rounded-full border border-zinc-500/30 bg-zinc-500/10 backdrop-blur-md shadow-[0_0_20px_rgba(255,255,255,0.2)]">
-              <Sparkles className="w-4 h-4 text-zinc-400" />
-              <span className="text-[10px] sm:text-xs font-black uppercase tracking-[0.3em] text-zinc-300">Dritzz Black Membership</span>
-              <Sparkles className="w-4 h-4 text-zinc-400" />
+            <div className="mb-8 inline-flex items-center gap-2 px-4 py-2 rounded-full border border-white/10 bg-zinc-500/10 backdrop-blur-md shadow-[0_0_20px_rgba(255,255,255,0.2)]">
+              <Sparkles className="w-4 h-4 text-white" />
+              <span className="text-xs sm:text-xs font-black uppercase tracking-[0.3em] text-neutral-300">Dritzz Black Membership</span>
+              <Sparkles className="w-4 h-4 text-white" />
             </div>
 
             <h3 className="text-4xl md:text-6xl font-black mb-6 tracking-tight leading-tight">
               <span className="text-white drop-shadow-md">One Membership.</span> <br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-zinc-300 via-zinc-100 to-zinc-400 drop-shadow-[0_0_30px_rgba(255,255,255,0.3)]">Clean Car All Month.</span>
             </h3>
-            <p className="text-neutral-400 text-lg md:text-xl font-medium mb-12 max-w-2xl mx-auto leading-relaxed">
+            <p className="text-neutral-100 text-lg md:text-xl font-medium mb-12 max-w-2xl mx-auto leading-relaxed">
               Join hundreds of smart car owners choosing an effortless, premium doorstep car care experience.
             </p>
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-6 w-full">
               <button 
                 onClick={() => onSelectPackage('monthly', vehicle)}
-                className="w-full sm:w-auto px-10 py-[1.15rem] rounded-full bg-white text-black font-black uppercase tracking-[0.15em] text-sm shadow-[0_0_40px_rgba(255,255,255,0.2)] hover:shadow-[0_0_60px_rgba(255,255,255,0.4)] hover:scale-105 transition-all duration-300 flex items-center justify-center gap-3"
+                className="w-full sm:w-auto px-10 py-[1.15rem] rounded-full bg-white text-black font-black uppercase tracking-[0.15em] text-xs shadow-[0_0_40px_rgba(255,255,255,0.2)] hover:shadow-[0_0_60px_rgba(255,255,255,0.4)] hover:scale-105 transition-all duration-300 flex items-center justify-center gap-3"
               >
                 <Gem className="w-4 h-4" />
                 Get Membership
               </button>
               <button 
                 onClick={() => document.getElementById('packages')?.scrollIntoView({ behavior: 'smooth' })}
-                className="w-full sm:w-auto px-10 py-[1.15rem] rounded-full bg-white/5 border border-white/10 text-white font-bold uppercase tracking-[0.15em] text-sm hover:bg-white/10 transition-all duration-300 backdrop-blur-md flex items-center justify-center"
+                className="w-full sm:w-auto px-10 py-[1.15rem] rounded-full bg-white/5 border border-white/10 text-white font-bold uppercase tracking-[0.15em] text-xs hover:bg-white/10 transition-all duration-300 backdrop-blur-md flex items-center justify-center"
               >
                 Schedule Wash
               </button>

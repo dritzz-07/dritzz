@@ -301,10 +301,10 @@ export default function AdminDashboard() {
           <div className="bg-neutral-900 border border-white/10 rounded-2xl p-8 max-w-sm w-full text-center">
             <Lock className="w-12 h-12 text-red-500 mx-auto mb-4 opacity-50" />
             <h2 className="text-xl font-bold text-white mb-2">Access Denied</h2>
-            <p className="text-neutral-400 text-sm mb-6">You are signed in as {user.email}, which is not an administrator account.</p>
+            <p className="text-neutral-100 text-xs mb-6">You are signed in as {user.email}, which is not an administrator account.</p>
             <button
               onClick={logout}
-              className="w-full py-3 bg-white/10 hover:bg-white/20 text-white rounded-xl font-bold transition-all text-sm uppercase tracking-wider"
+              className="w-full py-3 bg-white/10 hover:bg-white/20 text-white rounded-xl font-bold transition-all text-xs uppercase tracking-wider"
             >
               Sign Out
             </button>
@@ -313,7 +313,7 @@ export default function AdminDashboard() {
           <div className="bg-neutral-900 border border-white/10 rounded-[32px] p-8 max-w-[400px] w-full shadow-2xl">
             <div className="text-center mb-8">
               <h1 className="text-2xl font-black text-white uppercase tracking-tighter mb-2">Admin Portal</h1>
-              <p className="text-sm text-neutral-500">Authorized personnel only</p>
+              <p className="text-xs text-neutral-300">Authorized personnel only</p>
             </div>
 
             {loginError && (
@@ -325,7 +325,7 @@ export default function AdminDashboard() {
             <form onSubmit={handleAdminLogin} className="space-y-4">
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                  <Mail className="w-4 h-4 text-neutral-500" />
+                  <Mail className="w-4 h-4 text-neutral-300" />
                 </div>
                 <input
                   type="email"
@@ -333,13 +333,13 @@ export default function AdminDashboard() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="Admin Email"
-                  className="w-full bg-white/5 border border-white/10 rounded-xl py-3 pl-11 pr-4 text-sm text-white placeholder-neutral-500 focus:outline-none focus:border-white transition-colors"
+                  className="w-full bg-white/5 border border-white/10 rounded-xl py-3 pl-11 pr-4 text-xs text-white placeholder-neutral-500 focus:outline-none focus:border-white transition-colors"
                 />
               </div>
 
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                  <Lock className="w-4 h-4 text-neutral-500" />
+                  <Lock className="w-4 h-4 text-neutral-300" />
                 </div>
                 <input
                   type="password"
@@ -347,7 +347,7 @@ export default function AdminDashboard() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Password"
-                  className="w-full bg-white/5 border border-white/10 rounded-xl py-3 pl-11 pr-4 text-sm text-white placeholder-neutral-500 focus:outline-none focus:border-white transition-colors"
+                  className="w-full bg-white/5 border border-white/10 rounded-xl py-3 pl-11 pr-4 text-xs text-white placeholder-neutral-500 focus:outline-none focus:border-white transition-colors"
                 />
               </div>
 
@@ -379,7 +379,7 @@ export default function AdminDashboard() {
                       setIsResetting(false);
                     }
                   }}
-                  className="text-xs text-neutral-400 hover:text-white transition-colors underline-offset-4 hover:underline"
+                  className="text-xs text-neutral-100 hover:text-white transition-colors underline-offset-4 hover:underline"
                 >
                   {isResetting ? 'Sending...' : 'Forgot password?'}
                 </button>
@@ -391,7 +391,7 @@ export default function AdminDashboard() {
                 <div className="absolute inset-0 flex items-center">
                   <div className="w-full border-t border-white/5"></div>
                 </div>
-                <div className="relative flex justify-center text-[10px] uppercase tracking-[0.3em] font-bold">
+                <div className="relative flex justify-center text-xs uppercase tracking-[0.3em] font-bold">
                   <span className="bg-neutral-900 px-4 text-neutral-600">OR</span>
                 </div>
               </div>
@@ -431,7 +431,7 @@ export default function AdminDashboard() {
           </div>
           <button
             onClick={logout}
-            className="text-xs font-bold uppercase tracking-wider text-neutral-500 hover:text-white transition-colors"
+            className="text-xs font-bold uppercase tracking-wider text-neutral-300 hover:text-white transition-colors"
           >
             Sign Out
           </button>
@@ -444,37 +444,37 @@ export default function AdminDashboard() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
           <div className="bg-neutral-900 border border-white/5 rounded-3xl p-6">
             <div className="w-12 h-12 bg-white/5 rounded-xl flex items-center justify-center mb-4">
-              <Calendar className="w-6 h-6 text-neutral-400" />
+              <Calendar className="w-6 h-6 text-neutral-100" />
             </div>
-            <p className="text-neutral-500 text-sm font-medium mb-1">{filterDate ? 'Filtered Bookings' : "Today's Bookings"}</p>
+            <p className="text-neutral-300 text-xs font-medium mb-1">{filterDate ? 'Filtered Bookings' : "Today's Bookings"}</p>
             <p className="text-4xl font-black tracking-tighter">{displayBookingsCount}</p>
           </div>
           <div className="bg-neutral-900 border border-white/5 rounded-3xl p-6">
             <div className="w-12 h-12 bg-green-500/10 rounded-xl flex items-center justify-center mb-4">
               <TrendingUp className="w-6 h-6 text-green-400" />
             </div>
-            <p className="text-neutral-500 text-sm font-medium mb-1">{filterDate ? 'Filtered Revenue' : "Today's Revenue"}</p>
+            <p className="text-neutral-300 text-xs font-medium mb-1">{filterDate ? 'Filtered Revenue' : "Today's Revenue"}</p>
             <p className="text-4xl font-black tracking-tighter">₹{displayRevenue}</p>
           </div>
           <div className="bg-neutral-900 border border-white/5 rounded-3xl p-6">
             <div className="w-12 h-12 bg-white/5 rounded-xl flex items-center justify-center mb-4">
-              <Calendar className="w-6 h-6 text-neutral-400" />
+              <Calendar className="w-6 h-6 text-neutral-100" />
             </div>
-            <p className="text-neutral-500 text-sm font-medium mb-1">Total Bookings</p>
+            <p className="text-neutral-300 text-xs font-medium mb-1">Total Bookings</p>
             <p className="text-4xl font-black tracking-tighter">{totalBookings}</p>
           </div>
           <div className="bg-neutral-900 border border-white/5 rounded-3xl p-6">
             <div className="w-12 h-12 bg-green-500/10 rounded-xl flex items-center justify-center mb-4">
               <TrendingUp className="w-6 h-6 text-green-400" />
             </div>
-            <p className="text-neutral-500 text-sm font-medium mb-1">Total Revenue</p>
+            <p className="text-neutral-300 text-xs font-medium mb-1">Total Revenue</p>
             <p className="text-4xl font-black tracking-tighter">₹{totalRevenue}</p>
           </div>
           <div className="bg-neutral-900 border border-white/5 rounded-3xl p-6">
             <div className="w-12 h-12 bg-orange-500/10 rounded-xl flex items-center justify-center mb-4">
               <CheckCircle2 className="w-6 h-6 text-orange-400" />
             </div>
-            <p className="text-neutral-500 text-sm font-medium mb-1">Active / Pending</p>
+            <p className="text-neutral-300 text-xs font-medium mb-1">Active / Pending</p>
             <p className="text-4xl font-black tracking-tighter">{pendingBookings}</p>
           </div>
         </div>
@@ -483,19 +483,19 @@ export default function AdminDashboard() {
         <div className="flex gap-2 p-1 bg-white/5 w-fit rounded-xl border border-white/10 flex-wrap">
           <button 
             onClick={() => setActiveTab('bookings')}
-            className={`px-6 py-2.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-all ${activeTab === 'bookings' ? 'bg-white text-black' : 'text-neutral-400 hover:text-white'}`}
+            className={`px-6 py-2.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-all ${activeTab === 'bookings' ? 'bg-white text-black' : 'text-neutral-100 hover:text-white'}`}
           >
             One-Time Bookings
           </button>
           <button 
             onClick={() => setActiveTab('sub_tasks')}
-            className={`px-6 py-2.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-all ${activeTab === 'sub_tasks' ? 'bg-orange-500 text-white' : 'text-neutral-400 hover:text-white'}`}
+            className={`px-6 py-2.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-all ${activeTab === 'sub_tasks' ? 'bg-orange-500 text-white' : 'text-neutral-100 hover:text-white'}`}
           >
             Subscription Tasks
           </button>
           <button 
             onClick={() => setActiveTab('subscriptions')}
-            className={`px-6 py-2.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-all ${activeTab === 'subscriptions' ? 'bg-zinc-600 text-white' : 'text-neutral-400 hover:text-white'}`}
+            className={`px-6 py-2.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-all ${activeTab === 'subscriptions' ? 'bg-zinc-600 text-white' : 'text-neutral-100 hover:text-white'}`}
           >
             Active Subscriptions
           </button>
@@ -505,13 +505,13 @@ export default function AdminDashboard() {
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
             <div className="relative w-full sm:max-w-[200px]">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-500" />
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-300" />
               <input
                 type="text"
                 placeholder="Search..."
                 value={searchTerm}
                 onChange={e => setSearchTerm(e.target.value)}
-                className="w-full bg-neutral-900 border border-white/10 rounded-2xl py-3 pl-11 pr-4 text-sm focus:outline-none focus:border-white transition-colors"
+                className="w-full bg-neutral-900 border border-white/10 rounded-2xl py-3 pl-11 pr-4 text-xs focus:outline-none focus:border-white transition-colors"
               />
             </div>
 
@@ -520,13 +520,13 @@ export default function AdminDashboard() {
                 type="date"
                 value={filterDate}
                 onChange={e => setFilterDate(e.target.value)}
-                className="w-full bg-neutral-900 border border-white/10 rounded-2xl py-3 px-4 text-sm focus:outline-none focus:border-white transition-colors text-white"
+                className="w-full bg-neutral-900 border border-white/10 rounded-2xl py-3 px-4 text-xs focus:outline-none focus:border-white transition-colors text-white"
                 style={{ colorScheme: 'dark' }}
               />
               {filterDate && (
                 <button 
                   onClick={() => setFilterDate('')}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-500 hover:text-white"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-300 hover:text-white"
                 >
                   <X className="w-4 h-4" />
                 </button>
@@ -566,12 +566,12 @@ export default function AdminDashboard() {
             {activeTab === 'bookings' || activeTab === 'sub_tasks' ? (
               // Bookings Table
               (loading && bookings.length === 0) ? (
-                <div className="p-12 text-center text-neutral-500 text-sm font-medium">Loading bookings...</div>
+                <div className="p-12 text-center text-neutral-300 text-xs font-medium">Loading bookings...</div>
               ) : filteredBookings.length === 0 ? (
-                <div className="p-12 text-center text-neutral-500 text-sm font-medium">No bookings found for this category.</div>
+                <div className="p-12 text-center text-neutral-300 text-xs font-medium">No bookings found for this category.</div>
               ) : (
-                <table className="w-full text-left text-sm whitespace-nowrap">
-                  <thead className="bg-white/5 text-neutral-400 text-xs uppercase tracking-wider">
+                <table className="w-full text-left text-xs whitespace-nowrap">
+                  <thead className="bg-white/5 text-neutral-100 text-xs uppercase tracking-wider">
                     <tr>
                       <th className="px-6 py-4 font-bold">Ref / Booking Date</th>
                       <th className="px-6 py-4 font-bold">Customer Info</th>
@@ -589,11 +589,11 @@ export default function AdminDashboard() {
                             <span className="font-mono text-xs bg-black/50 px-2 py-1 rounded inline-block text-neutral-300 w-fit">
                               {b.refId}
                             </span>
-                            <span className="text-[10px] text-neutral-500 font-medium tracking-wider">
+                            <span className="text-xs text-neutral-300 font-medium tracking-wider">
                               Booked for: {b.date ? new Date(b.date + 'T00:00:00').toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) : '—'}
                             </span>
                             {b.createdAt && b.createdAt.toDate && (
-                              <span className="text-[9px] text-neutral-600 font-medium tracking-wider">
+                              <span className="text-[11px] text-neutral-600 font-medium tracking-wider">
                                 Created: {b.createdAt.toDate().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}
                               </span>
                             )}
@@ -601,7 +601,7 @@ export default function AdminDashboard() {
                         </td>
                         <td className="px-6 py-4">
                           <div className="font-bold text-white mb-1">{b.name}</div>
-                          <div className="text-xs text-neutral-500 flex flex-col gap-1">
+                          <div className="text-xs text-neutral-300 flex flex-col gap-1">
                             <span className="flex items-center gap-1"><Mail className="w-3 h-3"/> {b.email}</span>
                             <span className="flex items-center gap-1"><Phone className="w-3 h-3"/> {b.phone}</span>
                             {b.address && (
@@ -610,15 +610,15 @@ export default function AdminDashboard() {
                                   href={`https://www.google.com/maps/dir/?api=1&destination=${b.latitude},${b.longitude}`}
                                   target="_blank"
                                   rel="noreferrer"
-                                  className="flex items-start gap-1 mt-1 pt-1 border-t border-white/5 text-[11px] text-zinc-400 hover:text-zinc-300 max-w-[200px] leading-tight transition-colors cursor-pointer group"
+                                  className="flex items-start gap-1 mt-1 pt-1 border-t border-white/5 text-[11px] text-white hover:text-neutral-300 max-w-[200px] leading-tight transition-colors cursor-pointer group"
                                   title="Click to get directions on Google Maps"
                                 >
-                                  <MapPin className="w-3 h-3 text-zinc-400 shrink-0 mt-0.5 group-hover:scale-110 transition-transform" />
+                                  <MapPin className="w-3 h-3 text-white shrink-0 mt-0.5 group-hover:scale-110 transition-transform" />
                                   <span className="line-clamp-2 underline decoration-dashed decoration-zinc-500/30 group-hover:decoration-zinc-400">{b.address}</span>
                                 </a>
                               ) : (
-                                <span className="flex items-start gap-1 mt-1 pt-1 border-t border-white/5 text-[11px] text-neutral-400 max-w-[200px] leading-tight" title={b.address}>
-                                  <MapPin className="w-3 h-3 text-neutral-500 shrink-0 mt-0.5" />
+                                <span className="flex items-start gap-1 mt-1 pt-1 border-t border-white/5 text-[11px] text-neutral-100 max-w-[200px] leading-tight" title={b.address}>
+                                  <MapPin className="w-3 h-3 text-neutral-300 shrink-0 mt-0.5" />
                                   <span className="line-clamp-2">{b.address}</span>
                                 </span>
                               )
@@ -628,9 +628,9 @@ export default function AdminDashboard() {
                                 href={`https://www.google.com/maps/dir/?api=1&destination=${b.latitude},${b.longitude}`}
                                 target="_blank"
                                 rel="noreferrer"
-                                className="inline-flex items-center gap-1 mt-1 text-[10px] text-zinc-400 hover:text-zinc-300 font-bold uppercase tracking-widest bg-zinc-500/10 hover:bg-zinc-500/20 px-2 py-1 rounded transition-all w-fit cursor-pointer"
+                                className="inline-flex items-center gap-1 mt-1 text-xs text-white hover:text-neutral-300 font-bold uppercase tracking-widest bg-zinc-500/10 hover:bg-zinc-500/20 px-2 py-1 rounded transition-all w-fit cursor-pointer"
                               >
-                                <Navigation className="w-2.5 h-2.5 text-zinc-400 animate-pulse" />
+                                <Navigation className="w-2.5 h-2.5 text-white animate-pulse" />
                                 Get Directions
                               </a>
                             )}
@@ -638,16 +638,16 @@ export default function AdminDashboard() {
                         </td>
                         <td className="px-6 py-4">
                           <div className="flex items-center gap-2 mb-1">
-                            <Car className="w-4 h-4 text-neutral-400" />
+                            <Car className="w-4 h-4 text-neutral-100" />
                             <span className="font-medium text-white capitalize">{b.vehicleMake} {b.vehicleModel}</span>
                           </div>
-                          <div className="text-xs text-neutral-500 uppercase tracking-wider">
+                          <div className="text-xs text-neutral-300 uppercase tracking-wider">
                             {(b.vehicles && b.vehicles.length > 0) ? `${b.vehicles.length} Vehicles` : b.vehicleType} &bull; {b.packageId} &bull; ₹{b.amount}
                           </div>
                         </td>
                         <td className="px-6 py-4 text-neutral-300">
                           <div className="font-medium">{b.date}</div>
-                          <div className="text-xs text-neutral-500">{b.timeSlot}</div>
+                          <div className="text-xs text-neutral-300">{b.timeSlot}</div>
                         </td>
                         <td className="px-6 py-4">
                           <select
@@ -656,7 +656,7 @@ export default function AdminDashboard() {
                             className={`text-xs font-bold uppercase tracking-wider px-3 py-1.5 rounded-lg border-2 appearance-none cursor-pointer outline-none transition-colors
                               ${b.status === 'completed' ? 'bg-green-500/10 text-green-400 border-green-500/20' : 
                                 b.status === 'confirmed' ? 'bg-orange-500/10 text-orange-400 border-orange-500/20' : 
-                                b.status === 'scheduled' ? 'bg-zinc-500/10 text-zinc-400 border-zinc-500/20' : 
+                                b.status === 'scheduled' ? 'bg-zinc-500/10 text-white border-white/5' : 
                                 b.status === 'cancelled' ? 'bg-red-500/10 text-red-400 border-red-500/20' : 
                                 'bg-neutral-800 text-neutral-300 border-neutral-700'}`}
                           >
@@ -672,14 +672,14 @@ export default function AdminDashboard() {
                           <div className="flex items-center gap-2">
                             <button
                               onClick={() => handleDownloadInvoice(b)}
-                              className="p-2 text-neutral-500 hover:text-white hover:bg-white/10 rounded-lg transition-colors"
+                              className="p-2 text-neutral-300 hover:text-white hover:bg-white/10 rounded-lg transition-colors"
                               title="Download Invoice"
                             >
                               <FileText className="w-4 h-4" />
                             </button>
                             <button 
                               onClick={() => handleDeleteBooking(b.id)}
-                              className="p-2 text-neutral-500 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-colors"
+                              className="p-2 text-neutral-300 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-colors"
                               title="Delete Booking"
                             >
                               <Trash2 className="w-4 h-4" />
@@ -694,12 +694,12 @@ export default function AdminDashboard() {
             ) : (
               // Subscriptions Table
               (loading && subscriptions.length === 0) ? (
-                <div className="p-12 text-center text-neutral-500 text-sm font-medium">Loading subscriptions...</div>
+                <div className="p-12 text-center text-neutral-300 text-xs font-medium">Loading subscriptions...</div>
               ) : filteredSubscriptions.length === 0 ? (
-                <div className="p-12 text-center text-neutral-500 text-sm font-medium">No active subscriptions found.</div>
+                <div className="p-12 text-center text-neutral-300 text-xs font-medium">No active subscriptions found.</div>
               ) : (
-                <table className="w-full text-left text-sm whitespace-nowrap">
-                  <thead className="bg-white/5 text-neutral-400 text-xs uppercase tracking-wider">
+                <table className="w-full text-left text-xs whitespace-nowrap">
+                  <thead className="bg-white/5 text-neutral-100 text-xs uppercase tracking-wider">
                     <tr>
                       <th className="px-6 py-4 font-bold">Details</th>
                       <th className="px-6 py-4 font-bold">Customer Info</th>
@@ -716,26 +716,26 @@ export default function AdminDashboard() {
                       <tr key={s.id} className="hover:bg-white/[0.02] transition-colors">
                         <td className="px-6 py-4">
                           <div className="font-bold text-white capitalize">{s.packageId || 'Plan'}</div>
-                          <div className="text-xs text-neutral-500 uppercase tracking-widest mt-1">
+                          <div className="text-xs text-neutral-300 uppercase tracking-widest mt-1">
                              {s.vehicles?.length} Vehicle(s)
                           </div>
                         </td>
                         <td className="px-6 py-4">
                           <div className="font-bold text-white mb-1">{s.customerName}</div>
-                          <div className="text-xs text-neutral-500">
+                          <div className="text-xs text-neutral-300">
                              {s.customerPhone} <br/>
                              <span className="truncate block max-w-[200px]" title={s.address}>{s.address}</span>
                           </div>
                         </td>
                         <td className="px-6 py-4">
-                          <span className={`px-2 py-1 rounded text-[10px] font-black uppercase tracking-widest ${activeStatus === 'Active' ? 'bg-zinc-500/20 text-zinc-400' : 'bg-red-500/20 text-red-500'}`}>
+                          <span className={`px-2 py-1 rounded text-xs font-black uppercase tracking-widest ${activeStatus === 'Active' ? 'bg-zinc-500/20 text-white' : 'bg-red-500/20 text-red-500'}`}>
                              {activeStatus}
                           </span>
                           <div className="text-xs text-neutral-300 mt-2 font-mono">
                              Used: {s.usedWashes} / {s.totalWashes} (Rem: {s.remainingWashes})
                           </div>
                         </td>
-                        <td className="px-6 py-4 text-xs text-neutral-400">
+                        <td className="px-6 py-4 text-xs text-neutral-100">
                           <div><span className="font-bold">Created:</span> {s.createdAt?.toDate?.()?.toLocaleDateString('en-GB') || 'N/A'}</div>
                           <div><span className="font-bold">Expires:</span> {s.expiresAt?.toDate?.()?.toLocaleDateString('en-GB') || 'N/A'}</div>
                         </td>
@@ -835,45 +835,45 @@ function AddBookingModal({ onClose, onAdded }: { onClose: () => void, onAdded: (
         <form onSubmit={handleSubmit} className="p-6 space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="text-xs font-bold text-neutral-400 uppercase tracking-wider mb-2 block">Name</label>
-              <input required type="text" value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-sm focus:border-white transition-colors outline-none" />
+              <label className="text-xs font-bold text-neutral-100 uppercase tracking-wider mb-2 block">Name</label>
+              <input required type="text" value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-xs focus:border-white transition-colors outline-none" />
             </div>
             <div>
-              <label className="text-xs font-bold text-neutral-400 uppercase tracking-wider mb-2 block">Email</label>
-              <input required type="email" value={formData.email} onChange={e => setFormData({...formData, email: e.target.value})} className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-sm focus:border-white transition-colors outline-none" />
+              <label className="text-xs font-bold text-neutral-100 uppercase tracking-wider mb-2 block">Email</label>
+              <input required type="email" value={formData.email} onChange={e => setFormData({...formData, email: e.target.value})} className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-xs focus:border-white transition-colors outline-none" />
             </div>
             <div>
-              <label className="text-xs font-bold text-neutral-400 uppercase tracking-wider mb-2 block">Phone</label>
-              <input required type="tel" value={formData.phone} onChange={e => setFormData({...formData, phone: e.target.value})} className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-sm focus:border-white transition-colors outline-none" />
+              <label className="text-xs font-bold text-neutral-100 uppercase tracking-wider mb-2 block">Phone</label>
+              <input required type="tel" value={formData.phone} onChange={e => setFormData({...formData, phone: e.target.value})} className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-xs focus:border-white transition-colors outline-none" />
             </div>
             <div>
-              <label className="text-xs font-bold text-neutral-400 uppercase tracking-wider mb-2 block">Amount (₹)</label>
-              <input required type="number" value={formData.amount} onChange={e => setFormData({...formData, amount: Number(e.target.value)})} className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-sm focus:border-white transition-colors outline-none" />
+              <label className="text-xs font-bold text-neutral-100 uppercase tracking-wider mb-2 block">Amount (₹)</label>
+              <input required type="number" value={formData.amount} onChange={e => setFormData({...formData, amount: Number(e.target.value)})} className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-xs focus:border-white transition-colors outline-none" />
             </div>
             
             <div className="md:col-span-2 pt-4 border-t border-white/5">
-              <h3 className="text-sm font-bold text-white mb-4">Vehicle Details</h3>
+              <h3 className="text-xs font-bold text-white mb-4">Vehicle Details</h3>
             </div>
             
             <div>
-              <label className="text-xs font-bold text-neutral-400 uppercase tracking-wider mb-2 block">Make</label>
-              <input required type="text" placeholder="e.g. Maruti Suzuki" value={formData.vehicleMake} onChange={e => setFormData({...formData, vehicleMake: e.target.value})} className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-sm focus:border-white transition-colors outline-none" />
+              <label className="text-xs font-bold text-neutral-100 uppercase tracking-wider mb-2 block">Make</label>
+              <input required type="text" placeholder="e.g. Maruti Suzuki" value={formData.vehicleMake} onChange={e => setFormData({...formData, vehicleMake: e.target.value})} className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-xs focus:border-white transition-colors outline-none" />
             </div>
             <div>
-              <label className="text-xs font-bold text-neutral-400 uppercase tracking-wider mb-2 block">Model</label>
-              <input required type="text" placeholder="e.g. Swift" value={formData.vehicleModel} onChange={e => setFormData({...formData, vehicleModel: e.target.value})} className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-sm focus:border-white transition-colors outline-none" />
+              <label className="text-xs font-bold text-neutral-100 uppercase tracking-wider mb-2 block">Model</label>
+              <input required type="text" placeholder="e.g. Swift" value={formData.vehicleModel} onChange={e => setFormData({...formData, vehicleModel: e.target.value})} className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-xs focus:border-white transition-colors outline-none" />
             </div>
             <div>
-              <label className="text-xs font-bold text-neutral-400 uppercase tracking-wider mb-2 block">Type</label>
-              <select value={formData.vehicleType} onChange={e => setFormData({...formData, vehicleType: e.target.value})} className="w-full bg-white/10 border border-white/20 px-4 py-3.5 text-sm font-medium focus:border-zinc-500/50 focus:ring-1 focus:ring-zinc-500/50 outline-none transition-all appearance-none rounded-xl text-white shadow-sm">
+              <label className="text-xs font-bold text-neutral-100 uppercase tracking-wider mb-2 block">Type</label>
+              <select value={formData.vehicleType} onChange={e => setFormData({...formData, vehicleType: e.target.value})} className="w-full bg-white/10 border border-white/20 px-4 py-3.5 text-xs font-medium focus:border-neutral-500/50 focus:ring-1 focus:ring-zinc-500/50 outline-none transition-all appearance-none rounded-xl text-white shadow-sm">
                 <option value="hatchback">Hatchback</option>
                 <option value="sedan">Sedan</option>
                 <option value="suv">SUV</option>
               </select>
             </div>
             <div>
-              <label className="text-xs font-bold text-neutral-400 uppercase tracking-wider mb-2 block">Package</label>
-              <select value={formData.packageId} onChange={e => setFormData({...formData, packageId: e.target.value})} className="w-full bg-white/10 border border-white/20 px-4 py-3.5 text-sm font-medium focus:border-zinc-500/50 focus:ring-1 focus:ring-zinc-500/50 outline-none transition-all appearance-none rounded-xl text-white shadow-sm">
+              <label className="text-xs font-bold text-neutral-100 uppercase tracking-wider mb-2 block">Package</label>
+              <select value={formData.packageId} onChange={e => setFormData({...formData, packageId: e.target.value})} className="w-full bg-white/10 border border-white/20 px-4 py-3.5 text-xs font-medium focus:border-neutral-500/50 focus:ring-1 focus:ring-zinc-500/50 outline-none transition-all appearance-none rounded-xl text-white shadow-sm">
                 <option value="basic">Basic Wash</option>
                 <option value="premium">Premium Care</option>
                 <option value="monthly">Monthly Care</option>
@@ -881,16 +881,16 @@ function AddBookingModal({ onClose, onAdded }: { onClose: () => void, onAdded: (
             </div>
 
             <div className="md:col-span-2 pt-4 border-t border-white/5">
-              <h3 className="text-sm font-bold text-white mb-4">Schedule</h3>
+              <h3 className="text-xs font-bold text-white mb-4">Schedule</h3>
             </div>
 
             <div>
-              <label className="text-xs font-bold text-neutral-400 uppercase tracking-wider mb-2 block">Date</label>
-              <input required type="date" value={formData.date} onChange={e => setFormData({...formData, date: e.target.value})} className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-sm focus:border-white transition-colors outline-none" style={{ colorScheme: 'dark' }} />
+              <label className="text-xs font-bold text-neutral-100 uppercase tracking-wider mb-2 block">Date</label>
+              <input required type="date" value={formData.date} onChange={e => setFormData({...formData, date: e.target.value})} className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-xs focus:border-white transition-colors outline-none" style={{ colorScheme: 'dark' }} />
             </div>
             <div>
-              <label className="text-xs font-bold text-neutral-400 uppercase tracking-wider mb-2 block">Time Slot</label>
-              <select value={formData.timeSlot} onChange={e => setFormData({...formData, timeSlot: e.target.value})} className="w-full bg-white/10 border border-white/20 px-4 py-3.5 text-sm font-medium focus:border-zinc-500/50 focus:ring-1 focus:ring-zinc-500/50 outline-none transition-all appearance-none rounded-xl text-white shadow-sm">
+              <label className="text-xs font-bold text-neutral-100 uppercase tracking-wider mb-2 block">Time Slot</label>
+              <select value={formData.timeSlot} onChange={e => setFormData({...formData, timeSlot: e.target.value})} className="w-full bg-white/10 border border-white/20 px-4 py-3.5 text-xs font-medium focus:border-neutral-500/50 focus:ring-1 focus:ring-zinc-500/50 outline-none transition-all appearance-none rounded-xl text-white shadow-sm">
                 {['09:00 AM - 11:00 AM', '11:00 AM - 01:00 PM', '01:00 PM - 03:00 PM', '03:00 PM - 05:00 PM', '05:00 PM - 07:00 PM'].map(time => (
                   <option key={time} value={time}>{time}</option>
                 ))}
