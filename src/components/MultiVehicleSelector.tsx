@@ -108,10 +108,10 @@ export default function MultiVehicleSelector({ selectedVehicles, onChange, defau
                     type="button"
                     onClick={() => toggleVehicle(v)}
                     className={`flex items-center gap-3 p-4 rounded-xl border text-left transition-all ${
-                       isSelected ? 'bg-emerald-500/10 border-emerald-500/50 shadow-[0_0_15px_rgba(16,185,129,0.2)]' : 'bg-black/50 border-white/10 hover:border-white/30'
+                       isSelected ? 'bg-zinc-500/10 border-zinc-500/50 shadow-[0_0_15px_rgba(16,185,129,0.2)]' : 'bg-black/50 border-white/10 hover:border-white/30'
                     }`}
                   >
-                    <div className={`p-2 rounded-lg ${isSelected ? 'bg-emerald-500/20 text-emerald-400' : 'bg-white/5 text-white/50'}`}>
+                    <div className={`p-2 rounded-lg ${isSelected ? 'bg-zinc-500/20 text-zinc-400' : 'bg-white/5 text-white/50'}`}>
                       <Car className="w-5 h-5" />
                     </div>
                     <div className="flex-1">
@@ -122,7 +122,7 @@ export default function MultiVehicleSelector({ selectedVehicles, onChange, defau
                       <span className="text-white/70 font-mono text-sm">
                          ₹{(PACKAGES.find(p => p.id === defaultPackageId) || PACKAGES[0]).price[v.type as VehicleType]}
                       </span>
-                      <div className={`w-5 h-5 rounded-md border flex items-center justify-center ${isSelected ? 'bg-emerald-500 border-emerald-500' : 'border-white/20'}`}>
+                      <div className={`w-5 h-5 rounded-md border flex items-center justify-center ${isSelected ? 'bg-zinc-500 border-zinc-500' : 'border-white/20'}`}>
                         {isSelected && <svg className="w-3 h-3 text-black" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>}
                       </div>
                     </div>
@@ -148,7 +148,7 @@ export default function MultiVehicleSelector({ selectedVehicles, onChange, defau
                );
             })}
          </div>
-         {selectedVehicles.length > 0 && <p className="text-[10px] text-emerald-400/80 font-bold mt-3 font-mono">You can add multiple vehicles to this booking.</p>}
+         {selectedVehicles.length > 0 && <p className="text-[10px] text-zinc-400/80 font-bold mt-3 font-mono">You can add multiple vehicles to this booking.</p>}
       </div>
       
       {/* Show newly added custom (non-saved) vehicles */}
@@ -160,8 +160,8 @@ export default function MultiVehicleSelector({ selectedVehicles, onChange, defau
                  <div key={i} className="flex flex-col gap-3 p-4 bg-black/40 border border-white/10 rounded-xl relative overflow-hidden group">
                     <div className="flex items-center justify-between relative z-10">
                        <div className="flex items-center gap-3">
-                          <div className="w-8 h-8 rounded-full bg-blue-500/20 flex items-center justify-center">
-                             <Car className="w-4 h-4 text-blue-400" />
+                          <div className="w-8 h-8 rounded-full bg-zinc-500/20 flex items-center justify-center">
+                             <Car className="w-4 h-4 text-zinc-400" />
                           </div>
                           <span className="text-white text-sm uppercase font-bold tracking-widest">{v.type} <span className="text-neutral-500 font-medium lowercase">({PACKAGES.find(p => p.id === defaultPackageId)?.name})</span></span>
                        </div>
@@ -177,7 +177,7 @@ export default function MultiVehicleSelector({ selectedVehicles, onChange, defau
                              newV[i] = { ...newV[i], brand: e.target.value };
                              onChange(newV);
                           }}
-                          className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2.5 text-sm text-white focus:outline-none focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/50 transition-all placeholder-neutral-500"
+                          className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2.5 text-sm text-white focus:outline-none focus:border-zinc-500/50 focus:ring-1 focus:ring-zinc-500/50 transition-all placeholder-neutral-500"
                        />
                        <input 
                           type="text" 
@@ -188,7 +188,7 @@ export default function MultiVehicleSelector({ selectedVehicles, onChange, defau
                              newV[i] = { ...newV[i], vehicleNumber: e.target.value.toUpperCase() };
                              onChange(newV);
                           }}
-                          className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2.5 text-sm text-white uppercase focus:outline-none focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/50 transition-all placeholder-neutral-500"
+                          className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2.5 text-sm text-white uppercase focus:outline-none focus:border-zinc-500/50 focus:ring-1 focus:ring-zinc-500/50 transition-all placeholder-neutral-500"
                        />
                     </div>
                  </div>

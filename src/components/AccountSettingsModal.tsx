@@ -144,7 +144,7 @@ export default function AccountSettingsModal({ isOpen, onClose, initialTab = 'se
                 onClick={() => setActiveTab(tab.id as any)}
                 className={`flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all font-medium text-sm ${
                   activeTab === tab.id
-                    ? 'bg-blue-500/10 text-blue-400'
+                    ? 'bg-zinc-500/10 text-zinc-400'
                     : 'text-neutral-400 hover:bg-white/5 hover:text-white'
                 }`}
               >
@@ -177,13 +177,13 @@ export default function AccountSettingsModal({ isOpen, onClose, initialTab = 'se
                         value={carModel}
                         onChange={(e) => setCarModel(e.target.value)}
                         placeholder="e.g. Hyundai Creta"
-                        className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all font-medium"
+                        className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-zinc-500 focus:ring-1 focus:ring-zinc-500 transition-all font-medium"
                       />
                     </div>
                     <button
                       onClick={handleSaveCarOption}
                       disabled={isSaving}
-                      className={`w-full flex justify-center items-center gap-2 font-bold py-3 rounded-xl transition-colors disabled:opacity-50 ${saveSuccess === 'vehicles' ? 'bg-emerald-600 hover:bg-emerald-500 text-white' : 'bg-blue-600 hover:bg-blue-500 text-white'}`}
+                      className={`w-full flex justify-center items-center gap-2 font-bold py-3 rounded-xl transition-colors disabled:opacity-50 ${saveSuccess === 'vehicles' ? 'bg-zinc-600 hover:bg-zinc-500 text-white' : 'bg-zinc-600 hover:bg-zinc-500 text-white'}`}
                     >
                       {isSaving ? <Loader2 className="w-4 h-4 animate-spin" /> : saveSuccess === 'vehicles' ? 'Saved Successfully' : 'Save Vehicle'}
                     </button>
@@ -203,13 +203,13 @@ export default function AccountSettingsModal({ isOpen, onClose, initialTab = 'se
                         value={address}
                         onChange={(e) => setAddress(e.target.value)}
                         placeholder="e.g. 123 Main St, Appt 4B"
-                        className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all font-medium resize-none h-24 whitespace-pre-wrap"
+                        className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-zinc-500 focus:ring-1 focus:ring-zinc-500 transition-all font-medium resize-none h-24 whitespace-pre-wrap"
                       />
                     </div>
                     <button
                       onClick={handleSaveAddress}
                       disabled={isSaving}
-                      className={`w-full flex justify-center items-center gap-2 font-bold py-3 rounded-xl transition-colors disabled:opacity-50 ${saveSuccess === 'addresses' ? 'bg-emerald-600 hover:bg-emerald-500 text-white' : 'bg-blue-600 hover:bg-blue-500 text-white'}`}
+                      className={`w-full flex justify-center items-center gap-2 font-bold py-3 rounded-xl transition-colors disabled:opacity-50 ${saveSuccess === 'addresses' ? 'bg-zinc-600 hover:bg-zinc-500 text-white' : 'bg-zinc-600 hover:bg-zinc-500 text-white'}`}
                     >
                       {isSaving ? <Loader2 className="w-4 h-4 animate-spin" /> : saveSuccess === 'addresses' ? 'Saved Successfully' : 'Save Address'}
                     </button>
@@ -249,7 +249,7 @@ export default function AccountSettingsModal({ isOpen, onClose, initialTab = 'se
                               </div>
                             </div>
                             <div className="flex items-center gap-4">
-                              <span className="font-bold text-emerald-400 font-mono">₹{booking.amount}</span>
+                              <span className="font-bold text-zinc-400 font-mono">₹{booking.amount}</span>
                               {booking.status !== 'cancelled' && (
                                 <button
                                   onClick={() => {
@@ -268,7 +268,7 @@ export default function AccountSettingsModal({ isOpen, onClose, initialTab = 'se
                                     };
                                     generateInvoice(details, pkg, booking.amount || 0, booking.paymentMethod || 'Manual', booking.refId || 'REF000', booking.status);
                                   }}
-                                  className="p-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-colors flex items-center justify-center"
+                                  className="p-2 bg-zinc-500 hover:bg-zinc-600 text-white rounded-lg transition-colors flex items-center justify-center"
                                   title="Download Invoice"
                                 >
                                   <Download className="w-4 h-4" />
@@ -313,7 +313,7 @@ export default function AccountSettingsModal({ isOpen, onClose, initialTab = 'se
                         value={fullName}
                         onChange={(e) => setFullName(e.target.value)}
                         placeholder="Your Full Name"
-                        className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all font-medium"
+                        className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-zinc-500 focus:ring-1 focus:ring-zinc-500 transition-all font-medium"
                       />
                     </div>
                     <div>
@@ -323,7 +323,7 @@ export default function AccountSettingsModal({ isOpen, onClose, initialTab = 'se
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         placeholder="Your Email"
-                        className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all font-medium"
+                        className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-zinc-500 focus:ring-1 focus:ring-zinc-500 transition-all font-medium"
                       />
                     </div>
                     <div>
@@ -333,13 +333,13 @@ export default function AccountSettingsModal({ isOpen, onClose, initialTab = 'se
                         value={phone}
                         onChange={(e) => setPhone(e.target.value)}
                         placeholder="Your Phone Number"
-                        className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all font-medium"
+                        className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-zinc-500 focus:ring-1 focus:ring-zinc-500 transition-all font-medium"
                       />
                     </div>
                     <button
                       onClick={handleSaveSettings}
                       disabled={isSaving}
-                      className={`w-full flex justify-center items-center gap-2 font-bold py-3 rounded-xl transition-colors disabled:opacity-50 mt-4 ${saveSuccess === 'settings' ? 'bg-emerald-600 hover:bg-emerald-500 text-white' : 'bg-blue-600 hover:bg-blue-500 text-white'}`}
+                      className={`w-full flex justify-center items-center gap-2 font-bold py-3 rounded-xl transition-colors disabled:opacity-50 mt-4 ${saveSuccess === 'settings' ? 'bg-zinc-600 hover:bg-zinc-500 text-white' : 'bg-zinc-600 hover:bg-zinc-500 text-white'}`}
                     >
                       {isSaving ? <Loader2 className="w-4 h-4 animate-spin" /> : saveSuccess === 'settings' ? 'Saved Successfully' : 'Save Changes'}
                     </button>

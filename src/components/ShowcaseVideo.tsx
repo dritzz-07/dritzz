@@ -39,7 +39,7 @@ export default function ShowcaseVideo() {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="inline-block px-3 py-1 mb-6 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-[10px] font-bold uppercase tracking-widest text-emerald-400"
+          className="inline-block px-3 py-1 mb-6 rounded-full bg-zinc-500/10 border border-zinc-500/20 text-[10px] font-bold uppercase tracking-widest text-zinc-400"
         >
           Premium Experience
         </motion.div>
@@ -50,7 +50,7 @@ export default function ShowcaseVideo() {
           transition={{ delay: 0.1 }}
           className="font-sporty font-black text-4xl md:text-5xl uppercase tracking-tighter text-white mb-6"
         >
-          SEE THE <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400">DETAIL</span> IN ACTION
+          SEE THE <span className="text-transparent bg-clip-text bg-gradient-to-r from-zinc-400 to-zinc-400">DETAIL</span> IN ACTION
         </motion.h2>
         <motion.p
           initial={{ opacity: 0, y: 20 }}

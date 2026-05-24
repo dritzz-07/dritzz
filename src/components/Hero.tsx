@@ -168,12 +168,12 @@ export default function Hero() {
                 repeat: Infinity,
                 ease: "easeInOut"
               }}
-              className="w-12 h-12 rounded-full bg-blue-500/20 flex items-center justify-center border border-blue-500/30 shadow-[0_0_15px_rgba(59,130,246,0.3)]"
+              className="w-12 h-12 rounded-full bg-zinc-500/20 flex items-center justify-center border border-zinc-500/30 shadow-[0_0_15px_rgba(255,255,255,0.3)]"
             >
-              <Droplets className="w-6 h-6 text-blue-400" />
+              <Droplets className="w-6 h-6 text-zinc-400" />
             </motion.div>
             <div className="flex flex-col">
-              <span className="text-xs uppercase tracking-[0.2em] text-blue-300 font-bold border-none text-shadow-none">WE USE OUR OWN</span>
+              <span className="text-xs uppercase tracking-[0.2em] text-zinc-300 font-bold border-none text-shadow-none">WE USE OUR OWN</span>
               <span className="text-base uppercase tracking-widest text-white font-black border-none text-shadow-none">WATER SOURCE</span>
             </div>
           </div>

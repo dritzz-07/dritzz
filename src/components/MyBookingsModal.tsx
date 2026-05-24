@@ -159,7 +159,7 @@ export default function MyBookingsModal({ isOpen, onClose, initialTab = 'upcomin
               <div className="flex justify-between items-center">
                 <div>
                   <h2 className="text-2xl font-black text-white tracking-tighter uppercase">My Dashboard</h2>
-                  <p className="text-blue-400 text-sm mt-1 font-medium">Welcome back, {userProfile?.fullName?.split(' ')[0] || user?.displayName?.split(' ')[0] || 'Customer'}</p>
+                  <p className="text-zinc-400 text-sm mt-1 font-medium">Welcome back, {userProfile?.fullName?.split(' ')[0] || user?.displayName?.split(' ')[0] || 'Customer'}</p>
                 </div>
                 <button 
                   onClick={onClose}
@@ -174,7 +174,7 @@ export default function MyBookingsModal({ isOpen, onClose, initialTab = 'upcomin
                   onClick={() => setActiveTab('upcoming')}
                   className={`px-4 py-2 rounded-lg text-[11px] font-bold uppercase tracking-widest transition-all whitespace-nowrap ${
                     activeTab === 'upcoming' 
-                      ? 'bg-emerald-500 text-black shadow-md' 
+                      ? 'bg-zinc-500 text-black shadow-md' 
                       : 'text-neutral-400 hover:text-white'
                   }`}
                 >
@@ -222,7 +222,7 @@ export default function MyBookingsModal({ isOpen, onClose, initialTab = 'upcomin
                               </span>
                               <span className="text-neutral-500 text-xs font-mono">Ref: {booking.refId}</span>
                               {booking.subscriptionId && (
-                                 <span className="px-2 py-1 bg-blue-500/20 text-blue-400 text-[9px] font-black uppercase tracking-widest rounded flex items-center gap-1">
+                                 <span className="px-2 py-1 bg-zinc-500/20 text-zinc-400 text-[9px] font-black uppercase tracking-widest rounded flex items-center gap-1">
                                     <Gem className="w-3 h-3" /> Plan Wash
                                  </span>
                               )}
@@ -265,11 +265,11 @@ export default function MyBookingsModal({ isOpen, onClose, initialTab = 'upcomin
                               <div className="col-span-2 pt-3 border-t border-white/5 space-y-3">
                                 <div className="flex items-center justify-between bg-white/[0.02] border border-white/5 rounded-xl p-3">
                                   <div className="flex items-start gap-3 text-sm text-neutral-300 max-w-[65%]">
-                                    <div className="p-2 bg-emerald-500/10 border border-emerald-500/20 rounded-lg shrink-0">
-                                      <MapPin className="w-4 h-4 text-emerald-400" />
+                                    <div className="p-2 bg-zinc-500/10 border border-zinc-500/20 rounded-lg shrink-0">
+                                      <MapPin className="w-4 h-4 text-zinc-400" />
                                     </div>
                                     <div className="text-left">
-                                      <div className="text-[10px] uppercase font-black text-emerald-400 tracking-wider mb-1">Service Location</div>
+                                      <div className="text-[10px] uppercase font-black text-zinc-400 tracking-wider mb-1">Service Location</div>
                                       <span className="line-clamp-2 text-xs text-neutral-300 font-medium leading-relaxed">
                                         {booking.address || 'Doorstep Service Location'}
                                       </span>
@@ -281,13 +281,13 @@ export default function MyBookingsModal({ isOpen, onClose, initialTab = 'upcomin
                                       onClick={() => setActiveTrackId(activeTrackId === booking.id ? null : booking.id)}
                                       className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-black uppercase tracking-wider transition-all shrink-0 cursor-pointer border
                                         ${activeTrackId === booking.id 
-                                          ? 'bg-emerald-500 text-black border-emerald-400 shadow-[0_0_20px_rgba(16,185,129,0.5)] hover:brightness-95' 
-                                          : 'bg-emerald-500/10 text-emerald-400 border-emerald-500/25 hover:bg-emerald-500/20 hover:border-emerald-500/40 animate-pulse'
+                                          ? 'bg-zinc-500 text-black border-zinc-400 shadow-[0_0_20px_rgba(16,185,129,0.5)] hover:brightness-95' 
+                                          : 'bg-zinc-500/10 text-zinc-400 border-zinc-500/25 hover:bg-zinc-500/20 hover:border-zinc-500/40 animate-pulse'
                                         }`}
                                     >
                                       <span className="relative flex h-2 w-2">
-                                        <span className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${activeTrackId === booking.id ? 'bg-black' : 'bg-emerald-400'}`}></span>
-                                        <span className={`relative inline-flex rounded-full h-2 w-2 ${activeTrackId === booking.id ? 'bg-black' : 'bg-emerald-500'}`}></span>
+                                        <span className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${activeTrackId === booking.id ? 'bg-black' : 'bg-zinc-400'}`}></span>
+                                        <span className={`relative inline-flex rounded-full h-2 w-2 ${activeTrackId === booking.id ? 'bg-black' : 'bg-zinc-500'}`}></span>
                                       </span>
                                       {activeTrackId === booking.id ? 'Map Active' : 'Live Location'}
                                     </button>
@@ -302,7 +302,7 @@ export default function MyBookingsModal({ isOpen, onClose, initialTab = 'upcomin
                             <div className="text-2xl font-black text-white tracking-tighter">₹{booking.amount}</div>
                             <button
                               onClick={() => handleDownloadInvoice(booking, pkgName)}
-                              className="mt-3 flex items-center gap-2 justify-center md:justify-end text-[10px] uppercase font-bold tracking-widest text-emerald-400 hover:text-emerald-300 transition-colors"
+                              className="mt-3 flex items-center gap-2 justify-center md:justify-end text-[10px] uppercase font-bold tracking-widest text-zinc-400 hover:text-zinc-300 transition-colors"
                             >
                               <Download className="w-3 h-3" />
                               Invoice

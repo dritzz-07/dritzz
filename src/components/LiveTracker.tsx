@@ -146,8 +146,8 @@ export default function LiveTracker({ bookingId, refId, address, status, onClose
     const customerIcon = L.divIcon({
       html: `
         <div class="relative flex items-center justify-center">
-          <div class="absolute w-10 h-10 bg-emerald-500/20 rounded-full animate-ping"></div>
-          <div class="w-7 h-7 bg-emerald-500 rounded-full flex items-center justify-center shadow-[0_0_15px_rgba(16,185,129,0.6)] border-2 border-white">
+          <div class="absolute w-10 h-10 bg-zinc-500/20 rounded-full animate-ping"></div>
+          <div class="w-7 h-7 bg-zinc-500 rounded-full flex items-center justify-center shadow-[0_0_15px_rgba(16,185,129,0.6)] border-2 border-white">
             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" class="text-white"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
           </div>
         </div>
@@ -271,7 +271,7 @@ export default function LiveTracker({ bookingId, refId, address, status, onClose
       {/* Header Info */}
       <div className="bg-neutral-900 px-5 py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/5">
         <div className="flex items-center gap-2.5">
-          <div className="w-2.5 h-2.5 bg-emerald-500 rounded-full animate-ping shrink-0" />
+          <div className="w-2.5 h-2.5 bg-zinc-500 rounded-full animate-ping shrink-0" />
           <div>
             <h4 className="text-sm font-black text-white tracking-wide uppercase">Live Wash Tracker</h4>
             <p className="text-neutral-500 font-mono text-[10px]">Reference: {refId}</p>
@@ -291,7 +291,7 @@ export default function LiveTracker({ bookingId, refId, address, status, onClose
         
         {/* Dynamic Map HUD Overlays */}
         <div className="absolute top-3 left-3 z-[10] bg-black/75 backdrop-blur-md px-3 py-2 rounded-xl border border-white/10 flex items-center gap-2">
-          <Clock className="w-3.5 h-3.5 text-cyan-400" />
+          <Clock className="w-3.5 h-3.5 text-zinc-400" />
           <div className="text-left font-mono">
             <div className="text-[9px] text-neutral-500 font-bold uppercase leading-none">ETA</div>
             <div className="text-xs font-black text-white leading-tight">{tracker.eta}</div>
@@ -313,7 +313,7 @@ export default function LiveTracker({ bookingId, refId, address, status, onClose
           {/* Progress bar line */}
           <div className="absolute left-6 right-6 top-[15px] h-0.5 bg-white/10 z-0">
             <div 
-              className="h-full bg-emerald-500 transition-all duration-1000" 
+              className="h-full bg-zinc-500 transition-all duration-1000" 
               style={{ width: `${(tracker.step / 4) * 100}%` }} 
             />
           </div>
@@ -327,9 +327,9 @@ export default function LiveTracker({ bookingId, refId, address, status, onClose
               <div key={name} className="relative z-10 flex flex-col items-center">
                 <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs shadow-md transition-colors duration-300
                   ${isCancelled ? 'bg-red-500/10 border-red-500 text-red-500' : 
-                    isCompleted ? 'bg-emerald-500/10 border-emerald-500 text-emerald-400 border-2' : 
+                    isCompleted ? 'bg-zinc-500/10 border-zinc-500 text-zinc-400 border-2' : 
                     'bg-neutral-800 border-neutral-700 text-neutral-500 border border-dashed'}
-                  ${isActive ? 'scale-110 shadow-[0_0_12px_rgba(16,185,129,0.3)] ring-4 ring-emerald-500/15' : ''}`}
+                  ${isActive ? 'scale-110 shadow-[0_0_12px_rgba(16,185,129,0.3)] ring-4 ring-zinc-500/15' : ''}`}
                 >
                   {isCancelled ? '✕' : isCompleted ? '✓' : idx + 1}
                 </div>

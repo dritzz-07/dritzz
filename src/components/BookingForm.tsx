@@ -477,11 +477,11 @@ export default function BookingForm({
   return (
     <section id="booking" className="relative px-6 md:px-16 py-24 bg-black border-t border-white/5 overflow-hidden">
       {/* Background soft glow */}
-      <div className="absolute top-1/4 -right-1/4 w-[800px] h-[800px] bg-blue-500/10 blur-[120px] rounded-full pointer-events-none" />
+      <div className="absolute top-1/4 -right-1/4 w-[800px] h-[800px] bg-zinc-500/10 blur-[120px] rounded-full pointer-events-none" />
       <div className="absolute bottom-0 -left-1/4 w-[600px] h-[600px] bg-purple-500/10 blur-[120px] rounded-full pointer-events-none" />
 
       <div className="relative z-10 max-w-7xl mx-auto flex flex-col items-center text-center mb-16">
-        <div className="text-[10px] uppercase tracking-[0.3em] font-black text-blue-400 mb-4 drop-shadow-sm">Reserve Your Slot</div>
+        <div className="text-[10px] uppercase tracking-[0.3em] font-black text-zinc-400 mb-4 drop-shadow-sm">Reserve Your Slot</div>
         <h2 className="text-4xl md:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-white via-neutral-200 to-neutral-400 tracking-tight mb-4 pb-1">
           BOOK YOUR WASH
         </h2>
@@ -535,10 +535,10 @@ export default function BookingForm({
                 <div>
                   <label className="text-[10px] uppercase tracking-widest text-neutral-500 font-bold block">Service Address</label>
                   {GOOGLE_MAPS_KEY && (
-                    <div className="text-[9px] uppercase font-black tracking-widest text-emerald-400 mt-1 flex items-center gap-1">
+                    <div className="text-[9px] uppercase font-black tracking-widest text-zinc-400 mt-1 flex items-center gap-1">
                       <span className="relative flex h-1.5 w-1.5">
-                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                        <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-500"></span>
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-zinc-400 opacity-75"></span>
+                        <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-zinc-500"></span>
                       </span>
                       Google Maps High-Accuracy
                     </div>
@@ -548,7 +548,7 @@ export default function BookingForm({
                   <button
                     type="button"
                     onClick={handleGetLiveLocation}
-                    className="flex items-center gap-1.5 text-xs text-emerald-400 hover:text-emerald-300 font-black uppercase tracking-wider bg-emerald-500/10 hover:bg-emerald-500/25 px-3 py-1.5 rounded-lg border border-emerald-500/20 transition-all cursor-pointer shrink-0"
+                    className="flex items-center gap-1.5 text-xs text-zinc-400 hover:text-zinc-300 font-black uppercase tracking-wider bg-zinc-500/10 hover:bg-zinc-500/25 px-3 py-1.5 rounded-lg border border-zinc-500/20 transition-all cursor-pointer shrink-0"
                   >
                     {locating ? (
                       <>
@@ -581,11 +581,11 @@ export default function BookingForm({
                     }
                   }}
                   placeholder="Type service address (with auto-complete) or pinpoint on map..."
-                  className="w-full bg-black/40 border border-white/10 pl-4 pr-10 py-3.5 text-sm focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/50 outline-none transition-all rounded-xl text-white placeholder-neutral-600"
+                  className="w-full bg-black/40 border border-white/10 pl-4 pr-10 py-3.5 text-sm focus:border-zinc-500/50 focus:ring-1 focus:ring-zinc-500/50 outline-none transition-all rounded-xl text-white placeholder-neutral-600"
                 />
                 <div className="absolute right-3.5 top-1/2 -translate-y-1/2 flex items-center justify-center pointer-events-none">
                   {searching ? (
-                    <Loader2 className="w-4 h-4 text-emerald-400 animate-spin" />
+                    <Loader2 className="w-4 h-4 text-zinc-400 animate-spin" />
                   ) : (
                     <MapPin className="w-4 h-4 text-neutral-500" />
                   )}
@@ -600,7 +600,7 @@ export default function BookingForm({
                         onClick={() => handleSelectSuggestion(suggestion)}
                         className="w-full text-left px-4 py-3 hover:bg-white/5 transition-colors flex items-start gap-2.5 group cursor-pointer"
                       >
-                        <MapPin className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5 group-hover:scale-110 transition-transform" />
+                        <MapPin className="w-4 h-4 text-zinc-400 shrink-0 mt-0.5 group-hover:scale-110 transition-transform" />
                         <div className="flex-1 min-w-0">
                           <div className="text-xs font-semibold text-neutral-200 truncate">
                             {suggestion.address?.road || suggestion.address?.suburb || suggestion.address?.city || 'Search Result'}
@@ -619,10 +619,10 @@ export default function BookingForm({
             {showMapPicker && (
               <div className="border border-white/10 rounded-xl overflow-hidden bg-white/5 p-4 space-y-3">
                 <div className="flex justify-between items-center mr-1">
-                  <div className="text-[10px] uppercase font-black text-emerald-400 tracking-wider flex items-center gap-1.5">
+                  <div className="text-[10px] uppercase font-black text-zinc-400 tracking-wider flex items-center gap-1.5">
                     <span className="relative flex h-2 w-2">
-                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                      <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-zinc-400 opacity-75"></span>
+                      <span className="relative inline-flex rounded-full h-2 w-2 bg-zinc-500"></span>
                     </span>
                     Drag Pin or Click Map To Adjust Destination Location
                   </div>
@@ -644,7 +644,7 @@ export default function BookingForm({
                 {details.latitude && details.longitude && (
                   <div className="flex items-center justify-between text-[11px] font-mono text-neutral-400 bg-black/20 px-3 py-2 rounded-lg">
                     <span className="text-neutral-500">GPS Coords: <span className="text-neutral-300">{details.latitude.toFixed(6)}, {details.longitude.toFixed(6)}</span></span>
-                    <span className="text-emerald-400 uppercase font-bold text-[9px] tracking-wide">Coordinates Locked</span>
+                    <span className="text-zinc-400 uppercase font-bold text-[9px] tracking-wide">Coordinates Locked</span>
                   </div>
                 )}
                 {mapError && (
@@ -664,7 +664,7 @@ export default function BookingForm({
                 value={details.date}
                 min={new Date().toISOString().split('T')[0]}
                 onChange={handleChange}
-                className="w-full bg-black/40 border border-white/10 px-4 py-3.5 text-sm focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/50 outline-none transition-all rounded-xl text-white [color-scheme:dark]"
+                className="w-full bg-black/40 border border-white/10 px-4 py-3.5 text-sm focus:border-zinc-500/50 focus:ring-1 focus:ring-zinc-500/50 outline-none transition-all rounded-xl text-white [color-scheme:dark]"
               />
             </div>
             <div className="space-y-2">
@@ -674,7 +674,7 @@ export default function BookingForm({
                 name="timeSlot"
                 value={details.timeSlot}
                 onChange={handleChange}
-                className="w-full bg-white/10 border border-white/20 px-4 py-3.5 text-sm font-medium focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/50 outline-none transition-all appearance-none rounded-xl text-white shadow-sm"
+                className="w-full bg-white/10 border border-white/20 px-4 py-3.5 text-sm font-medium focus:border-zinc-500/50 focus:ring-1 focus:ring-zinc-500/50 outline-none transition-all appearance-none rounded-xl text-white shadow-sm"
               >
                 <option value="" className="bg-black">Select a slot</option>
                 {TIME_SLOTS.map(s => <option key={s} value={s} className="bg-black">{s}</option>)}
@@ -695,7 +695,7 @@ export default function BookingForm({
                       className={`relative cursor-pointer flex flex-col p-5 rounded-2xl border transition-all duration-300 ${
                         isSelected 
                           ? isMonthly 
-                            ? 'bg-blue-600/10 border-blue-500 shadow-[0_0_20px_rgba(37,99,235,0.2)] scale-[1.02]' 
+                            ? 'bg-zinc-600/10 border-zinc-500 shadow-[0_0_20px_rgba(255,255,255,0.2)] scale-[1.02]' 
                             : 'bg-white/10 border-white text-white scale-[1.02]' 
                           : 'bg-black/40 border-white/10 hover:border-white/30 hover:bg-white/5'
                       } ${isMonthly && !isSelected ? 'mt-3 sm:mt-0' : ''}`}
@@ -710,13 +710,13 @@ export default function BookingForm({
                         className="sr-only"
                       />
                       {isMonthly && (
-                        <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-1 bg-gradient-to-r from-blue-700 to-blue-500 text-white text-[9px] font-semibold uppercase tracking-[0.3em] rounded-full shadow-lg border border-blue-400/50 whitespace-nowrap">
+                        <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-1 bg-gradient-to-r from-zinc-700 to-zinc-500 text-white text-[9px] font-semibold uppercase tracking-[0.3em] rounded-full shadow-lg border border-zinc-400/50 whitespace-nowrap">
                           Dritzz Black Membership
                         </div>
                       )}
                       <div className="flex items-center justify-between mb-3">
                         <span className={`font-bold uppercase tracking-[0.15em] text-[14px] ${isSelected ? 'text-white' : 'text-neutral-300'}`}>{p.name}</span>
-                        {isSelected && <div className={`w-2.5 h-2.5 rounded-full ${isMonthly ? 'bg-blue-400 shadow-[0_0_12px_rgba(96,165,250,0.8)]' : 'bg-white shadow-[0_0_12px_rgba(255,255,255,0.8)]'}`} />}
+                        {isSelected && <div className={`w-2.5 h-2.5 rounded-full ${isMonthly ? 'bg-zinc-400 shadow-[0_0_12px_rgba(255,255,255,0.8)]' : 'bg-white shadow-[0_0_12px_rgba(255,255,255,0.8)]'}`} />}
                       </div>
                       <span className="text-[11px] uppercase tracking-wider text-neutral-400 font-medium leading-relaxed">{p.tagline}</span>
                     </label>
@@ -741,7 +741,7 @@ export default function BookingForm({
               onChange={handleChange}
               rows={3}
               placeholder="Any specific areas to focus on..."
-              className="w-full bg-black/40 border border-white/10 px-4 py-3.5 text-sm focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/50 outline-none transition-all resize-none rounded-xl text-white placeholder-neutral-600"
+              className="w-full bg-black/40 border border-white/10 px-4 py-3.5 text-sm focus:border-zinc-500/50 focus:ring-1 focus:ring-zinc-500/50 outline-none transition-all resize-none rounded-xl text-white placeholder-neutral-600"
             />
           </div>
         </form>
@@ -749,7 +749,7 @@ export default function BookingForm({
         <div className="lg:col-span-2 space-y-6 lg:sticky lg:top-32">
           <div className="relative overflow-hidden bg-neutral-900/60 backdrop-blur-xl border border-white/10 text-white p-8 md:p-10 rounded-3xl shadow-2xl shadow-black/50">
             {/* Subtle glow inside card */}
-            <div className="absolute top-0 right-0 w-64 h-64 bg-blue-500/5 blur-[80px] rounded-full pointer-events-none" />
+            <div className="absolute top-0 right-0 w-64 h-64 bg-zinc-500/5 blur-[80px] rounded-full pointer-events-none" />
 
             <h3 className="relative font-bold text-sm tracking-widest uppercase mb-8 pb-4 border-b border-white/10 text-neutral-300">Order Summary</h3>
             
@@ -759,8 +759,8 @@ export default function BookingForm({
                     {details.vehicles.map((v, idx) => (
                        <div key={idx} className="bg-[#111827]/80 rounded-2xl p-4 flex items-center justify-between shadow-inner shadow-white/5 border border-white/5">
                           <div className="flex items-center gap-4">
-                             <div className="w-10 h-10 shrink-0 rounded-full bg-blue-500/10 border border-blue-500/20 flex items-center justify-center">
-                                <Car className="w-5 h-5 text-blue-400" />
+                             <div className="w-10 h-10 shrink-0 rounded-full bg-zinc-500/10 border border-zinc-500/20 flex items-center justify-center">
+                                <Car className="w-5 h-5 text-zinc-400" />
                              </div>
                              <div className="flex flex-col">
                                 <span className="text-white font-bold">{v.brand || 'Custom Vehicle'} {v.model || ''}</span>
@@ -775,8 +775,8 @@ export default function BookingForm({
               ) : (
                  <div className="bg-[#111827]/80 rounded-2xl p-4 flex items-center justify-between shadow-inner shadow-white/5 border border-white/5">
                     <div className="flex items-center gap-4">
-                       <div className="w-10 h-10 shrink-0 rounded-full bg-blue-500/10 border border-blue-500/20 flex items-center justify-center">
-                          <Car className="w-5 h-5 text-blue-400" />
+                       <div className="w-10 h-10 shrink-0 rounded-full bg-zinc-500/10 border border-zinc-500/20 flex items-center justify-center">
+                          <Car className="w-5 h-5 text-zinc-400" />
                        </div>
                        <div className="flex flex-col">
                           <span className="text-white font-bold">Custom Vehicle</span>
@@ -788,7 +788,7 @@ export default function BookingForm({
               )}
               
               <div className="flex items-center gap-4 py-3 border-b border-white/5">
-                 <Calendar className="w-5 h-5 text-blue-400 shrink-0" />
+                 <Calendar className="w-5 h-5 text-zinc-400 shrink-0" />
                  <div className="flex flex-col">
                     <span className="text-[10px] uppercase tracking-[0.2em] text-neutral-500 font-bold mb-1">Date</span>
                     <span className="text-white font-bold">{details.date ? new Date(details.date).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric'}) : '—'}</span>
@@ -796,7 +796,7 @@ export default function BookingForm({
               </div>
 
               <div className="flex items-center gap-4 py-3 border-b border-white/5">
-                 <Clock className="w-5 h-5 text-blue-400 shrink-0" />
+                 <Clock className="w-5 h-5 text-zinc-400 shrink-0" />
                  <div className="flex flex-col">
                     <span className="text-[10px] uppercase tracking-[0.2em] text-neutral-500 font-bold mb-1">Slot</span>
                     <span className="text-white font-bold">{details.timeSlot || '—'}</span>
@@ -804,7 +804,7 @@ export default function BookingForm({
               </div>
               
               <div className="pt-4">
-                 <span className="text-[10px] uppercase tracking-[0.2em] text-blue-400 font-bold mb-4 block">Price Breakdown</span>
+                 <span className="text-[10px] uppercase tracking-[0.2em] text-zinc-400 font-bold mb-4 block">Price Breakdown</span>
                  <div className="space-y-4">
                     <div className="flex justify-between items-center text-sm border-b border-white/5 pb-3">
                        <span className="text-neutral-400 font-medium tracking-wide">Service Amount</span>
@@ -828,30 +828,30 @@ export default function BookingForm({
                       <input 
                         type="text" 
                         placeholder="ENTER DISCOUNT CODE" 
-                        className="w-full bg-black/40 border border-white/10 px-4 py-3.5 text-sm focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/50 outline-none transition-all rounded-xl text-white font-mono uppercase placeholder-neutral-600"
+                        className="w-full bg-black/40 border border-white/10 px-4 py-3.5 text-sm focus:border-zinc-500/50 focus:ring-1 focus:ring-zinc-500/50 outline-none transition-all rounded-xl text-white font-mono uppercase placeholder-neutral-600"
                       />
                     </div>
-                    <button type="button" className="px-5 py-3.5 bg-blue-600/10 hover:bg-blue-600/20 text-blue-400 border border-blue-500/30 text-[11px] font-black uppercase tracking-widest rounded-xl transition-colors shrink-0">
+                    <button type="button" className="px-5 py-3.5 bg-zinc-600/10 hover:bg-zinc-600/20 text-zinc-400 border border-zinc-500/30 text-[11px] font-black uppercase tracking-widest rounded-xl transition-colors shrink-0">
                       Apply
                     </button>
                  </div>
               </div>
             </div>
 
-            <div className="relative overflow-hidden bg-[#0A192F] rounded-2xl p-6 md:p-8 flex justify-between items-end mb-10 border border-blue-500/20 shadow-2xl shadow-blue-900/10 hover:shadow-blue-500/20 transition-all duration-300">
-              <div className="absolute top-0 right-0 w-48 h-48 bg-blue-500/10 blur-[50px] rounded-full pointer-events-none" />
-              <div className="absolute bottom-0 left-0 w-32 h-32 bg-blue-400/5 blur-[40px] rounded-full pointer-events-none" />
+            <div className="relative overflow-hidden bg-[#0a0a0a] rounded-2xl p-6 md:p-8 flex justify-between items-end mb-10 border border-zinc-500/30 shadow-[0_0_40px_rgba(255,255,255,0.03)] transition-all duration-300">
+              <div className="absolute top-0 right-0 w-48 h-48 bg-zinc-500/10 blur-[50px] rounded-full pointer-events-none" />
+              <div className="absolute bottom-0 left-0 w-32 h-32 bg-zinc-400/5 blur-[40px] rounded-full pointer-events-none" />
               <div className="flex flex-col gap-1.5 relative z-10">
-                <span className="font-bold text-sm uppercase tracking-widest text-blue-400 drop-shadow-sm">Total Amount</span>
+                <span className="font-bold text-sm uppercase tracking-widest text-zinc-400 drop-shadow-sm">Total Amount</span>
                 <span className="text-[10px] uppercase tracking-[0.1em] text-neutral-400">Incl. of GST</span>
                 {isSocietyOffer && (
-                  <span className="text-[9px] text-white font-black uppercase tracking-widest bg-blue-500/30 px-2 py-0.5 rounded border border-blue-400/30 mt-2 inline-block w-fit shadow-sm shadow-blue-500/20">20% OFF APPLIED</span>
+                  <span className="text-[9px] text-white font-black uppercase tracking-widest bg-zinc-500/30 px-2 py-0.5 rounded border border-zinc-400/30 mt-2 inline-block w-fit shadow-sm shadow-zinc-500/20">20% OFF APPLIED</span>
                 )}
               </div>
               <div className="flex flex-col items-end relative z-10">
-                <span className="text-5xl font-black text-blue-400 tracking-tighter drop-shadow-lg">₹{totalPrice}</span>
+                <span className="text-5xl font-black text-zinc-400 tracking-tighter drop-shadow-lg">₹{totalPrice}</span>
                 {isSocietyOffer && (
-                  <span className="text-sm text-blue-500/60 line-through decoration-blue-500/40 mt-1 font-medium">₹{Math.round(originalPrice * 1.18)}</span>
+                  <span className="text-sm text-zinc-500/60 line-through decoration-zinc-500/40 mt-1 font-medium">₹{Math.round(originalPrice * 1.18)}</span>
                 )}
               </div>
             </div>

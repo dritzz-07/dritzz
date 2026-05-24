@@ -53,7 +53,7 @@ export default function WaterSplashEffects() {
           >
             <Droplets 
               size={p.size + 4} 
-              className="text-blue-300 fill-blue-400/30" 
+              className="text-zinc-300 fill-zinc-400/30" 
               strokeWidth={1} 
             />
           </motion.div>
@@ -76,7 +76,7 @@ export default function WaterSplashEffects() {
             repeat: Infinity, 
             repeatDelay: Math.random() * 5
           }}
-          className="absolute border-2 border-blue-400/20 rounded-full"
+          className="absolute border-2 border-zinc-400/20 rounded-full"
           style={{
             top: `${10 + i * 12}%`,
             left: `${Math.random() * 80 + 10}%`,
@@ -90,7 +90,7 @@ export default function WaterSplashEffects() {
       {/* Subtle Mist/Vapor Layers */}
       <motion.div 
         style={{ opacity: useTransform(scrollYProgress, [0, 1], [0.1, 0.25]) }}
-        className="absolute inset-0 bg-linear-to-b from-transparent via-blue-500/5 to-transparent mix-blend-screen"
+        className="absolute inset-0 bg-linear-to-b from-transparent via-zinc-500/5 to-transparent mix-blend-screen"
       />
     </div>
   );

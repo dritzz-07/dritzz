@@ -37,30 +37,7 @@
 }
 
 @utility btn-primary {
-  @apply relative overflow-hidden text-sky-950 px-8 py-4 font-bold uppercase tracking-wider rounded-2xl text-sm transition-all duration-300 shadow-[0_8px_16px_rgba(125,211,252,0.3),inset_0_2px_4px_rgba(255,255,255,1)] border border-sky-200 hover:shadow-[0_12px_24px_rgba(125,211,252,0.4)] hover:-translate-y-1 hover:brightness-105 active:translate-y-0 disabled:opacity-50 disabled:pointer-events-none;
-  background-image: 
-    radial-gradient(circle at 15px 35px, rgba(255, 255, 255, 0.9) 1px, transparent 2px),
-    radial-gradient(circle at 16px 37px, rgba(2, 132, 199, 0.5) 2px, transparent 3px),
-    radial-gradient(circle at 85px 65px, rgba(255, 255, 255, 0.9) 1.5px, transparent 2.5px),
-    radial-gradient(circle at 86px 67px, rgba(2, 132, 199, 0.5) 2.5px, transparent 3.5px),
-    radial-gradient(circle at 45px 80px, rgba(255, 255, 255, 0.8) 1px, transparent 2px),
-    radial-gradient(circle at 46px 82px, rgba(2, 132, 199, 0.5) 1.5px, transparent 2.5px),
-    radial-gradient(circle at 65px 25px, rgba(255, 255, 255, 0.8) 1.5px, transparent 2.5px),
-    radial-gradient(circle at 66px 27px, rgba(2, 132, 199, 0.5) 2.5px, transparent 3.5px),
-    linear-gradient(to bottom, #f0f9ff, #bae6fd);
-  background-size: 100px 100px, 100px 100px, 100px 100px, 100px 100px, 100px 100px, 100px 100px, 100px 100px, 100px 100px, 100% 100%;
-  animation: drops-fall 2.5s linear infinite;
-}
-
-@keyframes drops-fall {
-  0% {
-    background-position: 
-      0px -100px, 0px -100px, 0px -100px, 0px -100px, 0px -100px, 0px -100px, 0px -100px, 0px -100px, 0px 0px;
-  }
-  100% {
-    background-position: 
-      0px 0px, 0px 0px, 0px 0px, 0px 0px, 0px 0px, 0px 0px, 0px 0px, 0px 0px, 0px 0px;
-  }
+  @apply relative overflow-hidden text-black px-8 py-4 font-black uppercase tracking-widest rounded-xl text-sm transition-all duration-300 shadow-[0_8px_16px_rgba(255,255,255,0.1),inset_0_2px_4px_rgba(255,255,255,1)] border border-zinc-100 bg-gradient-to-br from-zinc-100 via-zinc-300 to-zinc-400 hover:shadow-[0_12px_30px_rgba(255,255,255,0.15)] hover:-translate-y-1 hover:brightness-105 active:translate-y-0 disabled:opacity-50 disabled:pointer-events-none;
 }
 
 @utility btn-secondary {

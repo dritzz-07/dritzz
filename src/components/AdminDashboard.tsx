@@ -495,7 +495,7 @@ export default function AdminDashboard() {
           </button>
           <button 
             onClick={() => setActiveTab('subscriptions')}
-            className={`px-6 py-2.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-all ${activeTab === 'subscriptions' ? 'bg-blue-600 text-white' : 'text-neutral-400 hover:text-white'}`}
+            className={`px-6 py-2.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-all ${activeTab === 'subscriptions' ? 'bg-zinc-600 text-white' : 'text-neutral-400 hover:text-white'}`}
           >
             Active Subscriptions
           </button>
@@ -610,11 +610,11 @@ export default function AdminDashboard() {
                                   href={`https://www.google.com/maps/dir/?api=1&destination=${b.latitude},${b.longitude}`}
                                   target="_blank"
                                   rel="noreferrer"
-                                  className="flex items-start gap-1 mt-1 pt-1 border-t border-white/5 text-[11px] text-emerald-400 hover:text-emerald-300 max-w-[200px] leading-tight transition-colors cursor-pointer group"
+                                  className="flex items-start gap-1 mt-1 pt-1 border-t border-white/5 text-[11px] text-zinc-400 hover:text-zinc-300 max-w-[200px] leading-tight transition-colors cursor-pointer group"
                                   title="Click to get directions on Google Maps"
                                 >
-                                  <MapPin className="w-3 h-3 text-emerald-400 shrink-0 mt-0.5 group-hover:scale-110 transition-transform" />
-                                  <span className="line-clamp-2 underline decoration-dashed decoration-emerald-500/30 group-hover:decoration-emerald-400">{b.address}</span>
+                                  <MapPin className="w-3 h-3 text-zinc-400 shrink-0 mt-0.5 group-hover:scale-110 transition-transform" />
+                                  <span className="line-clamp-2 underline decoration-dashed decoration-zinc-500/30 group-hover:decoration-zinc-400">{b.address}</span>
                                 </a>
                               ) : (
                                 <span className="flex items-start gap-1 mt-1 pt-1 border-t border-white/5 text-[11px] text-neutral-400 max-w-[200px] leading-tight" title={b.address}>
@@ -628,9 +628,9 @@ export default function AdminDashboard() {
                                 href={`https://www.google.com/maps/dir/?api=1&destination=${b.latitude},${b.longitude}`}
                                 target="_blank"
                                 rel="noreferrer"
-                                className="inline-flex items-center gap-1 mt-1 text-[10px] text-emerald-400 hover:text-emerald-300 font-bold uppercase tracking-widest bg-emerald-500/10 hover:bg-emerald-500/20 px-2 py-1 rounded transition-all w-fit cursor-pointer"
+                                className="inline-flex items-center gap-1 mt-1 text-[10px] text-zinc-400 hover:text-zinc-300 font-bold uppercase tracking-widest bg-zinc-500/10 hover:bg-zinc-500/20 px-2 py-1 rounded transition-all w-fit cursor-pointer"
                               >
-                                <Navigation className="w-2.5 h-2.5 text-emerald-400 animate-pulse" />
+                                <Navigation className="w-2.5 h-2.5 text-zinc-400 animate-pulse" />
                                 Get Directions
                               </a>
                             )}
@@ -656,7 +656,7 @@ export default function AdminDashboard() {
                             className={`text-xs font-bold uppercase tracking-wider px-3 py-1.5 rounded-lg border-2 appearance-none cursor-pointer outline-none transition-colors
                               ${b.status === 'completed' ? 'bg-green-500/10 text-green-400 border-green-500/20' : 
                                 b.status === 'confirmed' ? 'bg-orange-500/10 text-orange-400 border-orange-500/20' : 
-                                b.status === 'scheduled' ? 'bg-blue-500/10 text-blue-400 border-blue-500/20' : 
+                                b.status === 'scheduled' ? 'bg-zinc-500/10 text-zinc-400 border-zinc-500/20' : 
                                 b.status === 'cancelled' ? 'bg-red-500/10 text-red-400 border-red-500/20' : 
                                 'bg-neutral-800 text-neutral-300 border-neutral-700'}`}
                           >
@@ -728,7 +728,7 @@ export default function AdminDashboard() {
                           </div>
                         </td>
                         <td className="px-6 py-4">
-                          <span className={`px-2 py-1 rounded text-[10px] font-black uppercase tracking-widest ${activeStatus === 'Active' ? 'bg-emerald-500/20 text-emerald-400' : 'bg-red-500/20 text-red-500'}`}>
+                          <span className={`px-2 py-1 rounded text-[10px] font-black uppercase tracking-widest ${activeStatus === 'Active' ? 'bg-zinc-500/20 text-zinc-400' : 'bg-red-500/20 text-red-500'}`}>
                              {activeStatus}
                           </span>
                           <div className="text-xs text-neutral-300 mt-2 font-mono">
@@ -865,7 +865,7 @@ function AddBookingModal({ onClose, onAdded }: { onClose: () => void, onAdded: (
             </div>
             <div>
               <label className="text-xs font-bold text-neutral-400 uppercase tracking-wider mb-2 block">Type</label>
-              <select value={formData.vehicleType} onChange={e => setFormData({...formData, vehicleType: e.target.value})} className="w-full bg-white/10 border border-white/20 px-4 py-3.5 text-sm font-medium focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/50 outline-none transition-all appearance-none rounded-xl text-white shadow-sm">
+              <select value={formData.vehicleType} onChange={e => setFormData({...formData, vehicleType: e.target.value})} className="w-full bg-white/10 border border-white/20 px-4 py-3.5 text-sm font-medium focus:border-zinc-500/50 focus:ring-1 focus:ring-zinc-500/50 outline-none transition-all appearance-none rounded-xl text-white shadow-sm">
                 <option value="hatchback">Hatchback</option>
                 <option value="sedan">Sedan</option>
                 <option value="suv">SUV</option>
@@ -873,7 +873,7 @@ function AddBookingModal({ onClose, onAdded }: { onClose: () => void, onAdded: (
             </div>
             <div>
               <label className="text-xs font-bold text-neutral-400 uppercase tracking-wider mb-2 block">Package</label>
-              <select value={formData.packageId} onChange={e => setFormData({...formData, packageId: e.target.value})} className="w-full bg-white/10 border border-white/20 px-4 py-3.5 text-sm font-medium focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/50 outline-none transition-all appearance-none rounded-xl text-white shadow-sm">
+              <select value={formData.packageId} onChange={e => setFormData({...formData, packageId: e.target.value})} className="w-full bg-white/10 border border-white/20 px-4 py-3.5 text-sm font-medium focus:border-zinc-500/50 focus:ring-1 focus:ring-zinc-500/50 outline-none transition-all appearance-none rounded-xl text-white shadow-sm">
                 <option value="basic">Basic Wash</option>
                 <option value="premium">Premium Care</option>
                 <option value="monthly">Monthly Care</option>
@@ -890,7 +890,7 @@ function AddBookingModal({ onClose, onAdded }: { onClose: () => void, onAdded: (
             </div>
             <div>
               <label className="text-xs font-bold text-neutral-400 uppercase tracking-wider mb-2 block">Time Slot</label>
-              <select value={formData.timeSlot} onChange={e => setFormData({...formData, timeSlot: e.target.value})} className="w-full bg-white/10 border border-white/20 px-4 py-3.5 text-sm font-medium focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/50 outline-none transition-all appearance-none rounded-xl text-white shadow-sm">
+              <select value={formData.timeSlot} onChange={e => setFormData({...formData, timeSlot: e.target.value})} className="w-full bg-white/10 border border-white/20 px-4 py-3.5 text-sm font-medium focus:border-zinc-500/50 focus:ring-1 focus:ring-zinc-500/50 outline-none transition-all appearance-none rounded-xl text-white shadow-sm">
                 {['09:00 AM - 11:00 AM', '11:00 AM - 01:00 PM', '01:00 PM - 03:00 PM', '03:00 PM - 05:00 PM', '05:00 PM - 07:00 PM'].map(time => (
                   <option key={time} value={time}>{time}</option>
                 ))}
