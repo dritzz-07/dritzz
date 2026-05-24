@@ -477,8 +477,8 @@ export default function BookingForm({
   return (
     <section id="booking" className="relative px-6 md:px-16 py-24 bg-black border-t border-white/5 overflow-hidden">
       {/* Background soft glow */}
-      <div className="absolute hidden md:block top-1/4 -right-1/4 w-[800px] h-[800px] bg-zinc-500/10 blur-2xl rounded-full pointer-events-none" />
-      <div className="absolute hidden md:block bottom-0 -left-1/4 w-[600px] h-[600px] bg-purple-500/10 blur-2xl rounded-full pointer-events-none" />
+      <div className="absolute hidden md:block top-1/4 -right-1/4 w-[800px] h-[800px] bg-zinc-500/10 opacity-10 rounded-full pointer-events-none" />
+      <div className="absolute hidden md:block bottom-0 -left-1/4 w-[600px] h-[600px] bg-purple-500/10 opacity-10 rounded-full pointer-events-none" />
 
       <div className="relative z-10 max-w-7xl mx-auto flex flex-col items-center text-center mb-16">
         <div className="text-xs uppercase tracking-[0.3em] font-black text-white mb-4 drop-shadow-sm">Reserve Your Slot</div>
@@ -489,7 +489,7 @@ export default function BookingForm({
       </div>
 
       <div className="relative z-10 max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-5 gap-8 lg:gap-12 items-start">
-        <form onSubmit={handleFormSubmit} className="lg:col-span-3 bg-neutral-900/40 backdrop-blur-xl border border-white/10 p-6 md:p-10 space-y-8 rounded-3xl shadow-2xl shadow-black/50">
+        <form onSubmit={handleFormSubmit} className="lg:col-span-3 bg-neutral-900/95 border border-white/10 p-6 md:p-10 space-y-8 rounded-3xl shadow-2xl shadow-black/50">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div className="space-y-2">
               <label className="text-xs uppercase tracking-widest text-neutral-300 font-bold block">Full Name</label>
@@ -747,9 +747,9 @@ export default function BookingForm({
         </form>
 
         <div className="lg:col-span-2 space-y-6 lg:sticky lg:top-32">
-          <div className="relative overflow-hidden bg-neutral-900/60 backdrop-blur-xl border border-white/10 text-white p-8 md:p-10 rounded-3xl shadow-2xl shadow-black/50">
+          <div className="relative overflow-hidden bg-neutral-900/95 border border-white/10 text-white p-8 md:p-10 rounded-3xl shadow-2xl shadow-black/50">
             {/* Subtle glow inside card */}
-            <div className="absolute hidden md:block top-0 right-0 w-64 h-64 bg-zinc-500/5 blur-2xl rounded-full pointer-events-none" />
+            <div className="absolute hidden md:block top-0 right-0 w-64 h-64 bg-zinc-500/5 opacity-10 rounded-full pointer-events-none" />
 
             <h3 className="relative font-bold text-xs tracking-widest uppercase mb-8 pb-4 border-b border-white/10 text-neutral-300">Order Summary</h3>
             
@@ -839,8 +839,8 @@ export default function BookingForm({
             </div>
 
             <div className="relative overflow-hidden bg-[#0a0a0a] rounded-2xl p-6 md:p-8 flex justify-between items-end mb-10 border border-white/10 shadow-[0_0_40px_rgba(255,255,255,0.03)] transition-all duration-300">
-              <div className="absolute hidden md:block top-0 right-0 w-48 h-48 bg-zinc-500/10 blur-2xl rounded-full pointer-events-none" />
-              <div className="absolute hidden md:block bottom-0 left-0 w-32 h-32 bg-zinc-400/5 blur-2xl rounded-full pointer-events-none" />
+              <div className="absolute hidden md:block top-0 right-0 w-48 h-48 bg-zinc-500/10 opacity-10 rounded-full pointer-events-none" />
+              <div className="absolute hidden md:block bottom-0 left-0 w-32 h-32 bg-zinc-400/5 opacity-10 rounded-full pointer-events-none" />
               <div className="flex flex-col gap-1.5 relative z-10">
                 <span className="font-bold text-xs uppercase tracking-widest text-white drop-shadow-sm">Total Amount</span>
                 <span className="text-xs uppercase tracking-[0.1em] text-neutral-100">Incl. of GST</span>

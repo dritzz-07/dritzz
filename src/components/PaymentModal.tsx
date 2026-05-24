@@ -123,7 +123,7 @@ export default function PaymentModal({ isOpen, onClose, bookingDetails, pkg, amo
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="absolute inset-0 bg-black/90 backdrop-blur-md"
+            className="absolute inset-0 bg-black/90 "
           />
           
           <motion.div

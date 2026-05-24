@@ -111,7 +111,7 @@ export default function MultiVehicleSelector({ selectedVehicles, onChange, defau
                        isSelected ? 'bg-zinc-500/10 border-neutral-500/50 shadow-[0_0_15px_rgba(16,185,129,0.2)]' : 'bg-black/50 border-white/10 hover:border-white/30'
                     }`}
                   >
-                    <div className={`p-2 rounded-lg ${isSelected ? 'bg-zinc-500/20 text-white' : 'bg-white/5 text-white/50'}`}>
+                    <div className={`p-2 rounded-lg ${isSelected ? 'bg-zinc-500/20 text-white' : 'bg-white/5 text-white/80'}`}>
                       <Car className="w-5 h-5" />
                     </div>
                     <div className="flex-1">
@@ -143,7 +143,7 @@ export default function MultiVehicleSelector({ selectedVehicles, onChange, defau
                const price = pkg.price[t];
                return (
                   <button type="button" key={`add-${t}`} onClick={() => addCustomVehicle(t)} className="px-4 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-full text-xs text-white uppercase font-bold flex items-center gap-2 transition-all">
-                     <Plus className="w-3 h-3" /> Add {t} <span className="text-white/50 font-mono ml-1">₹{price}</span>
+                     <Plus className="w-3 h-3" /> Add {t} <span className="text-white/80 font-mono ml-1">₹{price}</span>
                   </button>
                );
             })}

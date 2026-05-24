@@ -59,7 +59,7 @@ export default function Navbar({ openLogin, openBookings, openSettings }: Navbar
   };
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 pt-1 pb-4 md:px-16 bg-black/80 backdrop-blur-sm border-b border-white/5">
+    <nav className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 pt-1 pb-4 md:px-16 bg-black/80  border-b border-white/5">
       <a href="#" className="flex items-center gap-2 decoration-none text-white group" onClick={handleNavClick}>
         <motion.img 
           whileHover={{ scale: 1.05 }}
@@ -119,11 +119,11 @@ export default function Navbar({ openLogin, openBookings, openSettings }: Navbar
             <AnimatePresence>
               {showProfileMenu && (
                 <motion.div
-                  initial={{ opacity: 0, y: 15, scale: 0.95, filter: 'blur(10px)' }}
-                  animate={{ opacity: 1, y: 0, scale: 1, filter: 'blur(0px)' }}
-                  exit={{ opacity: 0, y: 10, scale: 0.95, filter: 'blur(5px)' }}
+                  initial={{ opacity: 0, y: 15, scale: 0.95 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: 10, scale: 0.95 }}
                   transition={{ type: "spring", damping: 25, stiffness: 300 }}
-                  className="absolute right-0 mt-4 w-80 bg-black/80 backdrop-blur-3xl border border-white/10 rounded-3xl shadow-[0_20px_60px_rgba(0,0,0,0.8),0_0_0_1px_rgba(255,255,255,0.05)] overflow-hidden z-50 flex flex-col max-h-[calc(100vh-100px)]"
+                  className="absolute right-0 mt-4 w-80 bg-black/90 border border-white/10 rounded-3xl shadow-[0_20px_60px_rgba(0,0,0,0.8),0_0_0_1px_rgba(255,255,255,0.05)] overflow-hidden z-50 flex flex-col max-h-[calc(100vh-100px)]"
                 >
                   {/* Top Glow */}
                   <div className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-zinc-500/10 to-transparent pointer-events-none" />

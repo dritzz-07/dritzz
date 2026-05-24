@@ -48,7 +48,7 @@ export default function ProfileSetupOverlay() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="absolute inset-0 bg-black/80 backdrop-blur-md"
+          className="absolute inset-0 bg-black/80 "
           // No onClick to close because this is mandatory
         />
         

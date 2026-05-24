@@ -826,7 +826,7 @@ function AddBookingModal({ onClose, onAdded }: { onClose: () => void, onAdded: (
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 ">
       <div className="bg-neutral-900 border border-white/10 rounded-[32px] w-full max-w-2xl max-h-[90vh] overflow-y-auto shadow-2xl">
         <div className="p-6 border-b border-white/5 flex justify-between items-center sticky top-0 bg-neutral-900 z-10">
           <h2 className="text-xl font-black uppercase tracking-tight">Manual Booking entry</h2>

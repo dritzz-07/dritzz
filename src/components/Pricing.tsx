@@ -45,11 +45,11 @@ export default function Pricing({ onSelectPackage }: PricingProps) {
   return (
     <section id="packages" className="px-6 md:px-16 py-32 bg-[#0a0a0a] border-t border-white/5 relative overflow-hidden">
       {/* Premium Background elements */}
-      <div className="absolute hidden md:block top-0 left-1/2 -translate-x-1/2 w-full max-w-5xl h-[500px] bg-zinc-600/10 blur-2xl rounded-full pointer-events-none" />
-      <div className="absolute hidden md:block bottom-0 right-0 w-96 h-96 bg-zinc-500/5 blur-2xl rounded-full pointer-events-none" />
+      <div className="absolute hidden md:block top-0 left-1/2 -translate-x-1/2 w-full max-w-5xl h-[500px] bg-zinc-600/10 opacity-10 rounded-full pointer-events-none" />
+      <div className="absolute hidden md:block bottom-0 right-0 w-96 h-96 bg-zinc-500/5 opacity-10 rounded-full pointer-events-none" />
       
       <div className="text-center relative z-10 flex flex-col items-center mb-20">
-        <div className="mb-6 inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-white/10 bg-white/5 backdrop-blur-sm">
+        <div className="mb-6 inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-white/10 bg-white/5 ">
           <Sparkles className="w-3 h-3 text-white" />
           <span className="text-xs uppercase tracking-widest text-neutral-300 font-bold">Premium Doorstep Care</span>
         </div>
@@ -64,7 +64,7 @@ export default function Pricing({ onSelectPackage }: PricingProps) {
         </p>
         
         {/* Vehicle Toggle */}
-        <div className="flex flex-wrap items-center justify-center gap-3 mt-12 bg-neutral-900/60 p-2 inset-shadow-sm rounded-full border border-white/10 backdrop-blur-md">
+        <div className="flex flex-wrap items-center justify-center gap-3 mt-12 bg-neutral-900/60 p-2 inset-shadow-sm rounded-full border border-white/10 ">
           {(['hatchback', 'sedan', 'suv'] as VehicleType[]).map((v) => (
             <button
               key={v}
@@ -108,7 +108,7 @@ export default function Pricing({ onSelectPackage }: PricingProps) {
                 className={`group relative flex flex-col w-full max-w-md lg:w-1/3 transition-all duration-500 rounded-[2rem] 
                   ${isMonthly 
                     ? 'p-10 lg:-mt-8 lg:mb-8 bg-gradient-to-b from-zinc-900/40 to-neutral-900/80 border-2 border-neutral-500/50 shadow-[0_0_60px_-15px_rgba(255,255,255,0.5)] z-20 scale-100 lg:scale-105' 
-                    : 'p-8 lg:mt-8 bg-neutral-900/30 backdrop-blur-xl border border-white/10 shadow-xl hover:border-white/20 z-10'
+                    : 'p-8 lg:mt-8 bg-neutral-900/95 border border-white/10 shadow-xl hover:border-white/20 z-10'
                   }`}
               >
                 {/* Glowing Border effect for Monthly */}
@@ -130,8 +130,8 @@ export default function Pricing({ onSelectPackage }: PricingProps) {
                     transition={{ repeat: Infinity, duration: 3, ease: "easeInOut" }}
                     className="absolute top-8 right-8"
                   >
-                    <div className="absolute hidden md:block inset-0 bg-zinc-500 blur-2xl opacity-20 rounded-full" />
-                    <Icon className="w-10 h-10 text-white relative z-10 drop-shadow-[0_0_15px_rgba(255,255,255,0.6)]" />
+                    <div className="absolute hidden md:block inset-0 bg-zinc-500 opacity-10 opacity-20 rounded-full" />
+                    <Icon className="w-10 h-10 text-white relative z-10 drop-shadow-sm" />
                   </motion.div>
                 )}
                 {!isMonthly && (
@@ -211,8 +211,8 @@ export default function Pricing({ onSelectPackage }: PricingProps) {
           className="relative px-8 py-16 md:p-24 rounded-[3rem] bg-[#050505] border border-white/10 overflow-hidden group shadow-[0_0_80px_-20px_rgba(255,255,255,0.3)] text-center"
         >
           {/* Animated Background Gradients & Glows */}
-          <div className="absolute hidden md:block -top-40 -right-40 w-[500px] h-[500px] bg-zinc-600/20 blur-2xl rounded-full group-hover:bg-zinc-500/30 transition-colors duration-1000 pointer-events-none" />
-          <div className="absolute hidden md:block -bottom-40 -left-40 w-[500px] h-[500px] bg-neutral-900/20 blur-2xl rounded-full group-hover:bg-zinc-800/30 transition-colors duration-1000 pointer-events-none" />
+          <div className="absolute hidden md:block -top-40 -right-40 w-[500px] h-[500px] bg-zinc-600/20 opacity-10 rounded-full group-hover:bg-zinc-500/30 transition-colors duration-1000 pointer-events-none" />
+          <div className="absolute hidden md:block -bottom-40 -left-40 w-[500px] h-[500px] bg-neutral-900/20 opacity-10 rounded-full group-hover:bg-zinc-800/30 transition-colors duration-1000 pointer-events-none" />
 
           {/* Premium Grid/Texture */}
           <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff05_1px,transparent_1px),linear-gradient(to_bottom,#ffffff05_1px,transparent_1px)] bg-[size:24px_24px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_50%,#000_70%,transparent_100%)] pointer-events-none" />
@@ -222,7 +222,7 @@ export default function Pricing({ onSelectPackage }: PricingProps) {
 
           <div className="relative z-10 flex flex-col items-center">
             {/* VIP Badge */}
-            <div className="mb-8 inline-flex items-center gap-2 px-4 py-2 rounded-full border border-white/10 bg-zinc-500/10 backdrop-blur-md shadow-[0_0_20px_rgba(255,255,255,0.2)]">
+            <div className="mb-8 inline-flex items-center gap-2 px-4 py-2 rounded-full border border-white/10 bg-zinc-500/10  shadow-[0_0_20px_rgba(255,255,255,0.2)]">
               <Sparkles className="w-4 h-4 text-white" />
               <span className="text-xs sm:text-xs font-black uppercase tracking-[0.3em] text-neutral-300">Dritzz Black Membership</span>
               <Sparkles className="w-4 h-4 text-white" />
@@ -230,7 +230,7 @@ export default function Pricing({ onSelectPackage }: PricingProps) {
 
             <h3 className="text-4xl md:text-6xl font-black mb-6 tracking-tight leading-tight">
               <span className="text-white drop-shadow-md">One Membership.</span> <br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-zinc-300 via-zinc-100 to-zinc-400 drop-shadow-[0_0_30px_rgba(255,255,255,0.3)]">Clean Car All Month.</span>
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-zinc-300 via-zinc-100 to-zinc-400 drop-shadow-sm">Clean Car All Month.</span>
             </h3>
             <p className="text-neutral-100 text-lg md:text-xl font-medium mb-12 max-w-2xl mx-auto leading-relaxed">
               Join hundreds of smart car owners choosing an effortless, premium doorstep car care experience.
@@ -246,7 +246,7 @@ export default function Pricing({ onSelectPackage }: PricingProps) {
               </button>
               <button 
                 onClick={() => document.getElementById('packages')?.scrollIntoView({ behavior: 'smooth' })}
-                className="w-full sm:w-auto px-10 py-[1.15rem] rounded-full bg-white/5 border border-white/10 text-white font-bold uppercase tracking-[0.15em] text-xs hover:bg-white/10 transition-all duration-300 backdrop-blur-md flex items-center justify-center"
+                className="w-full sm:w-auto px-10 py-[1.15rem] rounded-full bg-white/5 border border-white/10 text-white font-bold uppercase tracking-[0.15em] text-xs hover:bg-white/10 transition-all duration-300  flex items-center justify-center"
               >
                 Schedule Wash
               </button>

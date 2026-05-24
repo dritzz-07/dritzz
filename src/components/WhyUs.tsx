@@ -77,7 +77,7 @@ export default function WhyUs() {
             className="w-full h-full object-cover rounded-3xl border border-white/10 grayscale group-hover:grayscale-0 transition-all duration-700 shadow-2xl"
           />
           <div className="absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-transparent rounded-3xl" />
-          <div className="absolute bottom-6 left-6 right-6 p-5 bg-black/40 backdrop-blur-md rounded-2xl border border-white/5">
+          <div className="absolute bottom-6 left-6 right-6 p-5 bg-black/40  rounded-2xl border border-white/5">
             <p className="text-xs font-bold text-white uppercase tracking-widest mb-1">Premium Detailing</p>
             <p className="text-xs text-neutral-100 uppercase tracking-[0.2em]">Quality you can trust, delivered to your door.</p>
           </div>

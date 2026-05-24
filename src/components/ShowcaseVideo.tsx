@@ -80,20 +80,20 @@ export default function ShowcaseVideo() {
             // To add your own video:
             // 1. Upload your video file (e.g., 'my-video.mp4') to the 'public' folder in the file explorer.
             // 2. Change the 'src' below to src="/my-video.mp4"
-            src="https://assets.mixkit.co/videos/49197/49197-720.mp4"
+            src="https://assets.mixkit.co/videos/47588/47588-720.mp4"
           />
 
           <div className="absolute bottom-0 left-0 right-0 p-8 md:p-12 z-20 flex items-end justify-between opacity-0 translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500">
             <button 
               onClick={togglePlay}
-              className="w-16 h-16 rounded-full bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center text-white hover:bg-white hover:text-black transition-colors shrink-0"
+              className="w-16 h-16 rounded-full bg-white/10  border border-white/20 flex items-center justify-center text-white hover:bg-white hover:text-black transition-colors shrink-0"
             >
               {isPlaying ? <Pause className="w-6 h-6 fill-current" /> : <Play className="w-6 h-6 fill-current ml-1" />}
             </button>
             
             <button
               onClick={toggleMute}
-              className="w-12 h-12 rounded-full bg-white/5 backdrop-blur-sm border border-white/10 flex items-center justify-center text-white hover:bg-white/20 transition-colors shrink-0"
+              className="w-12 h-12 rounded-full bg-white/5  border border-white/10 flex items-center justify-center text-white hover:bg-white/20 transition-colors shrink-0"
             >
               {isMuted ? <VolumeX className="w-5 h-5" /> : <Volume2 className="w-5 h-5" />}
             </button>

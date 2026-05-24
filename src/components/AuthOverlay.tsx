@@ -110,7 +110,7 @@ export default function AuthOverlay({ isOpen, onClose }: AuthOverlayProps) {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            className="absolute inset-0 bg-black/80 backdrop-blur-xl"
+            className="absolute inset-0 bg-black/80  bg-black/60"
           />
           
           <motion.div
@@ -128,7 +128,7 @@ export default function AuthOverlay({ isOpen, onClose }: AuthOverlayProps) {
               onClick={onClose}
               className="absolute top-6 right-6 p-2 rounded-full bg-white/5 hover:bg-white/10 transition-colors z-10"
             >
-              <X className="w-5 h-5 text-white/50" />
+              <X className="w-5 h-5 text-white/80" />
             </button>
 
             <div className="relative p-8 pt-12">
@@ -141,7 +141,7 @@ export default function AuthOverlay({ isOpen, onClose }: AuthOverlayProps) {
                 <h2 className="text-2xl font-medium text-white tracking-tight mb-2">
                   Welcome to Dritzz
                 </h2>
-                <p className="text-white/50 text-xs">
+                <p className="text-white/80 text-xs">
                   Sign in or create an account instantly.
                 </p>
               </div>
@@ -264,8 +264,8 @@ export default function AuthOverlay({ isOpen, onClose }: AuthOverlayProps) {
             </div>
             
             <div className="bg-black/20 p-6 text-center border-t border-zinc-900/30 flex items-center justify-center gap-2">
-              <Sparkles className="w-3 h-3 text-white/50" />
-              <span className="text-[11px] uppercase tracking-[0.2em] font-black text-white/50">
+              <Sparkles className="w-3 h-3 text-white/80" />
+              <span className="text-[11px] uppercase tracking-[0.2em] font-black text-white/80">
                 Encrypted & Secure with Firebase
               </span>
             </div>

@@ -146,7 +146,7 @@ export default function MyBookingsModal({ isOpen, onClose, initialTab = 'upcomin
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            className="absolute inset-0 bg-black/80 backdrop-blur-md"
+            className="absolute inset-0 bg-black/80 "
           />
           
           <motion.div
@@ -165,7 +165,7 @@ export default function MyBookingsModal({ isOpen, onClose, initialTab = 'upcomin
                   onClick={onClose}
                   className="p-2 rounded-full bg-white/5 hover:bg-white/10 transition-colors"
                 >
-                  <X className="w-5 h-5 text-white/50" />
+                  <X className="w-5 h-5 text-white/80" />
                 </button>
               </div>
               

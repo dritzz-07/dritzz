@@ -290,7 +290,7 @@ export default function LiveTracker({ bookingId, refId, address, status, onClose
         <div ref={mapContainerRef} className="w-full h-full" style={{ minHeight: '260px' }} />
         
         {/* Dynamic Map HUD Overlays */}
-        <div className="absolute top-3 left-3 z-[10] bg-black/75 backdrop-blur-md px-3 py-2 rounded-xl border border-white/10 flex items-center gap-2">
+        <div className="absolute top-3 left-3 z-[10] bg-black/75  px-3 py-2 rounded-xl border border-white/10 flex items-center gap-2">
           <Clock className="w-3.5 h-3.5 text-white" />
           <div className="text-left font-mono">
             <div className="text-[11px] text-neutral-300 font-bold uppercase leading-none">ETA</div>
@@ -298,7 +298,7 @@ export default function LiveTracker({ bookingId, refId, address, status, onClose
           </div>
         </div>
 
-        <div className="absolute bottom-3 right-3 z-[10] bg-black/75 backdrop-blur-md px-3 py-2 rounded-xl border border-white/10 flex items-center gap-2">
+        <div className="absolute bottom-3 right-3 z-[10] bg-black/75  px-3 py-2 rounded-xl border border-white/10 flex items-center gap-2">
           <Compass className="w-3.5 h-3.5 text-amber-400" />
           <div className="text-left font-mono text-[11px] text-neutral-100">
             {tracker.washerState === 'moving' ? 'WASHER EN ROUTE' : tracker.washerState === 'finished' ? 'SERVICES COMPLETE' : 'GPS LOCKED'}

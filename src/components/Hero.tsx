@@ -117,12 +117,12 @@ export default function Hero() {
           {["India’s Smartest", "Doorstep Car", "Wash Service"].join(" ").split(" ").map((word, i) => (
             <motion.span
               key={i}
-              initial={{ opacity: 0, y: 40, scale: 0.9, filter: "blur(10px)" }}
+              initial={{ opacity: 0, y: 40, scale: 0.9 }}
               animate={{ 
                 opacity: 1, 
                 y: [0, -15, 0], // Floating animation
                 scale: 1, 
-                filter: "blur(0px)" 
+                 
               }}
               transition={{ 
                 opacity: { duration: 0.8, delay: 0.2 + (i * 0.1) },
@@ -133,9 +133,9 @@ export default function Hero() {
                   delay: 0.5 + (i * 0.2) 
                 },
                 scale: { duration: 0.8, delay: 0.2 + (i * 0.1) },
-                filter: { duration: 0.8, delay: 0.2 + (i * 0.1) }
+                
               }}
-              className="inline-block bg-linear-to-b from-white via-neutral-100 to-neutral-400 bg-clip-text text-transparent drop-shadow-[0_10px_20px_rgba(0,0,0,0.3)]"
+              className="inline-block bg-linear-to-b from-white via-neutral-100 to-neutral-400 bg-clip-text text-transparent drop-shadow-sm"
             >
               {word}
             </motion.span>
@@ -157,7 +157,7 @@ export default function Hero() {
           transition={{ duration: 0.8, delay: 0.5 }}
           className="flex flex-wrap items-center gap-x-8 gap-y-4 mb-12"
         >
-          <div className="flex items-center gap-4 bg-white/5 border border-white/10 px-5 py-3 rounded-2xl shadow-[0_0_20px_rgba(255,255,255,0.05)] backdrop-blur-md">
+          <div className="flex items-center gap-4 bg-white/5 border border-white/10 px-5 py-3 rounded-2xl shadow-[0_0_20px_rgba(255,255,255,0.05)] ">
             <motion.div 
               animate={{ 
                 scale: [1, 1.2, 1],
@@ -178,7 +178,7 @@ export default function Hero() {
             </div>
           </div>
 
-          <div className="flex items-center gap-4 bg-white/5 border border-white/10 px-5 py-3 rounded-2xl shadow-[0_0_20px_rgba(255,255,255,0.05)] backdrop-blur-md">
+          <div className="flex items-center gap-4 bg-white/5 border border-white/10 px-5 py-3 rounded-2xl shadow-[0_0_20px_rgba(255,255,255,0.05)] ">
              <motion.div 
               animate={{ 
                 scale: [1, 1.2, 1],
@@ -241,7 +241,7 @@ export default function Hero() {
           transition={{ duration: 0.8, delay: 0.8 }}
           className="flex-1 w-full max-w-2xl relative z-20 mt-12 lg:mt-0"
         >
-          <div className="absolute hidden md:block inset-0 bg-white/5 rounded-3xl blur-2xl transform scale-105" />
+          <div className="absolute hidden md:block inset-0 bg-white/5 rounded-3xl opacity-10 transform scale-105" />
           <img 
             src={heroImage} 
             alt="Dritzz Doorstep Car Wash" 
