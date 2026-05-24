@@ -87,7 +87,9 @@ export default function PaymentModal({ isOpen, onClose, bookingDetails, pkg, amo
             phone: bookingDetails.phone,
             packageName: pkg.name,
             amount: amount,
-            refId: refId
+            refId: refId,
+            vehicle: bookingDetails.vehicles?.[0]?.type || 'Standard',
+            address: bookingDetails.address
           })
         });
       } catch (smsError) {

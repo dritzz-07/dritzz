@@ -1,5 +1,6 @@
 import { motion } from 'motion/react';
 import { Home, Droplets, UserCheck, Clock, ShieldCheck, CreditCard } from 'lucide-react';
+import generatedImage from '../assets/images/regenerated_image_1779647073338.jpg';
 
 const reasons = [
   {
@@ -72,7 +73,7 @@ export default function WhyUs() {
           className="relative group h-[300px] md:h-[500px] w-full"
         >
           <img 
-            src="https://images.unsplash.com/photo-1520340356584-f9917d1eea6f?q=80&w=1000&auto=format&fit=crop" 
+            src={generatedImage} 
             alt="Dritzz Service" 
             className="w-full h-full object-cover rounded-3xl border border-white/10 grayscale group-hover:grayscale-0 transition-all duration-700 shadow-2xl"
           />

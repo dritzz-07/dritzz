@@ -15,7 +15,31 @@ async function startServer() {
   app.post("/api/send-confirmation", async (req, res) => {
     const { name, phone, packageName, amount, refId } = req.body;
 
-    const { TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_PHONE_NUMBER } = process.env;
+    const { TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_PHONE_NUMBER, WHATSAPP_TOKEN, WHATSAPP_PHONE_NUMBER_ID, ADMIN_WHATSAPP_NUMBER } = process.env;
+
+    // Send WhatsApp Admin Notification
+    if (WHATSAPP_TOKEN && WHATSAPP_PHONE_NUMBER_ID && ADMIN_WHATSAPP_NUMBER) {
+      try {
+        const message = `🚗 *New Booking Received*\n\n*Customer Name:* ${name}\n*Phone Number:* ${phone}\n*Vehicle Type:* ${req.body.vehicle || 'Not specified'}\n*Service Selected:* ${packageName}\n*Address:* ${req.body.address || 'Not specified'}\n*Total Amount:* ₹${amount}\n\nPlease check the Admin Panel for full details.`;
+        
+        await fetch(`https://graph.facebook.com/v17.0/${WHATSAPP_PHONE_NUMBER_ID}/messages`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${WHATSAPP_TOKEN}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            messaging_product: 'whatsapp',
+            to: ADMIN_WHATSAPP_NUMBER.replace('+', ''),
+            type: 'text',
+            text: { body: message }
+          })
+        });
+        console.log(`[WhatsApp] Success: Admin notification sent for ref ${refId}`);
+      } catch (error) {
+        console.error("[WhatsApp] Error sending admin notification:", error);
+      }
+    }
 
     if (TWILIO_ACCOUNT_SID && TWILIO_AUTH_TOKEN && TWILIO_PHONE_NUMBER) {
       try {
