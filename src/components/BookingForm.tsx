@@ -94,10 +94,10 @@ export default function BookingForm({
   onSubmit, 
   onRequireAuth
 }: BookingFormProps) {
-  const { user, loginWithGoogle } = useAuth();
+  const { user, userProfile, loginWithGoogle } = useAuth();
   const [details, setDetails] = useState<BookingDetails>({
     name: '',
-    phone: '',
+    phone: '+91 ',
     email: '',
     address: '',
     date: '',
@@ -434,15 +434,16 @@ export default function BookingForm({
   }, [initialVehicle, initialPackageId]);
 
   useEffect(() => {
-    if (user) {
+    if (user || userProfile) {
       setDetails(prev => ({
         ...prev,
-        name: user.displayName || prev.name,
-        email: user.email || prev.email,
-        phone: user.phoneNumber || prev.phone
+        name: userProfile?.fullName || user?.displayName || prev.name,
+        email: userProfile?.email || user?.email || prev.email,
+        phone: userProfile?.phone || user?.phoneNumber || prev.phone,
+        address: userProfile?.address || prev.address
       }));
     }
-  }, [user]);
+  }, [user, userProfile]);
 
   const selectedPkg = PACKAGES.find(p => p.id === details.packageId);
   const originalPrice = details.vehicles && details.vehicles.length > 0
@@ -673,7 +674,7 @@ export default function BookingForm({
                 name="timeSlot"
                 value={details.timeSlot}
                 onChange={handleChange}
-                className="w-full bg-white/5 border border-white/10 px-4 py-3 text-sm focus:border-white outline-none transition-colors appearance-none rounded-lg text-white"
+                className="w-full bg-white/10 border border-white/20 px-4 py-3.5 text-sm font-medium focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/50 outline-none transition-all appearance-none rounded-xl text-white shadow-sm"
               >
                 <option value="" className="bg-black">Select a slot</option>
                 {TIME_SLOTS.map(s => <option key={s} value={s} className="bg-black">{s}</option>)}
@@ -682,18 +683,46 @@ export default function BookingForm({
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div className="space-y-2 md:col-span-2">
-              <label className="text-[10px] uppercase tracking-widest text-neutral-500 font-bold block">Package</label>
-              <select
-                required
-                name="packageId"
-                value={details.packageId}
-                onChange={handleChange}
-                className="w-full bg-white/5 border border-white/10 px-4 py-3 text-sm focus:border-white outline-none transition-colors appearance-none rounded-lg text-white"
-              >
-                <option value="" className="bg-black">Select a package</option>
-                {PACKAGES.map(p => <option key={p.id} value={p.id} className="bg-black">{p.name}</option>)}
-              </select>
+            <div className="space-y-4 md:col-span-2">
+              <label className="text-[10px] uppercase tracking-widest text-neutral-500 font-bold block mb-2">Package</label>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                {PACKAGES.map(p => {
+                  const isMonthly = p.id === 'monthly';
+                  const isSelected = details.packageId === p.id;
+                  return (
+                    <label
+                      key={p.id}
+                      className={`relative cursor-pointer flex flex-col p-5 rounded-2xl border transition-all duration-300 ${
+                        isSelected 
+                          ? isMonthly 
+                            ? 'bg-blue-600/10 border-blue-500 shadow-[0_0_20px_rgba(37,99,235,0.2)] scale-[1.02]' 
+                            : 'bg-white/10 border-white text-white scale-[1.02]' 
+                          : 'bg-black/40 border-white/10 hover:border-white/30 hover:bg-white/5'
+                      } ${isMonthly && !isSelected ? 'mt-3 sm:mt-0' : ''}`}
+                    >
+                      <input 
+                        type="radio" 
+                        name="packageId" 
+                        value={p.id} 
+                        required 
+                        checked={isSelected}
+                        onChange={handleChange}
+                        className="sr-only"
+                      />
+                      {isMonthly && (
+                        <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-1 bg-gradient-to-r from-blue-700 to-blue-500 text-white text-[9px] font-semibold uppercase tracking-[0.3em] rounded-full shadow-lg border border-blue-400/50 whitespace-nowrap">
+                          Dritzz Black Membership
+                        </div>
+                      )}
+                      <div className="flex items-center justify-between mb-3">
+                        <span className={`font-bold uppercase tracking-[0.15em] text-[14px] ${isSelected ? 'text-white' : 'text-neutral-300'}`}>{p.name}</span>
+                        {isSelected && <div className={`w-2.5 h-2.5 rounded-full ${isMonthly ? 'bg-blue-400 shadow-[0_0_12px_rgba(96,165,250,0.8)]' : 'bg-white shadow-[0_0_12px_rgba(255,255,255,0.8)]'}`} />}
+                      </div>
+                      <span className="text-[11px] uppercase tracking-wider text-neutral-400 font-medium leading-relaxed">{p.tagline}</span>
+                    </label>
+                  );
+                })}
+              </div>
             </div>
             <div className="md:col-span-2 mt-4">
                <MultiVehicleSelector 
@@ -792,9 +821,20 @@ export default function BookingForm({
                  </div>
               </div>
 
-              <div className="bg-[#111827] rounded-xl p-5 flex justify-between items-center mt-2 border border-white/5 shadow-inner shadow-black/50">
-                 <span className="text-[11px] uppercase tracking-[0.2em] text-blue-400 font-bold">Total Estimate</span>
-                 <span className="text-2xl font-bold text-white">₹{originalDiscountedPrice}</span>
+              <div className="mt-6 border-t border-white/5 pt-6">
+                 <label className="text-[10px] uppercase tracking-widest text-neutral-500 font-bold block mb-3">Apply Promo Code</label>
+                 <div className="flex gap-3">
+                    <div className="relative flex-1">
+                      <input 
+                        type="text" 
+                        placeholder="ENTER DISCOUNT CODE" 
+                        className="w-full bg-black/40 border border-white/10 px-4 py-3.5 text-sm focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/50 outline-none transition-all rounded-xl text-white font-mono uppercase placeholder-neutral-600"
+                      />
+                    </div>
+                    <button type="button" className="px-5 py-3.5 bg-blue-600/10 hover:bg-blue-600/20 text-blue-400 border border-blue-500/30 text-[11px] font-black uppercase tracking-widest rounded-xl transition-colors shrink-0">
+                      Apply
+                    </button>
+                 </div>
               </div>
             </div>
 

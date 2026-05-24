@@ -12,15 +12,20 @@ import { BookingDocument, Subscription } from '../types';
 interface MyBookingsProps {
   isOpen: boolean;
   onClose: () => void;
+  initialTab?: 'upcoming' | 'history' | 'subscriptions';
 }
 
-export default function MyBookingsModal({ isOpen, onClose }: MyBookingsProps) {
-  const { user } = useAuth();
+export default function MyBookingsModal({ isOpen, onClose, initialTab = 'upcoming' }: MyBookingsProps) {
+  const { user, userProfile } = useAuth();
   const [bookings, setBookings] = useState<BookingDocument[]>([]);
   const [subscriptions, setSubscriptions] = useState<Subscription[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeTrackId, setActiveTrackId] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState<'upcoming' | 'history' | 'subscriptions'>('subscriptions');
+  const [activeTab, setActiveTab] = useState<'upcoming' | 'history' | 'subscriptions'>(initialTab);
+
+  useEffect(() => {
+    setActiveTab(initialTab);
+  }, [initialTab, isOpen]);
 
   const [schedulingSub, setSchedulingSub] = useState<Subscription | null>(null);
   const [scheduleDate, setScheduleDate] = useState('');
@@ -56,7 +61,8 @@ export default function MyBookingsModal({ isOpen, onClose }: MyBookingsProps) {
         id: doc.id,
         ...doc.data()
       })) as Subscription[];
-      setSubscriptions(fetchedSub);
+      const monthlySubs = fetchedSub.filter(s => s.packageId === 'monthly');
+      setSubscriptions(monthlySubs);
       setLoading(false);
     });
 
@@ -69,7 +75,7 @@ export default function MyBookingsModal({ isOpen, onClose }: MyBookingsProps) {
   const handleDownloadInvoice = (booking: BookingDocument, pkgName: string) => {
     const pkg = PACKAGES.find(p => p.id === booking.packageId) || PACKAGES[0];
     const details = {
-      name: booking.name || 'User',
+      name: booking.name || userProfile?.fullName || user?.displayName || 'Customer',
       phone: booking.phone || '',
       email: booking.email || user?.email || '',
       address: booking.address || '',
@@ -153,7 +159,7 @@ export default function MyBookingsModal({ isOpen, onClose }: MyBookingsProps) {
               <div className="flex justify-between items-center">
                 <div>
                   <h2 className="text-2xl font-black text-white tracking-tighter uppercase">My Dashboard</h2>
-                  <p className="text-neutral-500 text-xs mt-1">Manage your active plans and washes.</p>
+                  <p className="text-blue-400 text-sm mt-1 font-medium">Welcome back, {userProfile?.fullName?.split(' ')[0] || user?.displayName?.split(' ')[0] || 'Customer'}</p>
                 </div>
                 <button 
                   onClick={onClose}
@@ -164,16 +170,6 @@ export default function MyBookingsModal({ isOpen, onClose }: MyBookingsProps) {
               </div>
               
               <div className="flex bg-neutral-800/50 p-1 rounded-xl w-fit overflow-x-auto max-w-full hide-scrollbar">
-                <button
-                  onClick={() => setActiveTab('subscriptions')}
-                  className={`px-4 py-2 rounded-lg text-[11px] font-bold uppercase tracking-widest transition-all whitespace-nowrap ${
-                    activeTab === 'subscriptions' 
-                      ? 'bg-blue-600 text-white shadow-md' 
-                      : 'text-neutral-400 hover:text-white'
-                  }`}
-                >
-                  My Plans
-                </button>
                 <button
                   onClick={() => setActiveTab('upcoming')}
                   className={`px-4 py-2 rounded-lg text-[11px] font-bold uppercase tracking-widest transition-all whitespace-nowrap ${
@@ -203,116 +199,6 @@ export default function MyBookingsModal({ isOpen, onClose }: MyBookingsProps) {
                   <Loader2 className="w-8 h-8 animate-spin mb-4" />
                   <p className="text-xs uppercase tracking-widest font-bold">Loading Data...</p>
                 </div>
-              ) : activeTab === 'subscriptions' ? (
-                subscriptions.length === 0 ? (
-                  <div className="text-center py-20">
-                    <div className="w-16 h-16 bg-blue-500/10 border border-blue-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
-                      <Gem className="w-6 h-6 text-blue-400" />
-                    </div>
-                    <h3 className="text-white font-bold mb-2">No Active Plans</h3>
-                    <p className="text-neutral-500 text-sm mb-6">Upgrade to our Monthly Plan for hassle-free washes.</p>
-                    <button onClick={onClose} className="bg-blue-600 text-white px-6 py-3 rounded-xl text-xs font-bold uppercase tracking-widest hover:bg-blue-700 transition">View Plans</button>
-                  </div>
-                ) : (
-                  <div className="space-y-6">
-                    {subscriptions.map((sub) => {
-                      const percentUsed = sub.totalWashes > 0 ? (sub.usedWashes / sub.totalWashes) * 100 : 0;
-                      const isExpired = sub.expiresAt?.toDate ? new Date() > sub.expiresAt.toDate() : false;
-                      const activeStatus = isExpired ? 'Expired' : (sub.remainingWashes > 0 ? 'Active' : 'Completed');
-
-                      return (
-                        <div key={sub.id} className="bg-white/5 border border-white/10 rounded-[24px] overflow-hidden">
-                           <div className="p-6 border-b border-white/5 bg-gradient-to-r from-blue-900/40 to-transparent flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-                              <div>
-                                 <div className="text-xs uppercase tracking-widest font-black text-blue-400 mb-1">Monthly Plan</div>
-                                 <div className="text-xl font-bold text-white capitalize">{sub.vehicles?.length} Vehicle(s)</div>
-                              </div>
-                              <div className="flex items-center gap-3">
-                                 <div className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest ${activeStatus === 'Active' ? 'bg-emerald-500/20 text-emerald-400' : 'bg-red-500/20 text-red-500'}`}>
-                                    {activeStatus}
-                                 </div>
-                              </div>
-                           </div>
-                           
-                           <div className="p-6">
-                              <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-8">
-                                 <div className="bg-white/5 p-4 rounded-xl text-center">
-                                    <div className="text-4xl font-black text-white mb-1">{sub.totalWashes}</div>
-                                    <div className="text-[10px] uppercase font-bold text-neutral-500 tracking-widest">Total Washes</div>
-                                 </div>
-                                 <div className="bg-white/5 p-4 rounded-xl text-center">
-                                    <div className="text-4xl font-black text-white mb-1">{sub.usedWashes}</div>
-                                    <div className="text-[10px] uppercase font-bold text-neutral-500 tracking-widest">Used</div>
-                                 </div>
-                                 <div className="bg-blue-500/10 border border-blue-500/20 p-4 rounded-xl text-center">
-                                    <div className="text-4xl font-black text-blue-400 mb-1">{sub.remainingWashes}</div>
-                                    <div className="text-[10px] uppercase font-bold text-blue-400 tracking-widest">Remaining</div>
-                                 </div>
-                              </div>
-                              
-                              <div className="mb-8">
-                                 <div className="flex justify-between items-center mb-2">
-                                    <span className="text-xs font-bold text-neutral-400 uppercase tracking-widest">Usage</span>
-                                    <span className="text-xs font-bold text-white tracking-widest">{sub.usedWashes} / {sub.totalWashes}</span>
-                                 </div>
-                                 <div className="w-full h-3 bg-white/10 rounded-full overflow-hidden">
-                                    <div className="h-full bg-blue-500 rounded-full transition-all duration-1000" style={{ width: `${percentUsed}%` }}></div>
-                                 </div>
-                              </div>
-
-                              <div className="flex flex-col sm:flex-row justify-between items-center gap-4 bg-white/5 p-4 rounded-xl">
-                                 <div className="text-xs text-neutral-400 font-medium">
-                                    <span className="font-bold text-neutral-300">Expires:</span> {sub.expiresAt?.toDate ? sub.expiresAt.toDate().toLocaleDateString('en-GB') : ''}
-                                 </div>
-                                 {schedulingSub?.id === sub.id ? (
-                                    <div className="flex flex-col sm:flex-row gap-3 items-center ml-auto">
-                                       <input 
-                                          type="date" 
-                                          value={scheduleDate} 
-                                          onChange={e => setScheduleDate(e.target.value)} 
-                                          className="bg-black/50 border border-white/10 rounded-lg px-3 py-2 text-xs focus:border-white transition-colors outline-none text-white" 
-                                          style={{ colorScheme: 'dark' }}
-                                       />
-                                       <select 
-                                          value={scheduleTime} 
-                                          onChange={e => setScheduleTime(e.target.value)} 
-                                          className="bg-black/50 border border-white/10 rounded-lg px-3 py-2 text-xs focus:border-white transition-colors outline-none appearance-none"
-                                       >
-                                          {['09:00 AM - 11:00 AM', '11:00 AM - 01:00 PM', '01:00 PM - 03:00 PM', '03:00 PM - 05:00 PM', '05:00 PM - 07:00 PM'].map(time => (
-                                             <option key={time} value={time}>{time}</option>
-                                          ))}
-                                       </select>
-                                       <button 
-                                          onClick={handleScheduleSubmit}
-                                          disabled={isSubmittingSchedule || !scheduleDate}
-                                          className="px-5 py-2.5 rounded-lg text-xs font-bold uppercase tracking-widest bg-emerald-500 text-black hover:bg-emerald-400 transition-all disabled:opacity-50"
-                                       >
-                                          {isSubmittingSchedule ? '...' : 'Confirm'}
-                                       </button>
-                                       <button onClick={() => setSchedulingSub(null)} className="p-2 hover:bg-white/10 rounded-lg transition-colors"><X className="w-4 h-4 text-neutral-400" /></button>
-                                    </div>
-                                 ) : (
-                                    <button 
-                                       className={`px-5 py-2.5 rounded-lg text-xs font-bold uppercase tracking-widest transition-all ml-auto
-                                          ${activeStatus === 'Active' 
-                                             ? 'bg-blue-600 text-white hover:bg-blue-700' 
-                                             : 'bg-white/10 text-neutral-500 cursor-not-allowed'}`}
-                                       onClick={() => {
-                                          if(activeStatus === 'Active') {
-                                             setSchedulingSub(sub);
-                                          }
-                                       }}
-                                    >
-                                       Schedule Next Wash
-                                    </button>
-                                 )}
-                              </div>
-                           </div>
-                        </div>
-                      )
-                    })}
-                  </div>
-                )
               ) : displayedBookings.length === 0 ? (
                 <div className="text-center py-20">
                   <div className="w-16 h-16 bg-white/5 rounded-full flex items-center justify-center mx-auto mb-4">

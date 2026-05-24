@@ -3,28 +3,25 @@ import { Package } from './types';
 export const PACKAGES: Package[] = [
   {
     id: 'basic',
-    name: 'Basic Wash',
-    tagline: 'Quick exterior refresh',
+    name: 'Basic Care',
+    tagline: 'Affordable Quick Wash',
     price: {
-      hatchback: 349,
+      hatchback: 449,
       sedan: 449,
-      suv: 549,
-      muv: 549
+      suv: 449,
+      muv: 449
     },
     icon: 'Droplets',
     features: [
       'Exterior Foam Wash',
-      'Interior Vacuum',
-      'Dashboard Cleaning',
-      'Tyre Cleaning',
-      'Doorstep Service',
-      'Water Efficient Cleaning'
+      'Tyre Cleaning & Shine',
+      'Doorstep Service'
     ]
   },
   {
-    id: 'mid',
-    name: 'Premium Wash',
-    tagline: 'Inside & out, spotless',
+    id: 'premium',
+    name: 'Premium Care',
+    tagline: 'Complete Interior + Exterior Care',
     price: {
       hatchback: 799,
       sedan: 899,
@@ -36,31 +33,31 @@ export const PACKAGES: Package[] = [
       'Exterior Foam Wash',
       'Interior Vacuum',
       'Dashboard Cleaning',
-      'Tyre Cleaning',
-      'Doorstep Service',
-      'Water Efficient Cleaning'
+      'Tyre Cleaning & Shine',
+      'Doorstep Service'
     ],
-    featured: true
+    featured: false // We will handle featured badge in UI for Premium
   },
   {
-    id: 'premium',
-    name: 'Monthly Plan',
-    tagline: '4 Washes Monthly',
+    id: 'monthly',
+    name: 'Monthly Care',
+    tagline: 'Smart Car Owners Choose Monthly Care',
     price: {
-      hatchback: 2199,
-      sedan: 2599,
-      suv: 2999,
-      muv: 2999
+      hatchback: 2499,
+      sedan: 2799,
+      suv: 3199,
+      muv: 3199
     },
     icon: 'Gem',
     features: [
+      '4 Washes Every Month',
       'Exterior Foam Wash',
       'Interior Vacuum',
       'Dashboard Cleaning',
-      'Tyre Cleaning',
-      'Doorstep Service',
-      'Water Efficient Cleaning'
-    ]
+      'Tyre Cleaning & Shine',
+      'Priority Booking'
+    ],
+    featured: true // To be highlighted
   }
 ];
 

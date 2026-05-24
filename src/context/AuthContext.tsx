@@ -9,16 +9,31 @@ import {
   updateProfile,
   sendPasswordResetEmail
 } from 'firebase/auth';
-import { doc, getDoc, setDoc, serverTimestamp } from 'firebase/firestore';
+import { doc, getDoc, setDoc, serverTimestamp, onSnapshot } from 'firebase/firestore';
 import { auth, db, googleProvider } from '../lib/firebase';
+
+export interface UserProfile {
+  uid: string;
+  fullName: string | null;
+  phone: string | null;
+  email: string | null;
+  city: string | null;
+  address?: string | null;
+  carModel: string | null;
+  profileCompleted: boolean;
+  provider: string | null;
+  isAdmin: boolean;
+}
 
 interface AuthContextType {
   user: User | null;
+  userProfile: UserProfile | null;
   loading: boolean;
   loginWithGoogle: () => Promise<void>;
   loginWithEmail: (email: string, pass: string) => Promise<void>;
   signupWithEmail: (email: string, pass: string, name: string) => Promise<void>;
   resetPassword: (email: string) => Promise<void>;
+  updateUserProfile: (data: Partial<UserProfile>) => Promise<void>;
   logout: () => Promise<void>;
 }
 
@@ -26,44 +41,83 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
+  const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+    let unsubscribeProfile: (() => void) | null = null;
+    
+    const unsubscribeAuth = onAuthStateChanged(auth, async (currentUser) => {
+      setUser(currentUser);
+      
       if (currentUser) {
         try {
-          // Sync user data to Firestore
           const userRef = doc(db, 'users', currentUser.uid);
-          const userDoc = await getDoc(userRef);
-          
           const adminEmails = ['dritzz.info@gmail.com', 'sujitsinghguw@gmail.com', 'admin@dritzz.info'];
           const isUserAdmin = currentUser.email ? adminEmails.some(email => currentUser.email?.toLowerCase() === email.toLowerCase()) : false;
 
-          if (!userDoc.exists()) {
+          const initDoc = await getDoc(userRef);
+          if (!initDoc.exists()) {
+            const savedName = localStorage.getItem('authFullName');
             await setDoc(userRef, {
               uid: currentUser.uid,
-              email: currentUser.email,
-              displayName: currentUser.displayName || null,
-              photoURL: currentUser.photoURL || null,
+              fullName: currentUser.displayName || savedName || null,
+              phone: currentUser.phoneNumber || null,
+              email: currentUser.email || null,
+              city: null,
+              carModel: null,
+              profileCompleted: !!(currentUser.displayName || savedName),
+              provider: currentUser.providerData[0]?.providerId || null,
               isAdmin: isUserAdmin,
               createdAt: serverTimestamp(),
-              lastUpdated: serverTimestamp()
+              lastLogin: serverTimestamp()
             });
+            if (savedName) {
+              localStorage.removeItem('authFullName');
+              if (!currentUser.displayName) {
+                await updateProfile(currentUser, { displayName: savedName });
+              }
+            }
           } else {
-            await setDoc(userRef, {
+            const savedName = localStorage.getItem('authFullName');
+            const updates: any = {
               isAdmin: isUserAdmin,
-              lastUpdated: serverTimestamp()
-            }, { merge: true });
+              phone: currentUser.phoneNumber || initDoc.data().phone || null,
+              lastLogin: serverTimestamp()
+            };
+            if (savedName) {
+              updates.fullName = savedName;
+              updates.profileCompleted = true;
+              localStorage.removeItem('authFullName');
+            }
+            await setDoc(userRef, updates, { merge: true });
+            
+            if (savedName && !currentUser.displayName) {
+              await updateProfile(currentUser, { displayName: savedName });
+            }
           }
+
+          unsubscribeProfile = onSnapshot(userRef, (doc) => {
+            if (doc.exists()) {
+              setUserProfile(doc.data() as UserProfile);
+            }
+            setLoading(false);
+          });
         } catch (error) {
           console.error('Error syncing user info to Firestore:', error);
+          setLoading(false);
         }
+      } else {
+        setUserProfile(null);
+        if (unsubscribeProfile) unsubscribeProfile();
+        setLoading(false);
       }
-      setUser(currentUser);
-      setLoading(false);
     });
 
-    return () => unsubscribe();
+    return () => {
+      unsubscribeAuth();
+      if (unsubscribeProfile) unsubscribeProfile();
+    };
   }, []);
 
   const loginWithGoogle = async () => {
@@ -89,23 +143,23 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const result = await createUserWithEmailAndPassword(auth, email, pass);
       await updateProfile(result.user, { displayName: name });
       
-      try {
-        const adminEmails = ['dritzz.info@gmail.com', 'sujitsinghguw@gmail.com', 'admin@dritzz.info'];
-        const isUserAdmin = result.user.email ? adminEmails.some(aEmail => result.user.email?.toLowerCase() === aEmail.toLowerCase()) : false;
+      const adminEmails = ['dritzz.info@gmail.com', 'sujitsinghguw@gmail.com', 'admin@dritzz.info'];
+      const isUserAdmin = result.user.email ? adminEmails.some(aEmail => result.user.email?.toLowerCase() === aEmail.toLowerCase()) : false;
 
-        const userRef = doc(db, 'users', result.user.uid);
-        await setDoc(userRef, {
-          uid: result.user.uid,
-          email: result.user.email,
-          displayName: name,
-          photoURL: null,
-          isAdmin: isUserAdmin,
-          createdAt: serverTimestamp(),
-          lastUpdated: serverTimestamp()
-        });
-      } catch (firestoreError) {
-        console.error('Error creating user doc in Firestore:', firestoreError);
-      }
+      const userRef = doc(db, 'users', result.user.uid);
+      await setDoc(userRef, {
+        uid: result.user.uid,
+        fullName: name,
+        phone: null,
+        email: result.user.email,
+        city: null,
+        carModel: null,
+        profileCompleted: true,
+        provider: 'password',
+        isAdmin: isUserAdmin,
+        createdAt: serverTimestamp(),
+        lastLogin: serverTimestamp()
+      });
     } catch (error) {
       console.error('Error signing up with Email:', error);
       throw error;
@@ -121,6 +175,20 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
+  const updateUserProfile = async (data: Partial<UserProfile>) => {
+    if (!user) return;
+    try {
+      const userRef = doc(db, 'users', user.uid);
+      await setDoc(userRef, { ...data, profileCompleted: true }, { merge: true });
+      if (data.fullName && user.displayName !== data.fullName) {
+        await updateProfile(user, { displayName: data.fullName });
+      }
+    } catch (error) {
+      console.error('Error updating user profile:', error);
+      throw error;
+    }
+  };
+
   const logout = async () => {
     try {
       await signOut(auth);
@@ -131,7 +199,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, loginWithGoogle, loginWithEmail, signupWithEmail, resetPassword, logout }}>
+    <AuthContext.Provider value={{ user, userProfile, loading, loginWithGoogle, loginWithEmail, signupWithEmail, resetPassword, updateUserProfile, logout }}>
       {children}
     </AuthContext.Provider>
   );
@@ -144,3 +212,4 @@ export function useAuth() {
   }
   return context;
 }
+

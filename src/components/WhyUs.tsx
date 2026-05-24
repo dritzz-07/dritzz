@@ -38,7 +38,7 @@ export default function WhyUs() {
   return (
     <section id="why-us" className="bg-black px-6 md:px-16 py-24 border-t border-white/5">
       <div className="section-label">Our Promise</div>
-      <h2 className="section-title text-white">WHY DRITZZ?</h2>
+      <h2 className="section-title">WHY DRITZZ?</h2>
       
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center mt-16">
         <div className="flex flex-col gap-12">

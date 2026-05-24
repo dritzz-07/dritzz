@@ -77,7 +77,10 @@ export default function ShowcaseVideo() {
             loop
             muted={isMuted}
             playsInline
-            src="https://assets.mixkit.co/videos/47585/47585-720.mp4"
+            // To add your own video:
+            // 1. Upload your video file (e.g., 'my-video.mp4') to the 'public' folder in the file explorer.
+            // 2. Change the 'src' below to src="/my-video.mp4"
+            src="https://assets.mixkit.co/videos/49197/49197-720.mp4"
           />
 
           <div className="absolute bottom-0 left-0 right-0 p-8 md:p-12 z-20 flex items-end justify-between opacity-0 translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500">

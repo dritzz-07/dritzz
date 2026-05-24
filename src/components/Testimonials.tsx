@@ -25,7 +25,7 @@ export default function Testimonials() {
   return (
     <section className="bg-black px-6 md:px-16 py-24 border-t border-white/5">
       <div className="section-label">What Customers Say</div>
-      <h2 className="section-title text-white">REVIEWS</h2>
+      <h2 className="section-title">REVIEWS</h2>
       
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-16">
         {reviews.map((review, i) => (

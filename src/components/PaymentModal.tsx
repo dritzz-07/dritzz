@@ -29,7 +29,7 @@ export default function PaymentModal({ isOpen, onClose, bookingDetails, pkg, amo
     try {
       let subscriptionId;
 
-      if (pkg.id === 'premium') {
+      if (pkg.id === 'monthly') {
         const totalWashes = (bookingDetails.vehicles?.length || 1) * 4;
         const expiresAtDate = new Date();
         expiresAtDate.setMonth(expiresAtDate.getMonth() + 1);

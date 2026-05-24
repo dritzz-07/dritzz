@@ -40,11 +40,15 @@ export const generateInvoice = async (details: BookingDetails, pkg: Package, amo
     console.error('Failed to add logo to PDF', err);
   }
 
+  doc.setFontSize(11);
+  doc.setTextColor(255, 255, 255);
+  doc.setFont('helvetica', 'bold');
+  doc.text('DRIVE CLEAN WITHOUT LEAVING HOME', 190, 20, { align: 'right' });
   doc.setFontSize(9);
-  doc.setTextColor(180, 180, 180);
+  doc.setTextColor(150, 150, 150);
   doc.setFont('helvetica', 'normal');
-  doc.text('PREMIUM DOORSTEP CAR WASH', 140, 25);
-  doc.text('dritzz.info@gmail.com | +91 7075504625', 140, 30);
+  doc.text('dritzz.info@gmail.com | +91 7075504625', 190, 26, { align: 'right' });
+  doc.text('GSTIN: 36XXXXXXXXXX   SAC: 998729', 190, 31, { align: 'right' });
 
   // Status Badge
   if (status === 'cancelled') {
@@ -69,18 +73,18 @@ export const generateInvoice = async (details: BookingDetails, pkg: Package, amo
   // Invoice text
   doc.setFontSize(24);
   doc.setFont('helvetica', 'bold');
-  doc.text('INVOICE', 20, 65);
+  doc.text('TAX INVOICE', 20, 65);
   
   doc.setFontSize(10);
   doc.setTextColor(120, 120, 120);
   doc.setFont('helvetica', 'bold');
   doc.text('REFERENCE ID', 20, 75);
-  doc.text('ISSUE DATE', 70, 75);
+  doc.text('ISSUE DATE', 190, 75, { align: 'right' });
   
   doc.setFont('helvetica', 'normal');
   doc.setTextColor(40, 40, 40);
   doc.text(refId, 20, 81);
-  doc.text(new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }), 70, 81);
+  doc.text(new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }), 190, 81, { align: 'right' });
 
   // Customer & Details Block
   doc.setFillColor(248, 248, 250);

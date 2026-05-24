@@ -28,7 +28,7 @@ export default function HowItWorks() {
   return (
     <section id="how-it-works" className="bg-black px-6 md:px-16 py-24 border-t border-white/5">
       <div className="section-label">Simple Process</div>
-      <h2 className="section-title text-white">HOW IT WORKS</h2>
+      <h2 className="section-title">HOW IT WORKS?</h2>
       <p className="text-neutral-400 max-w-md mb-16 uppercase tracking-wider">FOUR EASY STEPS TO A SPOTLESS CAR — WITHOUT LEAVING YOUR HOME.</p>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12">

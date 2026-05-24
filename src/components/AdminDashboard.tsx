@@ -170,11 +170,11 @@ export default function AdminDashboard() {
 
   const filteredBookings = bookings.filter(b => {
     // Verify booking type matches tab selection
-    if (activeTab === 'bookings' && (b.paymentMethod === 'subscription' || !!b.subscriptionId)) {
+    if (activeTab === 'bookings' && b.packageId === 'monthly') {
       // Exclude subscription tasks from one-time bookings and vice-versa
       return false;
     }
-    if (activeTab === 'sub_tasks' && (b.paymentMethod !== 'subscription' && !b.subscriptionId)) {
+    if (activeTab === 'sub_tasks' && b.packageId !== 'monthly') {
       return false;
     }
 
@@ -199,6 +199,8 @@ export default function AdminDashboard() {
   });
 
   const filteredSubscriptions = subscriptions.filter(s => {
+    if (s.packageId !== 'monthly') return false;
+    
     const searchLower = searchTerm.toLowerCase();
     const matchesSearch = (s.customerName || '').toLowerCase().includes(searchLower) ||
            (s.id || '').toLowerCase().includes(searchLower) ||
@@ -713,7 +715,7 @@ export default function AdminDashboard() {
                       return (
                       <tr key={s.id} className="hover:bg-white/[0.02] transition-colors">
                         <td className="px-6 py-4">
-                          <div className="font-bold text-white">Monthly Plan</div>
+                          <div className="font-bold text-white capitalize">{s.packageId || 'Plan'}</div>
                           <div className="text-xs text-neutral-500 uppercase tracking-widest mt-1">
                              {s.vehicles?.length} Vehicle(s)
                           </div>
@@ -774,12 +776,43 @@ function AddBookingModal({ onClose, onAdded }: { onClose: () => void, onAdded: (
     setLoading(true);
     try {
       const refId = `ADMIN-${Math.random().toString(36).substring(2, 6).toUpperCase()}-${Date.now().toString().slice(-4)}`;
+      
+      let subscriptionId = null;
+
+      if (formData.packageId === 'monthly') {
+        const expiresAtDate = new Date();
+        expiresAtDate.setMonth(expiresAtDate.getMonth() + 1);
+
+        const subPayload = {
+          userId: 'admin_manual_entry',
+          customerName: formData.name,
+          customerPhone: formData.phone,
+          packageId: 'monthly',
+          vehicles: [{
+            type: formData.vehicleType,
+            make: formData.vehicleMake,
+            model: formData.vehicleModel
+          }],
+          status: 'active',
+          totalWashes: 4,
+          usedWashes: 0,
+          remainingWashes: 4,
+          expiresAt: expiresAtDate,
+          createdAt: serverTimestamp(),
+          paymentId: refId
+        };
+        
+        const subRef = await addDoc(collection(db, 'subscriptions'), subPayload);
+        subscriptionId = subRef.id;
+      }
+
       await addDoc(collection(db, 'bookings'), {
         ...formData,
+        subscriptionId,
         amount: Number(formData.amount),
         refId,
         status: 'confirmed',
-        paymentMethod: 'manual_admin',
+        paymentMethod: formData.packageId === 'monthly' ? 'subscription' : 'manual_admin',
         userId: 'admin_manual_entry',
         createdAt: serverTimestamp()
       });
@@ -832,7 +865,7 @@ function AddBookingModal({ onClose, onAdded }: { onClose: () => void, onAdded: (
             </div>
             <div>
               <label className="text-xs font-bold text-neutral-400 uppercase tracking-wider mb-2 block">Type</label>
-              <select value={formData.vehicleType} onChange={e => setFormData({...formData, vehicleType: e.target.value})} className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-sm focus:border-white transition-colors outline-none appearance-none">
+              <select value={formData.vehicleType} onChange={e => setFormData({...formData, vehicleType: e.target.value})} className="w-full bg-white/10 border border-white/20 px-4 py-3.5 text-sm font-medium focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/50 outline-none transition-all appearance-none rounded-xl text-white shadow-sm">
                 <option value="hatchback">Hatchback</option>
                 <option value="sedan">Sedan</option>
                 <option value="suv">SUV</option>
@@ -840,10 +873,10 @@ function AddBookingModal({ onClose, onAdded }: { onClose: () => void, onAdded: (
             </div>
             <div>
               <label className="text-xs font-bold text-neutral-400 uppercase tracking-wider mb-2 block">Package</label>
-              <select value={formData.packageId} onChange={e => setFormData({...formData, packageId: e.target.value})} className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-sm focus:border-white transition-colors outline-none appearance-none">
+              <select value={formData.packageId} onChange={e => setFormData({...formData, packageId: e.target.value})} className="w-full bg-white/10 border border-white/20 px-4 py-3.5 text-sm font-medium focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/50 outline-none transition-all appearance-none rounded-xl text-white shadow-sm">
                 <option value="basic">Basic Wash</option>
-                <option value="standard">Standard Detailing</option>
-                <option value="premium">Premium Protection</option>
+                <option value="premium">Premium Care</option>
+                <option value="monthly">Monthly Care</option>
               </select>
             </div>
 
@@ -857,7 +890,7 @@ function AddBookingModal({ onClose, onAdded }: { onClose: () => void, onAdded: (
             </div>
             <div>
               <label className="text-xs font-bold text-neutral-400 uppercase tracking-wider mb-2 block">Time Slot</label>
-              <select value={formData.timeSlot} onChange={e => setFormData({...formData, timeSlot: e.target.value})} className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-sm focus:border-white transition-colors outline-none appearance-none">
+              <select value={formData.timeSlot} onChange={e => setFormData({...formData, timeSlot: e.target.value})} className="w-full bg-white/10 border border-white/20 px-4 py-3.5 text-sm font-medium focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/50 outline-none transition-all appearance-none rounded-xl text-white shadow-sm">
                 {['09:00 AM - 11:00 AM', '11:00 AM - 01:00 PM', '01:00 PM - 03:00 PM', '03:00 PM - 05:00 PM', '05:00 PM - 07:00 PM'].map(time => (
                   <option key={time} value={time}>{time}</option>
                 ))}

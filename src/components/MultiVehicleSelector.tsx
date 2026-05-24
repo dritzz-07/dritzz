@@ -153,16 +153,44 @@ export default function MultiVehicleSelector({ selectedVehicles, onChange, defau
       
       {/* Show newly added custom (non-saved) vehicles */}
       {selectedVehicles.filter(v => !v.vehicleId).length > 0 && (
-        <div className="mt-4 space-y-2">
+        <div className="mt-4 space-y-3">
            {selectedVehicles.map((v, i) => {
               if (v.vehicleId) return null;
               return (
-                 <div key={i} className="flex items-center justify-between p-3 bg-white/5 border border-white/10 rounded-xl">
-                    <div className="flex items-center gap-3">
-                       <Car className="w-4 h-4 text-white/50" />
-                       <span className="text-white text-sm uppercase font-bold">{v.type}</span>
+                 <div key={i} className="flex flex-col gap-3 p-4 bg-black/40 border border-white/10 rounded-xl relative overflow-hidden group">
+                    <div className="flex items-center justify-between relative z-10">
+                       <div className="flex items-center gap-3">
+                          <div className="w-8 h-8 rounded-full bg-blue-500/20 flex items-center justify-center">
+                             <Car className="w-4 h-4 text-blue-400" />
+                          </div>
+                          <span className="text-white text-sm uppercase font-bold tracking-widest">{v.type} <span className="text-neutral-500 font-medium lowercase">({PACKAGES.find(p => p.id === defaultPackageId)?.name})</span></span>
+                       </div>
+                       <button type="button" onClick={() => removeCustom(i)} className="text-red-400 p-2 hover:bg-red-500/20 rounded-full transition-colors"><X className="w-4 h-4" /></button>
                     </div>
-                    <button type="button" onClick={() => removeCustom(i)} className="text-red-400 p-1 hover:bg-red-500/10 rounded-full transition-colors"><X className="w-4 h-4" /></button>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3 relative z-10">
+                       <input 
+                          type="text" 
+                          placeholder="Vehicle Name (e.g. Swift, Creta)" 
+                          value={v.brand || ''}
+                          onChange={(e) => {
+                             const newV = [...selectedVehicles];
+                             newV[i] = { ...newV[i], brand: e.target.value };
+                             onChange(newV);
+                          }}
+                          className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2.5 text-sm text-white focus:outline-none focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/50 transition-all placeholder-neutral-500"
+                       />
+                       <input 
+                          type="text" 
+                          placeholder="Vehicle No. (e.g. TS09XX1234)" 
+                          value={v.vehicleNumber || ''}
+                          onChange={(e) => {
+                             const newV = [...selectedVehicles];
+                             newV[i] = { ...newV[i], vehicleNumber: e.target.value.toUpperCase() };
+                             onChange(newV);
+                          }}
+                          className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2.5 text-sm text-white uppercase focus:outline-none focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/50 transition-all placeholder-neutral-500"
+                       />
+                    </div>
                  </div>
               )
            })}

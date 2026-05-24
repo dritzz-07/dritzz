@@ -1,55 +1,33 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { X, Mail, Lock, User, LogIn, Chrome, ArrowRight, Sparkles, AlertCircle } from 'lucide-react';
+import { X, Chrome, ArrowRight, Sparkles, AlertCircle, Phone, Lock, Smartphone, User } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import { RecaptchaVerifier, signInWithPhoneNumber, ConfirmationResult } from 'firebase/auth';
+import { auth } from '../lib/firebase';
 
 interface AuthOverlayProps {
   isOpen: boolean;
   onClose: () => void;
-  initialMode?: 'login' | 'signup';
+  initialMode?: 'login' | 'signup'; // Kept for compatibility but ignored
 }
 
-export default function AuthOverlay({ isOpen, onClose, initialMode = 'login' }: AuthOverlayProps) {
-  const [mode, setMode] = useState<'login' | 'signup'>(initialMode);
-  const { loginWithGoogle, loginWithEmail, signupWithEmail, resetPassword } = useAuth();
+export default function AuthOverlay({ isOpen, onClose }: AuthOverlayProps) {
+  const { loginWithGoogle } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
-  const [isResetting, setIsResetting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
   const [name, setName] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('+91');
+  const [verificationCode, setVerificationCode] = useState('');
+  const [confirmationResult, setConfirmationResult] = useState<ConfirmationResult | null>(null);
 
   useEffect(() => {
-    setMode(initialMode);
-  }, [initialMode, isOpen]);
-  
-  const handleEmailAuth = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsLoading(true);
+    setName('');
+    setPhoneNumber('+91');
+    setVerificationCode('');
+    setConfirmationResult(null);
     setError(null);
-    try {
-      if (mode === 'signup') {
-        if (!name) throw new Error('Name is required for signup.');
-        await signupWithEmail(email, password, name);
-      } else {
-        await loginWithEmail(email, password);
-      }
-      onClose();
-    } catch (err: any) {
-      if (err.code === 'auth/invalid-credential') {
-        setError('Invalid credentials. Please check your password or switch to "Sign Up" if you don\'t have an account yet.');
-      } else if (err.code === 'auth/email-already-in-use') {
-        setError('Email is already registered. Please switch to "Log in".');
-      } else if (err.code === 'auth/network-request-failed') {
-        setError('Network request failed. Try opening the app in a new tab or disable ad-blockers.');
-      } else {
-        setError(err.message || `Failed to ${mode} with Email and Password`);
-      }
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  }, [isOpen]);
 
   const handleGoogleLogin = async () => {
     setIsLoading(true);
@@ -72,6 +50,57 @@ export default function AuthOverlay({ isOpen, onClose, initialMode = 'login' }: 
     }
   };
 
+  const setupRecaptcha = () => {
+    if (!(window as any).recaptchaVerifier) {
+      (window as any).recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', {
+        'size': 'invisible',
+        'callback': () => {
+          // reCAPTCHA solved
+        }
+      });
+    }
+  };
+
+  const handleSendCode = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsLoading(true);
+    setError(null);
+    try {
+      setupRecaptcha();
+      const appVerifier = (window as any).recaptchaVerifier;
+      const digitsOnly = phoneNumber.replace(/\D/g, '');
+      const formattedPhone = phoneNumber.startsWith('+') ? '+' + digitsOnly : `+91${digitsOnly}`;
+      const confirmation = await signInWithPhoneNumber(auth, formattedPhone, appVerifier);
+      setConfirmationResult(confirmation);
+    } catch (err: any) {
+      setError(err.message || 'Failed to send verification code. Ensure the number is correct.');
+      if ((window as any).recaptchaVerifier) {
+        (window as any).recaptchaVerifier.clear();
+        (window as any).recaptchaVerifier = null;
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleVerifyCode = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!confirmationResult) return;
+    setIsLoading(true);
+    setError(null);
+    try {
+      if (name.trim()) {
+        localStorage.setItem('authFullName', name.trim());
+      }
+      await confirmationResult.confirm(verificationCode);
+      onClose();
+    } catch (err: any) {
+      setError('Invalid verification code. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <AnimatePresence>
       {isOpen && (
@@ -81,15 +110,19 @@ export default function AuthOverlay({ isOpen, onClose, initialMode = 'login' }: 
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            className="absolute inset-0 bg-black/60 backdrop-blur-md"
+            className="absolute inset-0 bg-black/80 backdrop-blur-xl"
           />
           
           <motion.div
-            initial={{ scale: 0.9, opacity: 0, y: 20 }}
+            initial={{ scale: 0.95, opacity: 0, y: 30 }}
             animate={{ scale: 1, opacity: 1, y: 0 }}
-            exit={{ scale: 0.9, opacity: 0, y: 20 }}
-            className="relative w-full max-w-[440px] bg-neutral-900 border border-white/10 rounded-[32px] overflow-hidden shadow-[0_0_100px_rgba(0,0,0,0.5)] max-h-[90vh] overflow-y-auto"
+            exit={{ scale: 0.95, opacity: 0, y: 30 }}
+            transition={{ type: "spring", damping: 25, stiffness: 300 }}
+            className="relative w-full max-w-[440px] bg-gradient-to-b from-slate-950 to-black border border-blue-900/30 rounded-[40px] overflow-hidden shadow-[0_0_100px_rgba(37,99,235,0.15)] max-h-[90vh] overflow-y-auto"
           >
+            {/* Subtle top glare */}
+            <div className="absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-blue-500/[0.08] to-transparent pointer-events-none" />
+            
             {/* Close Button */}
             <button 
               onClick={onClose}
@@ -98,19 +131,18 @@ export default function AuthOverlay({ isOpen, onClose, initialMode = 'login' }: 
               <X className="w-5 h-5 text-white/50" />
             </button>
 
-            <div className="p-8 pt-12">
+            <div className="relative p-8 pt-12">
               <div className="mb-10 flex flex-col items-center text-center">
-                <div className="w-16 h-16 bg-white rounded-2xl flex items-center justify-center mb-6 shadow-[0_0_40px_rgba(255,255,255,0.1)]">
-                  <LogIn className="w-8 h-8 text-black" />
+                <div className="w-16 h-16 bg-gradient-to-br from-blue-600/20 to-blue-900/10 rounded-[20px] flex items-center justify-center mb-6 border border-blue-500/20 shadow-[inset_0_0_20px_rgba(37,99,235,0.2)] relative">
+                  <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-blue-400 to-transparent opacity-50" />
+                  <Sparkles className="w-8 h-8 text-blue-400" />
                 </div>
                 
-                <h2 className="text-3xl font-black text-white tracking-tighter mb-2 uppercase">
-                  {mode === 'login' ? 'WELCOME BACK' : 'CREATE ACCOUNT'}
+                <h2 className="text-2xl font-medium text-white tracking-tight mb-2">
+                  Welcome to Dritzz
                 </h2>
-                <p className="text-neutral-500 text-sm">
-                  {mode === 'login' 
-                    ? 'Premium car care is just a sign-in away.' 
-                    : 'Join the community of elite car owners.'}
+                <p className="text-blue-100/50 text-sm">
+                  Sign in or create an account instantly.
                 </p>
               </div>
 
@@ -125,129 +157,115 @@ export default function AuthOverlay({ isOpen, onClose, initialMode = 'login' }: 
                 </motion.div>
               )}
 
-              <div className="space-y-4">
+              <div className="space-y-5">
                 <button
                   onClick={handleGoogleLogin}
                   disabled={isLoading}
-                  className="w-full h-14 bg-white text-black rounded-2xl font-black text-xs uppercase tracking-[0.2em] flex items-center justify-center gap-3 group transition-all hover:scale-[1.02] active:scale-95 disabled:opacity-50"
+                  className="w-full h-14 bg-gradient-to-r from-blue-600 to-blue-800 text-white rounded-2xl font-bold text-xs uppercase tracking-[0.1em] flex items-center justify-center gap-3 group transition-all hover:from-blue-500 hover:to-blue-700 active:scale-[0.98] disabled:opacity-50 shadow-[0_4px_20px_rgba(37,99,235,0.3)] relative overflow-hidden"
                 >
-                  <Chrome className="w-4 h-4" />
-                  {isLoading ? 'Processing...' : 'Continue with Google'}
+                  <div className="absolute inset-0 bg-white/20 translate-y-[-100%] group-hover:translate-y-[100%] transition-transform duration-500" />
+                  <div className="absolute inset-x-0 top-0 h-px bg-white/40" />
+                  <Chrome className="w-5 h-5 relative z-10" />
+                  <span className="relative z-10">{isLoading ? 'Processing...' : 'Continue with Google'}</span>
                 </button>
 
                 <div className="relative py-4">
                   <div className="absolute inset-0 flex items-center">
-                    <div className="w-full border-t border-white/5"></div>
+                    <div className="w-full border-t border-blue-900/40"></div>
                   </div>
-                  <div className="relative flex justify-center text-[10px] uppercase tracking-[0.3em] font-bold">
-                    <span className="bg-neutral-900 px-4 text-neutral-600">OR EMAIL</span>
+                  <div className="relative flex justify-center text-[10px] uppercase tracking-[0.2em] font-medium">
+                    <span className="bg-slate-950 px-4 text-blue-300/50">OR CONTINUE WITH PHONE</span>
                   </div>
                 </div>
 
-                <form onSubmit={handleEmailAuth} className="space-y-4">
-                  {mode === 'signup' && (
-                    <div className="relative">
-                      <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                        <User className="w-4 h-4 text-neutral-500" />
+                <form onSubmit={confirmationResult ? handleVerifyCode : handleSendCode} className="space-y-4">
+                  <div id="recaptcha-container"></div>
+                  {!confirmationResult ? (
+                    <>
+                      <div className="relative group">
+                        <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                          <User className="w-5 h-5 text-blue-500/50 group-focus-within:text-blue-400 transition-colors" />
+                        </div>
+                        <input
+                          type="text"
+                          required
+                          value={name}
+                          onChange={(e) => setName(e.target.value)}
+                          placeholder="Full Name"
+                          className="w-full h-14 bg-blue-950/20 border border-blue-900/30 rounded-2xl pl-12 pr-4 text-sm text-white placeholder-blue-300/30 focus:outline-none focus:border-blue-500/50 focus:bg-blue-900/20 transition-all font-medium shadow-[inset_0_2px_4px_rgba(0,0,0,0.2)]"
+                        />
                       </div>
-                      <input
-                        type="text"
-                        required
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
-                        placeholder="Full Name"
-                        className="w-full bg-white/5 border border-white/10 rounded-xl py-3 pl-11 pr-4 text-sm text-white placeholder-neutral-500 focus:outline-none focus:border-white transition-colors"
-                      />
-                    </div>
-                  )}
-
-                  <div className="relative">
-                    <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                      <Mail className="w-4 h-4 text-neutral-500" />
-                    </div>
-                    <input
-                      type="email"
-                      required
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      placeholder="Email Address"
-                      className="w-full bg-white/5 border border-white/10 rounded-xl py-3 pl-11 pr-4 text-sm text-white placeholder-neutral-500 focus:outline-none focus:border-white transition-colors"
-                    />
-                  </div>
-
-                  <div className="relative">
-                    <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                      <Lock className="w-4 h-4 text-neutral-500" />
-                    </div>
-                    <input
-                      type="password"
-                      required
-                      minLength={6}
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      placeholder="Password (min 6 chars)"
-                      className="w-full bg-white/5 border border-white/10 rounded-xl py-3 pl-11 pr-4 text-sm text-white placeholder-neutral-500 focus:outline-none focus:border-white transition-colors"
-                    />
-                  </div>
-
-                  <button
-                    type="submit"
-                    disabled={isLoading}
-                    className="w-full h-14 bg-white/10 text-white border border-white/20 rounded-2xl font-black text-xs uppercase tracking-[0.2em] flex items-center justify-center gap-3 group transition-all hover:bg-white/20 active:scale-95 disabled:opacity-50 mt-2"
-                  >
-                    {isLoading ? 'Processing...' : (mode === 'login' ? 'Sign In' : 'Sign Up')}
-                    <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                  </button>
-
-                  {mode === 'login' && (
-                    <div className="text-center pt-2">
+                      <div className="relative group">
+                        <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                          <Phone className="w-5 h-5 text-blue-500/50 group-focus-within:text-blue-400 transition-colors" />
+                        </div>
+                        <input
+                          type="tel"
+                          required
+                          value={phoneNumber}
+                          onChange={(e) => setPhoneNumber(e.target.value)}
+                          placeholder="Phone Number (e.g. +91 9876543210)"
+                          className="w-full h-14 bg-blue-950/20 border border-blue-900/30 rounded-2xl pl-12 pr-4 text-sm text-white placeholder-blue-300/30 focus:outline-none focus:border-blue-500/50 focus:bg-blue-900/20 transition-all font-medium shadow-[inset_0_2px_4px_rgba(0,0,0,0.2)]"
+                        />
+                      </div>
                       <button
-                        type="button"
-                        onClick={async () => {
-                          if (!email) {
-                            setError('Please enter your email address above to reset password.');
-                            return;
-                          }
-                          setIsResetting(true);
-                          setError(null);
-                          try {
-                            await resetPassword(email);
-                            setError('Password reset email sent! Check your inbox.');
-                          } catch (e: any) {
-                            setError(e.message || 'Failed to send reset email.');
-                          } finally {
-                            setIsResetting(false);
-                          }
-                        }}
-                        className="text-xs text-neutral-400 hover:text-white transition-colors underline-offset-4 hover:underline"
-                        disabled={isResetting}
+                        type="submit"
+                        disabled={isLoading || !phoneNumber || !name.trim()}
+                        className="w-full h-14 bg-blue-900/20 text-blue-400 border border-blue-500/30 rounded-2xl font-bold text-xs uppercase tracking-[0.1em] flex items-center justify-center gap-3 group transition-all hover:bg-blue-800/30 hover:text-blue-300 active:scale-[0.98] disabled:opacity-50 mt-2"
                       >
-                        {isResetting ? 'Sending...' : 'Forgot your password?'}
+                        {isLoading ? 'Sending...' : 'Send Verification Code'}
+                        <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                       </button>
-                    </div>
+                    </>
+                  ) : (
+                    <>
+                      <div className="relative group">
+                        <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                          <Lock className="w-5 h-5 text-blue-500/50 group-focus-within:text-blue-400 transition-colors" />
+                        </div>
+                        <input
+                          type="text"
+                          required
+                          value={verificationCode}
+                          onChange={(e) => setVerificationCode(e.target.value)}
+                          placeholder="Enter 6-digit OTP"
+                          className="w-full h-14 bg-blue-950/20 border border-blue-900/30 rounded-2xl pl-12 pr-4 text-lg text-white placeholder-blue-300/30 focus:outline-none focus:border-blue-500/50 focus:bg-blue-900/20 transition-all font-medium tracking-[0.3em] shadow-[inset_0_2px_4px_rgba(0,0,0,0.2)]"
+                          maxLength={6}
+                        />
+                      </div>
+                      <button
+                        type="submit"
+                        disabled={isLoading || verificationCode.length < 6}
+                        className="w-full h-14 bg-gradient-to-r from-blue-600 to-blue-800 text-white rounded-2xl font-bold text-xs uppercase tracking-[0.1em] flex items-center justify-center gap-3 group transition-all hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 mt-2 shadow-[0_4px_20px_rgba(37,99,235,0.3)] relative overflow-hidden"
+                      >
+                        <div className="absolute inset-0 bg-white/20 translate-y-[-100%] group-hover:translate-y-[100%] transition-transform duration-500" />
+                        <div className="absolute inset-x-0 top-0 h-px bg-white/40" />
+                        <span className="relative z-10">{isLoading ? 'Verifying...' : 'Verify & Sign In'}</span>
+                        <Sparkles className="w-4 h-4 relative z-10" />
+                      </button>
+                      <div className="text-center pt-3">
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setConfirmationResult(null);
+                              setVerificationCode('');
+                              setError(null);
+                            }}
+                            className="text-xs font-medium text-blue-400/60 hover:text-blue-400 transition-colors underline-offset-4 hover:underline"
+                          >
+                            Change Phone Number
+                          </button>
+                      </div>
+                    </>
                   )}
                 </form>
               </div>
 
-              <div className="mt-8 pt-8 border-t border-white/5 text-center">
-                <p className="text-xs text-neutral-500">
-                  {mode === 'login' ? "Don't have an account?" : "Already have an account?"}{' '}
-                  <button 
-                    onClick={() => {
-                      setMode(mode === 'login' ? 'signup' : 'login');
-                      setError(null);
-                    }}
-                    className="text-white font-bold hover:underline underline-offset-4"
-                  >
-                    {mode === 'login' ? 'Sign up for free' : 'Log in here'}
-                  </button>
-                </p>
-              </div>
             </div>
             
-            <div className="bg-white/5 p-6 text-center border-t border-white/5 flex items-center justify-center gap-2">
-              <Sparkles className="w-3 h-3 text-white/40" />
-              <span className="text-[9px] uppercase tracking-[0.2em] font-black text-white/40">
+            <div className="bg-blue-950/20 p-6 text-center border-t border-blue-900/30 flex items-center justify-center gap-2">
+              <Sparkles className="w-3 h-3 text-blue-400/50" />
+              <span className="text-[9px] uppercase tracking-[0.2em] font-black text-blue-400/50">
                 Encrypted & Secure with Firebase
               </span>
             </div>

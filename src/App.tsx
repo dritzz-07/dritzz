@@ -12,24 +12,34 @@ import Footer from './components/Footer';
 import PaymentModal from './components/PaymentModal';
 import WaterSplashEffects from './components/WaterSplashEffects';
 import AuthOverlay from './components/AuthOverlay';
+import ProfileSetupOverlay from './components/ProfileSetupOverlay';
 import MyBookingsModal from './components/MyBookingsModal';
+import AccountSettingsModal from './components/AccountSettingsModal';
 import AdminDashboard from './components/AdminDashboard';
+import { useAuth } from './context/AuthContext';
 import { BookingDetails, VehicleType, Package } from './types';
 import { PACKAGES } from './constants';
 
 function MainApp() {
+  const { user } = useAuth();
   const [selectedVehicle, setSelectedVehicle] = useState<VehicleType>('hatchback');
   const [selectedPkgId, setSelectedPkgId] = useState<string>('');
   
   const [isPaymentOpen, setIsPaymentOpen] = useState(false);
   const [isAuthOpen, setIsAuthOpen] = useState(false);
   const [isBookingsOpen, setIsBookingsOpen] = useState(false);
-  const [authMode, setAuthMode] = useState<'login' | 'signup'>('login');
+  const [bookingsTab, setBookingsTab] = useState<'upcoming' | 'history' | 'subscriptions'>('upcoming');
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [settingsTab, setSettingsTab] = useState<'addresses' | 'vehicles' | 'invoices' | 'support' | 'settings'>('settings');
   const [currentBookingDetails, setCurrentBookingDetails] = useState<BookingDetails | null>(null);
   const [currentPkg, setCurrentPkg] = useState<Package | null>(null);
   const [amount, setAmount] = useState(0);
 
   const handleSelectPackage = (pkgId: string, vehicle: VehicleType) => {
+    if (!user) {
+      setIsAuthOpen(true);
+      return;
+    }
     setSelectedVehicle(vehicle);
     setSelectedPkgId(pkgId);
     
@@ -70,9 +80,9 @@ function MainApp() {
     <div className="min-h-screen selection:bg-gold selection:text-black">
       <WaterSplashEffects />
       <Navbar 
-        openLogin={() => { setAuthMode('login'); setIsAuthOpen(true); }} 
-        openSignup={() => { setAuthMode('signup'); setIsAuthOpen(true); }} 
-        openBookings={() => setIsBookingsOpen(true)}
+        openLogin={() => { setIsAuthOpen(true); }} 
+        openBookings={(tab = 'upcoming') => { setBookingsTab(tab); setIsBookingsOpen(true); }}
+        openSettings={(tab = 'settings') => { setSettingsTab(tab); setIsSettingsOpen(true); }}
       />
       
       <main className="relative z-10">
@@ -86,7 +96,7 @@ function MainApp() {
           initialVehicle={selectedVehicle} 
           initialPackageId={selectedPkgId} 
           onSubmit={handleBookingSubmit} 
-          onRequireAuth={() => { setAuthMode('login'); setIsAuthOpen(true); }}
+          onRequireAuth={() => { setIsAuthOpen(true); }}
         />
         <WhyUs />
         <Testimonials />
@@ -97,12 +107,20 @@ function MainApp() {
       <AuthOverlay 
         isOpen={isAuthOpen} 
         onClose={() => setIsAuthOpen(false)} 
-        initialMode={authMode}
       />
+
+      <ProfileSetupOverlay />
 
       <MyBookingsModal 
         isOpen={isBookingsOpen}
         onClose={() => setIsBookingsOpen(false)}
+        initialTab={bookingsTab}
+      />
+
+      <AccountSettingsModal
+        isOpen={isSettingsOpen}
+        onClose={() => setIsSettingsOpen(false)}
+        initialTab={settingsTab}
       />
 
       <PaymentModal 
