@@ -867,7 +867,7 @@ export default function BookingForm({
                   handleFormSubmit(e);
                 }
               }}
-              className="relative w-full overflow-hidden bg-white text-black py-4 rounded-xl font-bold text-xs tracking-widest uppercase hover:bg-neutral-200 transition-all flex items-center justify-center gap-2 shadow-xl shadow-white/10 group"
+              className="w-full relative btn-primary group overflow-hidden"
             >
               <div className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/40 to-transparent -translate-x-full group-hover:animate-[shimmer_1.5s_infinite]" />
               {user ? (

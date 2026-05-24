@@ -161,10 +161,8 @@ export default function AuthOverlay({ isOpen, onClose }: AuthOverlayProps) {
                 <button
                   onClick={handleGoogleLogin}
                   disabled={isLoading}
-                  className="w-full h-14 bg-gradient-to-r from-zinc-600 to-zinc-800 text-white rounded-2xl font-bold text-xs uppercase tracking-[0.1em] flex items-center justify-center gap-3 group transition-all hover:from-zinc-500 hover:to-zinc-700 active:scale-[0.98] disabled:opacity-50 shadow-[0_4px_20px_rgba(255,255,255,0.3)] relative overflow-hidden"
+                  className="w-full h-14 btn-primary !mt-4"
                 >
-                  <div className="absolute inset-0 bg-white/20 translate-y-[-100%] group-hover:translate-y-[100%] transition-transform duration-500" />
-                  <div className="absolute inset-x-0 top-0 h-px bg-white/40" />
                   <Chrome className="w-5 h-5 relative z-10" />
                   <span className="relative z-10">{isLoading ? 'Processing...' : 'Continue with Google'}</span>
                 </button>
@@ -211,10 +209,10 @@ export default function AuthOverlay({ isOpen, onClose }: AuthOverlayProps) {
                       <button
                         type="submit"
                         disabled={isLoading || !phoneNumber || !name.trim()}
-                        className="w-full h-14 bg-neutral-900/20 text-white border border-white/10 rounded-2xl font-bold text-xs uppercase tracking-[0.1em] flex items-center justify-center gap-3 group transition-all hover:bg-zinc-800/30 hover:text-neutral-300 active:scale-[0.98] disabled:opacity-50 mt-2"
+                        className="w-full h-14 btn-primary !mt-4"
                       >
                         {isLoading ? 'Sending...' : 'Send Verification Code'}
-                        <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                        <ArrowRight className="w-4 h-4" />
                       </button>
                     </>
                   ) : (
@@ -236,10 +234,8 @@ export default function AuthOverlay({ isOpen, onClose }: AuthOverlayProps) {
                       <button
                         type="submit"
                         disabled={isLoading || verificationCode.length < 6}
-                        className="w-full h-14 bg-gradient-to-r from-zinc-600 to-zinc-800 text-white rounded-2xl font-bold text-xs uppercase tracking-[0.1em] flex items-center justify-center gap-3 group transition-all hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 mt-2 shadow-[0_4px_20px_rgba(255,255,255,0.3)] relative overflow-hidden"
+                        className="w-full h-14 btn-primary !mt-4"
                       >
-                        <div className="absolute inset-0 bg-white/20 translate-y-[-100%] group-hover:translate-y-[100%] transition-transform duration-500" />
-                        <div className="absolute inset-x-0 top-0 h-px bg-white/40" />
                         <span className="relative z-10">{isLoading ? 'Verifying...' : 'Verify & Sign In'}</span>
                         <Sparkles className="w-4 h-4 relative z-10" />
                       </button>

@@ -354,7 +354,7 @@ export default function AdminDashboard() {
               <button
                 type="submit"
                 disabled={isLoggingIn}
-                className="w-full h-14 bg-white text-black rounded-2xl font-black text-xs uppercase tracking-[0.2em] flex items-center justify-center gap-3 group transition-all hover:bg-neutral-200 active:scale-95 disabled:opacity-50 mt-2"
+                className="w-full h-14 btn-primary !mt-2 !rounded-2xl"
               >
                 {isLoggingIn ? 'Authenticating...' : 'Secure Login'}
                 <LogIn className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
@@ -483,7 +483,7 @@ export default function AdminDashboard() {
         <div className="flex gap-2 p-1 bg-white/5 w-fit rounded-xl border border-white/10 flex-wrap">
           <button 
             onClick={() => setActiveTab('bookings')}
-            className={`px-6 py-2.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-all ${activeTab === 'bookings' ? 'bg-white text-black' : 'text-neutral-100 hover:text-white'}`}
+            className={`px-6 py-2.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-all ${activeTab === 'bookings' ? 'bg-zinc-800 text-white border border-white/10' : 'text-neutral-100 hover:text-white'}`}
           >
             One-Time Bookings
           </button>
@@ -553,7 +553,7 @@ export default function AdminDashboard() {
             </button>
             <button
               onClick={() => setIsAddingBooking(true)}
-              className="flex-1 sm:flex-none px-4 py-3 bg-white text-black rounded-2xl text-xs font-black uppercase tracking-widest hover:bg-neutral-200 transition-colors flex items-center justify-center gap-2"
+              className="flex-1 sm:flex-none btn-primary !px-4 !py-3 !rounded-2xl"
             >
               <Plus className="w-4 h-4" /> <span className="hidden sm:inline">Add</span>
             </button>
@@ -899,7 +899,7 @@ function AddBookingModal({ onClose, onAdded }: { onClose: () => void, onAdded: (
           </div>
           
           <div className="pt-6">
-            <button type="submit" disabled={loading} className="w-full py-4 bg-white text-black font-black uppercase tracking-widest rounded-xl hover:bg-neutral-200 transition-colors disabled:opacity-50">
+            <button type="submit" disabled={loading} className="w-full btn-primary !py-4 !rounded-xl">
               {loading ? 'Adding...' : 'Add Booking manually'}
             </button>
           </div>

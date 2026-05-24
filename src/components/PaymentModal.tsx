@@ -242,11 +242,11 @@ export default function PaymentModal({ isOpen, onClose, bookingDetails, pkg, amo
                   <button
                     onClick={handleConfirm}
                     disabled={isLoading}
-                    className="w-full bg-white text-black py-5 rounded-2xl font-bold text-xs tracking-widest uppercase hover:brightness-90 transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="w-full btn-primary"
                   >
                     {isLoading ? (
                       <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 border-2 border-black/20 border-t-black rounded-full animate-spin" />
+                        <div className="w-4 h-4 border-2 border-white/20 border-t-white rounded-full animate-spin" />
                         Processing...
                       </div>
                     ) : (

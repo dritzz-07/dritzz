@@ -37,11 +37,11 @@
 }
 
 @utility btn-primary {
-  @apply relative overflow-hidden text-black px-8 py-4 font-black uppercase tracking-widest rounded-xl text-sm transition-all duration-300 shadow-[0_8px_16px_rgba(255,255,255,0.1),inset_0_2px_4px_rgba(255,255,255,1)] border border-zinc-100 bg-gradient-to-br from-zinc-100 via-zinc-300 to-zinc-400 hover:shadow-[0_12px_30px_rgba(255,255,255,0.15)] hover:-translate-y-1 hover:brightness-105 active:translate-y-0 disabled:opacity-50 disabled:pointer-events-none;
+  @apply rounded-full bg-gradient-to-b from-zinc-800 to-zinc-950 border border-white/10 text-neutral-100 px-10 py-[1.15rem] font-black uppercase tracking-[0.2em] text-xs shadow-[0_0_20px_rgba(255,255,255,0.1)] hover:shadow-[0_0_30px_rgba(255,255,255,0.2)] hover:border-white/30 hover:scale-105 active:scale-[0.98] transition-all duration-300 flex items-center justify-center gap-3 disabled:opacity-50 disabled:pointer-events-none;
 }
 
 @utility btn-secondary {
-  @apply bg-transparent border border-white/20 text-white px-8 py-4 font-bold uppercase tracking-wider rounded-xl text-sm transition-all duration-300 hover:bg-white/10 hover:border-white/40 disabled:opacity-50 disabled:pointer-events-none;
+  @apply rounded-full bg-white/5 border border-white/10 text-neutral-300 px-10 py-[1.15rem] font-bold uppercase tracking-[0.2em] text-xs hover:bg-white/10 active:scale-[0.98] transition-all duration-300 flex items-center justify-center gap-3 disabled:opacity-50 disabled:pointer-events-none hover:text-white;
 }
 
 @layer utilities {

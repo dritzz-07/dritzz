@@ -182,15 +182,8 @@ export default function Pricing({ onSelectPackage }: PricingProps) {
 
                 <button
                   onClick={() => onSelectPackage(pkg.id, vehicle)}
-                  className={`w-full py-4 rounded-xl text-[13px] font-black uppercase tracking-[0.2em] transition-all duration-300 shadow-md relative overflow-hidden group/btn ${
-                    isMonthly 
-                      ? 'bg-zinc-600 text-white hover:bg-zinc-500 shadow-[0_0_30px_rgba(255,255,255,0.4)]' 
-                      : 'bg-white/5 border border-white/10 text-white hover:bg-white/10 hover:border-white/30'
-                  }`}
+                  className={isMonthly ? 'w-full btn-primary text-xs' : 'w-full btn-secondary text-xs'}
                 >
-                  {isMonthly && (
-                    <div className="absolute inset-0 bg-white/20 translate-y-full group-hover/btn:translate-y-0 transition-transform duration-300 ease-out" />
-                  )}
                   <span className="relative z-10 flex items-center justify-center gap-2">
                     {getButtonText(pkg.id)}
                     {isMonthly && <ArrowRight className="w-4 h-4" />}
@@ -239,14 +232,14 @@ export default function Pricing({ onSelectPackage }: PricingProps) {
             <div className="flex flex-col sm:flex-row items-center justify-center gap-6 w-full">
               <button 
                 onClick={() => onSelectPackage('monthly', vehicle)}
-                className="w-full sm:w-auto px-10 py-[1.15rem] rounded-full bg-white text-black font-black uppercase tracking-[0.15em] text-xs shadow-[0_0_40px_rgba(255,255,255,0.2)] hover:shadow-[0_0_60px_rgba(255,255,255,0.4)] hover:scale-105 transition-all duration-300 flex items-center justify-center gap-3"
+                className="w-full sm:w-auto btn-primary"
               >
                 <Gem className="w-4 h-4" />
                 Get Membership
               </button>
               <button 
                 onClick={() => document.getElementById('packages')?.scrollIntoView({ behavior: 'smooth' })}
-                className="w-full sm:w-auto px-10 py-[1.15rem] rounded-full bg-white/5 border border-white/10 text-white font-bold uppercase tracking-[0.15em] text-xs hover:bg-white/10 transition-all duration-300  flex items-center justify-center"
+                className="w-full sm:w-auto btn-secondary"
               >
                 Schedule Wash
               </button>

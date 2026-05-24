@@ -100,18 +100,18 @@ export default function Navbar({ openLogin, openBookings, openSettings }: Navbar
               onClick={() => setShowProfileMenu(!showProfileMenu)}
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
-              className="flex items-center gap-2.5 px-1.5 py-1.5 pr-4 bg-gradient-to-r from-zinc-950/40 to-zinc-900/40 border border-white/5 rounded-full hover:border-white/10 hover:bg-white/5 transition-all shadow-sm"
+              className="flex items-center gap-2.5 px-1.5 py-1.5 pr-4 rounded-full bg-gradient-to-b from-zinc-800 to-zinc-950 border border-white/10 text-neutral-100 uppercase tracking-[0.2em] text-[11px] shadow-[0_0_20px_rgba(255,255,255,0.1)] hover:shadow-[0_0_30px_rgba(255,255,255,0.2)] hover:scale-105 active:scale-[0.98] transition-all duration-300 font-black"
             >
-              <div className="w-8 h-8 rounded-full overflow-hidden bg-gradient-to-br from-zinc-500/20 to-zinc-900/40 border border-white/10 flex items-center justify-center shadow-[inset_0_0_10px_rgba(255,255,255,0.2)]">
+              <div className="w-8 h-8 rounded-full overflow-hidden bg-white/10 border border-white/10 flex items-center justify-center">
                 {user.photoURL ? (
                   <img src={user.photoURL} alt="Profile" referrerPolicy="no-referrer" className="w-full h-full object-cover" />
                 ) : (
-                  <span className="text-xs font-bold text-white">
+                  <span className="text-[13px] font-black text-white">
                     {displayName.charAt(0).toUpperCase()}
                   </span>
                 )}
               </div>
-              <span className="text-[13px] font-medium text-white max-w-[120px] truncate">
+              <span className="max-w-[120px] truncate">
                 Hi, {displayName}
               </span>
             </motion.button>
@@ -202,15 +202,10 @@ export default function Navbar({ openLogin, openBookings, openSettings }: Navbar
               onClick={openLogin}
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
-              className="group px-6 py-2.5 flex items-center gap-2.5 bg-gradient-to-r from-zinc-950/80 to-zinc-950 text-zinc-50 text-[11px] font-black rounded-full border border-white/10 hover:border-zinc-400/50 hover:shadow-[0_0_20px_rgba(255,255,255,0.2)] transition-all uppercase tracking-[0.2em] shadow-[0_4px_20px_rgba(0,0,0,0.5)] relative overflow-hidden"
+              className="btn-primary !px-6 !py-2.5 !text-[11px]"
             >
-              <div className="absolute inset-0 bg-zinc-500/10 translate-x-[-100%] group-hover:translate-x-0 transition-transform duration-500 ease-out" />
-              <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-zinc-400/40 to-transparent opacity-50" />
-              <div className="relative z-10 w-4 h-4 overflow-hidden flex flex-col justify-center">
-                <Car className="w-4 h-4 text-white absolute transition-all duration-500 ease-in-out group-hover:translate-x-[150%] opacity-100 group-hover:opacity-0" strokeWidth={2.5} />
-                <Car className="w-4 h-4 text-neutral-300 absolute -translate-x-[150%] transition-all duration-500 ease-in-out group-hover:translate-x-0 opacity-0 group-hover:opacity-100" strokeWidth={2.5} />
-              </div>
-              <span className="relative z-10 transition-transform duration-300 group-hover:translate-x-0.5 text-zinc-50">Sign In</span>
+              <Car className="w-4 h-4" strokeWidth={2.5} />
+              <span>Sign In</span>
             </motion.button>
           </>
         )}

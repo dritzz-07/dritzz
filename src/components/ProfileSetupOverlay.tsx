@@ -140,10 +140,10 @@ export default function ProfileSetupOverlay() {
               <button
                 type="submit"
                 disabled={isLoading || !fullName.trim()}
-                className="w-full h-14 bg-white text-black rounded-2xl font-black text-xs uppercase tracking-[0.2em] flex items-center justify-center gap-3 group transition-all hover:scale-[1.02] active:scale-95 disabled:opacity-50 mt-2"
+                className="w-full h-14 btn-primary !mt-4"
               >
                 {isLoading ? 'Saving...' : 'Complete Setup'}
-                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                <ArrowRight className="w-4 h-4" />
               </button>
             </form>
           </div>
