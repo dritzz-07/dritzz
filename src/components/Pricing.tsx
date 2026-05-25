@@ -54,7 +54,7 @@ export default function Pricing({ onSelectPackage }: PricingProps) {
       <div className="absolute hidden md:block bottom-0 right-0 w-96 h-96 bg-zinc-500/5 opacity-10 rounded-full pointer-events-none" />
       
       <div className="text-center relative z-10 flex flex-col items-center mb-20 animate-in fade-in slide-in-from-bottom-8 duration-700">
-        <div className="mb-6 inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-white/10 bg-white/5">
+        <div className="mb-6 inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-white/10 bg-white/5" style={{ borderColor: '#000000' }}>
           <Sparkles className="w-3 h-3 text-white" />
           <span className="text-xs uppercase tracking-widest text-neutral-300 font-bold">Premium Doorstep Care</span>
         </div>
@@ -125,7 +125,7 @@ export default function Pricing({ onSelectPackage }: PricingProps) {
                   <div 
                     className={`absolute -top-4 left-1/2 -translate-x-1/2 px-5 py-1.5 rounded-full text-xs font-black uppercase tracking-widest whitespace-nowrap shadow-xl
                     ${isMonthly ? 'bg-gradient-to-r from-black via-zinc-800 to-black text-white shadow-black/50 border border-zinc-700/50 animate-slow-shine' : 'bg-neutral-800 text-neutral-100 border border-white/10'}`}
-                    style={{ borderWidth: '1.8888889999999998px', borderRadius: '40px', paddingRight: '31px', marginLeft: '0px', marginTop: '-12px' }}
+                    style={(!isMonthly && badgeText === 'Best Seller') ? { borderWidth: '1.8888889999999998px', borderRadius: '40px', paddingRight: '31px', marginLeft: '0px', marginTop: '-12px', backgroundColor: '#010101', borderColor: '#f8f3f3' } : { borderWidth: '1.8888889999999998px', borderRadius: '40px', paddingRight: '31px', marginLeft: '0px', marginTop: '-12px' }}
                   >
                     {badgeText}
                   </div>
@@ -146,8 +146,9 @@ export default function Pricing({ onSelectPackage }: PricingProps) {
                     animate={{ y: [0, -4, 0], scale: [1, 1.05, 1] }} 
                     transition={{ repeat: Infinity, duration: 4, ease: "easeInOut", delay: pkg.id === 'basic' ? 0 : 1 }}
                     className="w-12 h-12 rounded-2xl bg-white/5 flex items-center justify-center border border-white/10 mb-6 group-hover:bg-white/10 group-hover:shadow-[0_0_15px_rgba(255,255,255,0.1)] transition-all"
+                    style={pkg.id === 'basic' ? { backgroundColor: '#338dea', borderColor: '#000000' } : undefined}
                   >
-                    <Icon className="w-6 h-6 text-neutral-300 group-hover:text-white transition-colors" />
+                    <Icon className="w-6 h-6 text-neutral-300 group-hover:text-white transition-colors" style={pkg.id === 'basic' ? { backgroundColor: '#338dea' } : undefined} />
                   </motion.div>
                 )}
                 
