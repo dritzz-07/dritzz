@@ -202,7 +202,7 @@ export default function Navbar({ openLogin, openBookings, openSettings }: Navbar
               onClick={openLogin}
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
-              className="btn-primary !px-6 !py-2.5 !text-[11px]"
+              className="btn-primary flex-none !px-6 !py-2.5 !text-[11px] animate-diamond-shine"
             >
               <Car className="w-4 h-4" strokeWidth={2.5} />
               <span>Sign In</span>

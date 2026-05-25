@@ -161,7 +161,7 @@ export default function AuthOverlay({ isOpen, onClose }: AuthOverlayProps) {
                 <button
                   onClick={handleGoogleLogin}
                   disabled={isLoading}
-                  className="w-full h-14 btn-primary !mt-4"
+                  className="w-full h-14 btn-primary !mt-4 animate-diamond-shine"
                 >
                   <Chrome className="w-5 h-5 relative z-10" />
                   <span className="relative z-10">{isLoading ? 'Processing...' : 'Continue with Google'}</span>
@@ -209,7 +209,7 @@ export default function AuthOverlay({ isOpen, onClose }: AuthOverlayProps) {
                       <button
                         type="submit"
                         disabled={isLoading || !phoneNumber || !name.trim()}
-                        className="w-full h-14 btn-primary !mt-4"
+                        className="w-full h-14 btn-primary !mt-4 animate-diamond-shine"
                       >
                         {isLoading ? 'Sending...' : 'Send Verification Code'}
                         <ArrowRight className="w-4 h-4" />
@@ -234,7 +234,7 @@ export default function AuthOverlay({ isOpen, onClose }: AuthOverlayProps) {
                       <button
                         type="submit"
                         disabled={isLoading || verificationCode.length < 6}
-                        className="w-full h-14 btn-primary !mt-4"
+                        className="w-full h-14 btn-primary !mt-4 animate-diamond-shine"
                       >
                         <span className="relative z-10">{isLoading ? 'Verifying...' : 'Verify & Sign In'}</span>
                         <Sparkles className="w-4 h-4 relative z-10" />

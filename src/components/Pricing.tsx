@@ -30,7 +30,12 @@ export default function Pricing({ onSelectPackage }: PricingProps) {
   };
 
   const getBadgeText = (pkgId: string) => {
-    if (pkgId === 'monthly') return 'MOST POPULAR 💎';
+    if (pkgId === 'monthly') return (
+      <span className="flex items-center gap-1.5">
+        MOST POPULAR
+        <Sparkles className="w-3.5 h-3.5 text-zinc-300 animate-pulse" />
+      </span>
+    );
     if (pkgId === 'premium') return 'Best Seller';
     return null;
   };
@@ -117,8 +122,11 @@ export default function Pricing({ onSelectPackage }: PricingProps) {
 
                 {/* Badges */}
                 {badgeText && (
-                  <div className={`absolute -top-4 left-1/2 -translate-x-1/2 px-5 py-1.5 rounded-full text-xs font-black uppercase tracking-widest whitespace-nowrap shadow-xl
-                    ${isMonthly ? 'bg-gradient-to-r from-zinc-500 to-zinc-600 text-white shadow-zinc-500/40 border border-zinc-400/50' : 'bg-neutral-800 text-neutral-100 border border-white/10'}`}>
+                  <div 
+                    className={`absolute -top-4 left-1/2 -translate-x-1/2 px-5 py-1.5 rounded-full text-xs font-black uppercase tracking-widest whitespace-nowrap shadow-xl
+                    ${isMonthly ? 'bg-gradient-to-r from-black via-zinc-800 to-black text-white shadow-black/50 border border-zinc-700/50 animate-slow-shine' : 'bg-neutral-800 text-neutral-100 border border-white/10'}`}
+                    style={{ borderWidth: '1.8888889999999998px', borderRadius: '40px', paddingRight: '31px', marginLeft: '0px', marginTop: '-12px' }}
+                  >
                     {badgeText}
                   </div>
                 )}
@@ -134,9 +142,13 @@ export default function Pricing({ onSelectPackage }: PricingProps) {
                   </motion.div>
                 )}
                 {!isMonthly && (
-                  <div className="w-12 h-12 rounded-2xl bg-white/5 flex items-center justify-center border border-white/10 mb-6 group-hover:bg-white/10 transition-colors">
-                    <Icon className="w-6 h-6 text-neutral-300" />
-                  </div>
+                  <motion.div 
+                    animate={{ y: [0, -4, 0], scale: [1, 1.05, 1] }} 
+                    transition={{ repeat: Infinity, duration: 4, ease: "easeInOut", delay: pkg.id === 'basic' ? 0 : 1 }}
+                    className="w-12 h-12 rounded-2xl bg-white/5 flex items-center justify-center border border-white/10 mb-6 group-hover:bg-white/10 group-hover:shadow-[0_0_15px_rgba(255,255,255,0.1)] transition-all"
+                  >
+                    <Icon className="w-6 h-6 text-neutral-300 group-hover:text-white transition-colors" />
+                  </motion.div>
                 )}
                 
                 <h3 className={`font-black tracking-tight mb-2 uppercase ${isMonthly ? 'text-2xl text-white' : 'text-2xl text-neutral-100'}`}>
@@ -214,10 +226,10 @@ export default function Pricing({ onSelectPackage }: PricingProps) {
 
           <div className="relative z-10 flex flex-col items-center">
             {/* VIP Badge */}
-            <div className="mb-8 inline-flex items-center gap-2 px-4 py-2 rounded-full border border-white/10 bg-zinc-500/10  shadow-[0_0_20px_rgba(255,255,255,0.2)]">
-              <Sparkles className="w-4 h-4 text-white" />
-              <span className="text-xs sm:text-xs font-black uppercase tracking-[0.3em] text-neutral-300">Dritzz Black Membership</span>
-              <Sparkles className="w-4 h-4 text-white" />
+            <div className="mb-8 inline-flex items-center gap-2 px-4 py-2 rounded-full border border-zinc-700/50 bg-gradient-to-r from-black via-zinc-800 to-black animate-slow-shine shadow-black/50 shadow-[0_0_20px_rgba(0,0,0,0.5)]">
+              <Sparkles className="w-4 h-4 text-white animate-pulse" />
+              <span className="text-xs sm:text-xs font-black uppercase tracking-[0.3em] text-white">Dritzz Black Membership</span>
+              <Sparkles className="w-4 h-4 text-white animate-pulse" />
             </div>
 
             <h3 className="text-4xl md:text-6xl font-black mb-6 tracking-tight leading-tight">
