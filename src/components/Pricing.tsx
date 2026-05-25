@@ -194,6 +194,7 @@ export default function Pricing({ onSelectPackage }: PricingProps) {
                 <button
                   onClick={() => onSelectPackage(pkg.id, vehicle)}
                   className={isMonthly ? 'w-full btn-primary text-xs' : 'w-full btn-secondary text-xs'}
+                  style={!isMonthly ? { backgroundColor: '#000000' } : undefined}
                 >
                   <span className="relative z-10 flex items-center justify-center gap-2">
                     {getButtonText(pkg.id)}
@@ -226,11 +227,15 @@ export default function Pricing({ onSelectPackage }: PricingProps) {
 
           <div className="relative z-10 flex flex-col items-center">
             {/* VIP Badge */}
-            <div className="mb-8 inline-flex items-center gap-2 px-4 py-2 rounded-full border border-zinc-700/50 bg-gradient-to-r from-black via-zinc-800 to-black animate-slow-shine shadow-black/50 shadow-[0_0_20px_rgba(0,0,0,0.5)]">
+            <motion.div 
+              animate={{ scale: [1, 1.05, 1] }}
+              transition={{ repeat: Infinity, duration: 2.5, ease: "easeInOut" }}
+              className="mb-8 inline-flex items-center gap-2 px-4 py-2 rounded-full border border-white/60 bg-gradient-to-r from-black via-zinc-800 to-black animate-slow-shine shadow-[0_0_20px_rgba(255,255,255,0.15)]"
+            >
               <Sparkles className="w-4 h-4 text-white animate-pulse" />
               <span className="text-xs sm:text-xs font-black uppercase tracking-[0.3em] text-white">Dritzz Black Membership</span>
               <Sparkles className="w-4 h-4 text-white animate-pulse" />
-            </div>
+            </motion.div>
 
             <h3 className="text-4xl md:text-6xl font-black mb-6 tracking-tight leading-tight">
               <span className="text-white drop-shadow-md">One Membership.</span> <br />

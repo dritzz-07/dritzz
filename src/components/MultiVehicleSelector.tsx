@@ -87,7 +87,7 @@ export default function MultiVehicleSelector({ selectedVehicles, onChange, defau
 
   if (!defaultPackageId) {
     return (
-      <div className="p-8 bg-white/5 border border-white/10 rounded-xl text-center">
+      <div className="p-8 bg-white/5 border border-white/10 rounded-xl text-center" style={{ backgroundColor: '#000000' }}>
         <Car className="w-8 h-8 text-white/20 mx-auto mb-3" />
         <p className="text-xs font-bold text-white/60 uppercase tracking-widest">Select a package to add vehicles</p>
       </div>
@@ -95,7 +95,7 @@ export default function MultiVehicleSelector({ selectedVehicles, onChange, defau
   }
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4" style={{ backgroundColor: '#000000' }}>
       {savedVehicles.length > 0 && (
          <div>
            <label className="block text-xs uppercase text-neutral-300 mb-3 font-bold">Select Saved Vehicles</label>

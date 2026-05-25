@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'motion/react';
-import { Lock, ChevronRight, MapPin, Navigation, Loader2, Car, Calendar, Clock } from 'lucide-react';
+import { Lock, ChevronRight, MapPin, Navigation, Loader2, Car, Calendar, Clock, Sparkles } from 'lucide-react';
 import { PACKAGES, TIME_SLOTS } from '../constants';
 import { BookingDetails, VehicleType, SelectedVehicleForBooking } from '../types';
 import { useAuth } from '../context/AuthContext';
@@ -501,6 +501,7 @@ export default function BookingForm({
                 onChange={handleChange}
                 placeholder="John Doe"
                 className="w-full bg-white/5 border border-white/10 px-4 py-3 text-xs focus:border-white outline-none transition-colors rounded-lg text-white"
+                style={{ backgroundColor: '#000000' }}
               />
             </div>
             <div className="space-y-2">
@@ -513,6 +514,7 @@ export default function BookingForm({
                 onChange={handleChange}
                 placeholder="+91 XXXXX XXXXX"
                 className="w-full bg-white/5 border border-white/10 px-4 py-3 text-xs focus:border-white outline-none transition-colors rounded-lg text-white"
+                style={{ backgroundColor: '#000000' }}
               />
             </div>
           </div>
@@ -526,6 +528,7 @@ export default function BookingForm({
               onChange={handleChange}
               placeholder="john@example.com"
               className="w-full bg-white/5 border border-white/10 px-4 py-3 text-xs focus:border-white outline-none transition-colors rounded-lg text-white"
+              style={{ backgroundColor: '#040404' }}
             />
           </div>
 
@@ -582,6 +585,7 @@ export default function BookingForm({
                   }}
                   placeholder="Type service address (with auto-complete) or pinpoint on map..."
                   className="w-full bg-black/40 border border-white/10 pl-4 pr-10 py-3.5 text-xs focus:border-neutral-500/50 focus:ring-1 focus:ring-zinc-500/50 outline-none transition-all rounded-xl text-white placeholder-neutral-600"
+                  style={{ backgroundColor: '#050505' }}
                 />
                 <div className="absolute right-3.5 top-1/2 -translate-y-1/2 flex items-center justify-center pointer-events-none">
                   {searching ? (
@@ -665,6 +669,7 @@ export default function BookingForm({
                 min={new Date().toISOString().split('T')[0]}
                 onChange={handleChange}
                 className="w-full bg-black/40 border border-white/10 px-4 py-3.5 text-xs focus:border-neutral-500/50 focus:ring-1 focus:ring-zinc-500/50 outline-none transition-all rounded-xl text-white [color-scheme:dark]"
+                style={{ borderColor: '#c2bbbb' }}
               />
             </div>
             <div className="space-y-2">
@@ -675,6 +680,7 @@ export default function BookingForm({
                 value={details.timeSlot}
                 onChange={handleChange}
                 className="w-full bg-white/10 border border-white/20 px-4 py-3.5 text-xs font-medium focus:border-neutral-500/50 focus:ring-1 focus:ring-zinc-500/50 outline-none transition-all appearance-none rounded-xl text-white shadow-sm"
+                style={{ backgroundColor: '#000000' }}
               >
                 <option value="" className="bg-black">Select a slot</option>
                 {TIME_SLOTS.map(s => <option key={s} value={s} className="bg-black">{s}</option>)}
@@ -699,6 +705,7 @@ export default function BookingForm({
                             : 'bg-white/10 border-white text-white scale-[1.02]' 
                           : 'bg-black/40 border-white/10 hover:border-white/30 hover:bg-white/5'
                       } ${isMonthly && !isSelected ? 'mt-3 sm:mt-0' : ''}`}
+                      style={{ backgroundColor: '#000000' }}
                     >
                       <input 
                         type="radio" 
@@ -710,9 +717,16 @@ export default function BookingForm({
                         className="sr-only"
                       />
                       {isMonthly && (
-                        <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-1 bg-gradient-to-r from-zinc-700 to-zinc-500 text-white text-[11px] font-semibold uppercase tracking-[0.3em] rounded-full shadow-lg border border-zinc-400/50 whitespace-nowrap">
-                          Dritzz Black Membership
-                        </div>
+                        <motion.div 
+                          animate={{ scale: [1, 1.05, 1] }}
+                          transition={{ repeat: Infinity, duration: 2.5, ease: "easeInOut" }}
+                          className="absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full border border-white/60 bg-gradient-to-r from-black via-zinc-800 to-black animate-slow-shine shadow-[0_0_20px_rgba(255,255,255,0.15)] whitespace-nowrap flex items-center gap-1.5"
+                          style={{ width: '277.33299999999997px', height: '27.2778px', marginTop: '1px', paddingTop: '5px', paddingLeft: '15px', borderColor: '#484c4c', borderWidth: '2.888889px' }}
+                        >
+                          <Sparkles className="w-3 h-3 text-white animate-pulse" />
+                          <span className="text-[10px] sm:text-[11px] font-black uppercase tracking-[0.3em] text-white">Dritzz Black Membership</span>
+                          <Sparkles className="w-3 h-3 text-white animate-pulse" />
+                        </motion.div>
                       )}
                       <div className="flex items-center justify-between mb-3">
                         <span className={`font-bold uppercase tracking-[0.15em] text-[14px] ${isSelected ? 'text-white' : 'text-neutral-300'}`}>{p.name}</span>
@@ -757,7 +771,7 @@ export default function BookingForm({
               {details.vehicles && details.vehicles.length > 0 ? (
                  <div className="space-y-3">
                     {details.vehicles.map((v, idx) => (
-                       <div key={idx} className="bg-[#111827]/80 rounded-2xl p-4 flex items-center justify-between shadow-inner shadow-white/5 border border-white/5">
+                       <div key={idx} className="bg-[#111827]/80 rounded-2xl p-4 flex items-center justify-between shadow-inner shadow-white/5 border border-white/5" style={{ backgroundColor: '#000000' }}>
                           <div className="flex items-center gap-4">
                              <div className="w-10 h-10 shrink-0 rounded-full bg-zinc-500/10 border border-white/5 flex items-center justify-center">
                                 <Car className="w-5 h-5 text-white" />
@@ -773,7 +787,7 @@ export default function BookingForm({
                     ))}
                  </div>
               ) : (
-                 <div className="bg-[#111827]/80 rounded-2xl p-4 flex items-center justify-between shadow-inner shadow-white/5 border border-white/5">
+                 <div className="bg-[#111827]/80 rounded-2xl p-4 flex items-center justify-between shadow-inner shadow-white/5 border border-white/5" style={{ backgroundColor: '#000000' }}>
                     <div className="flex items-center gap-4">
                        <div className="w-10 h-10 shrink-0 rounded-full bg-zinc-500/10 border border-white/5 flex items-center justify-center">
                           <Car className="w-5 h-5 text-white" />
