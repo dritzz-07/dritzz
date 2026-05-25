@@ -26,20 +26,28 @@ export default function RefundPolicy() {
           openSettings={(tab = 'settings') => { setSettingsTab(tab); setIsSettingsOpen(true); }}
         />
         
-        <main className="flex-grow pt-32 pb-20 px-4 md:px-8 max-w-4xl mx-auto w-full">
-          <h1 className="text-4xl md:text-5xl font-bold mb-8 uppercase tracking-tight">Refund & Cancellation Policy</h1>
-          <div className="prose prose-invert max-w-none text-neutral-300 space-y-6">
-            <h2 className="text-xl font-bold text-white mt-8 mb-4">Booking Cancellation</h2>
-            <p>Booking cancellations are allowed up to 1 hour before the scheduled timeframe. Upon compliant cancellation, your original booking value will be reimbursed entirely.</p>
+        <main className="flex-grow pt-40 md:pt-48 pb-20 px-4 md:px-8 max-w-3xl mx-auto w-full">
+          <h1 className="text-2xl md:text-3xl font-light mb-12 uppercase tracking-[0.2em] text-white/90">Refund & Cancellation Policy</h1>
+          <div className="space-y-6 text-neutral-400 font-light text-sm md:text-base leading-relaxed">
+            <div>
+              <h2 className="text-xs font-semibold text-white/80 uppercase tracking-widest mt-12 mb-4">Booking Cancellation</h2>
+              <p>Booking cancellations are allowed up to 1 hour before the scheduled timeframe. Upon compliant cancellation, your original booking value will be reimbursed entirely.</p>
+            </div>
             
-            <h2 className="text-xl font-bold text-white mt-8 mb-4">Refund Processing timeline</h2>
-            <p>For fully documented refunds, returning your funds to the originating payment module typically processes within 5–7 business days dependent on banking procedures.</p>
+            <div>
+              <h2 className="text-xs font-semibold text-white/80 uppercase tracking-widest mt-10 mb-4">Refund Processing timeline</h2>
+              <p>For fully documented refunds, returning your funds to the originating payment module typically processes within 5–7 business days dependent on banking procedures.</p>
+            </div>
             
-            <h2 className="text-xl font-bold text-white mt-8 mb-4">Subscription Plan Terms</h2>
-            <p>Due to pre-reserved allocation of logistics, subscription plans are generally non-refundable once initiated. Modifications to scheduling can, however, be negotiated with our support elements.</p>
+            <div>
+              <h2 className="text-xs font-semibold text-white/80 uppercase tracking-widest mt-10 mb-4">Subscription Plan Terms</h2>
+              <p>Due to pre-reserved allocation of logistics, subscription plans are generally non-refundable once initiated. Modifications to scheduling can, however, be negotiated with our support elements.</p>
+            </div>
             
-            <h2 className="text-xl font-bold text-white mt-8 mb-4">Failed Payment Resolution</h2>
-            <p>In events where payment is debited against a failed booking loop, support assistance will instantly escalate the reconciliation mechanism. Reach out via Email or our helpline directly.</p>
+            <div>
+              <h2 className="text-xs font-semibold text-white/80 uppercase tracking-widest mt-10 mb-4">Failed Payment Resolution</h2>
+              <p>In events where payment is debited against a failed booking loop, support assistance will instantly escalate the reconciliation mechanism. Reach out via Email or our helpline directly.</p>
+            </div>
           </div>
         </main>
 

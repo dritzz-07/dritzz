@@ -1,4 +1,4 @@
-import { Phone, Mail, MapPin, Globe } from 'lucide-react';
+import { Phone, Mail, Globe, MessageCircle } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import logoImage from '../assets/images/regenerated_image_1779294281601.png';
 
@@ -10,11 +10,8 @@ export default function Footer() {
         <div className="flex flex-col items-center md:items-start text-center md:text-left">
           <Link to="/" className="mb-6 flex items-center gap-3">
             <img src={logoImage} alt="Dritzz Logo" className="w-[60px] h-[60px]" />
-            <span className="text-xl font-bold uppercase tracking-widest text-white">Dritzz</span>
+            <span className="font-bold uppercase tracking-widest text-white italic text-left text-[18px] leading-[24px]">Dritzz</span>
           </Link>
-          <p className="text-sm text-neutral-400 mb-6 leading-relaxed max-w-sm">
-            India's premier smart doorstep car care platform. We simplify vehicle cleaning through technology-driven and customer-friendly services.
-          </p>
           <div className="flex gap-4">
              <Link to="/admin" className="text-xs uppercase tracking-wider font-bold text-neutral-500 hover:text-white transition-colors">Admin Login</Link>
           </div>
@@ -36,6 +33,12 @@ export default function Footer() {
         <div className="flex flex-col items-center md:items-start text-center md:text-left">
           <h3 className="text-white text-sm font-bold uppercase tracking-widest mb-6">Get in Touch</h3>
           <ul className="space-y-4 text-sm">
+            <li>
+              <a href="https://wa.me/917075504625" target="_blank" rel="noopener noreferrer" className="-ml-[18px] inline-flex items-center justify-center md:justify-start gap-3 bg-white/5 hover:bg-green-500/10 border border-white/5 hover:border-green-500/30 px-4 py-2.5 rounded-xl transition-all group w-full md:w-auto">
+                <MessageCircle className="w-4 h-4 text-green-500 group-hover:scale-110 transition-transform" />
+                <span className="font-semibold text-white tracking-wide">Live Chat on WhatsApp</span>
+              </a>
+            </li>
             <li>
               <a href="tel:+917075504625" className="flex items-center justify-center md:justify-start gap-3 hover:text-white transition-colors">
                 <Phone className="w-4 h-4" />

@@ -4,7 +4,7 @@ import Footer from '../components/Footer';
 import AuthOverlay from '../components/AuthOverlay';
 import MyBookingsModal from '../components/MyBookingsModal';
 import AccountSettingsModal from '../components/AccountSettingsModal';
-import { Mail, Phone, Clock, Globe } from 'lucide-react';
+import { Mail, Phone, Clock, Globe, MessageCircle } from 'lucide-react';
 
 export default function ContactUs() {
   const [isAuthOpen, setIsAuthOpen] = useState(false);
@@ -27,15 +27,24 @@ export default function ContactUs() {
           openSettings={(tab = 'settings') => { setSettingsTab(tab); setIsSettingsOpen(true); }}
         />
         
-        <main className="flex-grow pt-32 pb-20 px-4 md:px-8 max-w-4xl mx-auto w-full">
-          <h1 className="text-4xl md:text-5xl font-bold mb-12 uppercase tracking-tight text-center">Contact Us</h1>
+        <main className="flex-grow pt-40 md:pt-48 pb-20 px-4 md:px-8 max-w-4xl mx-auto w-full">
+          <h1 className="text-2xl md:text-3xl font-light mb-12 uppercase tracking-[0.2em] text-white/90 text-center">Contact Us</h1>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 relative z-10">
+            <a href="https://wa.me/917075504625" target="_blank" rel="noopener noreferrer" className="bg-gradient-to-br from-green-500/10 to-green-600/5 border border-green-500/30 hover:border-green-500/60 backdrop-blur-md p-8 rounded-2xl flex flex-col items-center justify-center text-center transition-all group relative overflow-hidden">
+              <div className="absolute inset-0 bg-green-500/10 opacity-0 group-hover:opacity-100 transition-opacity" />
+              <div className="w-16 h-16 bg-green-500/20 group-hover:bg-green-500/30 rounded-full flex items-center justify-center mb-6 transition-colors relative z-10">
+                <MessageCircle className="w-8 h-8 text-green-400" />
+              </div>
+              <h3 className="text-xl font-bold mb-3 text-white relative z-10">Instant Support</h3>
+              <p className="text-green-400 font-bold bg-green-500/10 px-5 py-2 rounded-full relative z-10 text-xs tracking-widest uppercase border border-green-500/20 group-hover:border-green-500/40 transition-colors">Tap to chat on WhatsApp</p>
+            </a>
+
             <a href="tel:+917075504625" className="bg-black/40 border border-white/10 hover:border-white/30 backdrop-blur-md p-8 rounded-2xl flex flex-col items-center justify-center text-center transition-all group">
               <div className="w-16 h-16 bg-white/5 group-hover:bg-white/10 rounded-full flex items-center justify-center mb-6 transition-colors">
                 <Phone className="w-8 h-8 text-neutral-300" />
               </div>
-              <h3 className="text-xl font-bold mb-2">Phone / WhatsApp</h3>
+              <h3 className="text-xl font-bold mb-2">Call Us</h3>
               <p className="text-neutral-400 font-mono">+91 7075504625</p>
             </a>
 

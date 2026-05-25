@@ -26,26 +26,38 @@ export default function TermsConditions() {
           openSettings={(tab = 'settings') => { setSettingsTab(tab); setIsSettingsOpen(true); }}
         />
         
-        <main className="flex-grow pt-32 pb-20 px-4 md:px-8 max-w-4xl mx-auto w-full">
-          <h1 className="text-4xl md:text-5xl font-bold mb-8 uppercase tracking-tight">Terms & Conditions</h1>
-          <div className="prose prose-invert max-w-none text-neutral-300 space-y-6">
-            <h2 className="text-xl font-bold text-white mt-8 mb-4">Booking Terms</h2>
-            <p>Creating a booking confirms a request for service. Confirmation is subject to slot availability in your area.</p>
+        <main className="flex-grow pt-40 md:pt-48 pb-20 px-4 md:px-8 max-w-3xl mx-auto w-full">
+          <h1 className="text-2xl md:text-3xl font-light mb-12 uppercase tracking-[0.2em] text-white/90">Terms & Conditions</h1>
+          <div className="space-y-6 text-neutral-400 font-light text-sm md:text-base leading-relaxed">
+            <div>
+              <h2 className="text-xs font-semibold text-white/80 uppercase tracking-widest mt-12 mb-4">Booking Terms</h2>
+              <p>Creating a booking confirms a request for service. Confirmation is subject to slot availability in your area.</p>
+            </div>
             
-            <h2 className="text-xl font-bold text-white mt-8 mb-4">Vehicle Accessibility Requirements</h2>
-            <p>We require reasonable access and sufficient space around your vehicle to efficiently enact our cleaning services. In accessible spaces without utility blockages, optimal services are guaranteed.</p>
+            <div>
+              <h2 className="text-xs font-semibold text-white/80 uppercase tracking-widest mt-10 mb-4">Vehicle Accessibility Requirements</h2>
+              <p>We require reasonable access and sufficient space around your vehicle to efficiently enact our cleaning services. In accessible spaces without utility blockages, optimal services are guaranteed.</p>
+            </div>
             
-            <h2 className="text-xl font-bold text-white mt-8 mb-4">Payment Rules</h2>
-            <p>Payments are completed via designated online channels integrated into our platform. Cash payments are subject to service executive verification and company protocols.</p>
+            <div>
+              <h2 className="text-xs font-semibold text-white/80 uppercase tracking-widest mt-10 mb-4">Payment Rules</h2>
+              <p>Payments are completed via designated online channels integrated into our platform. Cash payments are subject to service executive verification and company protocols.</p>
+            </div>
             
-            <h2 className="text-xl font-bold text-white mt-8 mb-4">Service Scheduling Conditions</h2>
-            <p>Appointments might be impacted by unforeseen traffic density or extreme weather parameters. You will be promptly informed should rescheduling map to these elements.</p>
+            <div>
+              <h2 className="text-xs font-semibold text-white/80 uppercase tracking-widest mt-10 mb-4">Service Scheduling Conditions</h2>
+              <p>Appointments might be impacted by unforeseen traffic density or extreme weather parameters. You will be promptly informed should rescheduling map to these elements.</p>
+            </div>
             
-            <h2 className="text-xl font-bold text-white mt-8 mb-4">Liability Limitations</h2>
-            <p>While our teams practice the utmost diligence, Dritzz limits liability regarding pre-existing vehicle defects, dents, or pre-worn materials exacerbated during a normal wash cycle.</p>
+            <div>
+              <h2 className="text-xs font-semibold text-white/80 uppercase tracking-widest mt-10 mb-4">Liability Limitations</h2>
+              <p>While our teams practice the utmost diligence, Dritzz limits liability regarding pre-existing vehicle defects, dents, or pre-worn materials exacerbated during a normal wash cycle.</p>
+            </div>
             
-            <h2 className="text-xl font-bold text-white mt-8 mb-4">Membership/Subscription Terms</h2>
-            <p>Monthly subscriptions entail recurring scheduled services spanning the active billing month. Members must ensure vehicle availability as per their assigned cadence.</p>
+            <div>
+              <h2 className="text-xs font-semibold text-white/80 uppercase tracking-widest mt-10 mb-4">Membership/Subscription Terms</h2>
+              <p>Monthly subscriptions entail recurring scheduled services spanning the active billing month. Members must ensure vehicle availability as per their assigned cadence.</p>
+            </div>
           </div>
         </main>
 

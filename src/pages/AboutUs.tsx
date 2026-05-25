@@ -26,9 +26,9 @@ export default function AboutUs() {
           openSettings={(tab = 'settings') => { setSettingsTab(tab); setIsSettingsOpen(true); }}
         />
         
-        <main className="flex-grow pt-32 pb-20 px-4 md:px-8 max-w-4xl mx-auto w-full">
-          <h1 className="text-4xl md:text-5xl font-bold mb-8 uppercase tracking-tight">About Us</h1>
-          <div className="prose prose-invert max-w-none text-neutral-300 space-y-6 text-lg">
+        <main className="flex-grow pt-40 md:pt-48 pb-20 px-4 md:px-8 max-w-3xl mx-auto w-full">
+          <h1 className="text-2xl md:text-3xl font-light mb-12 uppercase tracking-[0.2em] text-white/90">About Us</h1>
+          <div className="space-y-8 text-neutral-400 font-light text-sm md:text-base leading-relaxed">
             <p>
               Dritzz is India's smart doorstep car wash platform designed to make vehicle cleaning easy, affordable, and convenient.
             </p>
@@ -36,15 +36,19 @@ export default function AboutUs() {
               We provide professional doorstep car cleaning services at homes, offices, and parking locations.
             </p>
             
-            <h2 className="text-2xl font-bold text-white mt-12 mb-4">Mission</h2>
-            <p>
-              To simplify car care through technology-driven and customer-friendly doorstep services across India.
-            </p>
+            <div>
+              <h2 className="text-xs font-semibold text-white/80 uppercase tracking-widest mt-12 mb-4">Mission</h2>
+              <p>
+                To simplify car care through technology-driven and customer-friendly doorstep services across India.
+              </p>
+            </div>
             
-            <h2 className="text-2xl font-bold text-white mt-12 mb-4">Vision</h2>
-            <p>
-              To become India's most trusted doorstep vehicle care brand.
-            </p>
+            <div>
+              <h2 className="text-xs font-semibold text-white/80 uppercase tracking-widest mt-12 mb-4">Vision</h2>
+              <p>
+                To become India's most trusted doorstep vehicle care brand.
+              </p>
+            </div>
           </div>
         </main>
 
