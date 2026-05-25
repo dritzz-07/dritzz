@@ -49,7 +49,7 @@ export default function Pricing({ onSelectPackage }: PricingProps) {
       <div className="absolute hidden md:block bottom-0 right-0 w-96 h-96 bg-zinc-500/5 opacity-10 rounded-full pointer-events-none" />
       
       <div className="text-center relative z-10 flex flex-col items-center mb-20 animate-in fade-in slide-in-from-bottom-8 duration-700">
-        <div className="mb-6 inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-white/10 bg-white/5 animate-diamond-shine">
+        <div className="mb-6 inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-white/10 bg-white/5">
           <Sparkles className="w-3 h-3 text-white" />
           <span className="text-xs uppercase tracking-widest text-neutral-300 font-bold">Premium Doorstep Care</span>
         </div>
@@ -87,7 +87,7 @@ export default function Pricing({ onSelectPackage }: PricingProps) {
       </div>
 
       <div className="flex flex-col lg:flex-row items-center lg:items-stretch justify-center gap-8 max-w-7xl mx-auto relative z-10">
-        <AnimatePresence mode="popLayout">
+        <AnimatePresence>
           {orderedPackages.map((pkg) => {
             const Icon = IconMap[pkg.icon] || Droplets;
             const price = pkg.price[vehicle];
@@ -96,7 +96,6 @@ export default function Pricing({ onSelectPackage }: PricingProps) {
             
             return (
               <motion.div
-                layout
                 key={pkg.id}
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
@@ -208,7 +207,7 @@ export default function Pricing({ onSelectPackage }: PricingProps) {
           <div className="absolute hidden md:block -bottom-40 -left-40 w-[500px] h-[500px] bg-neutral-900/20 opacity-10 rounded-full group-hover:bg-zinc-800/30 transition-colors duration-1000 pointer-events-none" />
 
           {/* Premium Grid/Texture */}
-          <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff05_1px,transparent_1px),linear-gradient(to_bottom,#ffffff05_1px,transparent_1px)] bg-[size:24px_24px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_50%,#000_70%,transparent_100%)] pointer-events-none" />
+          <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff02_1px,transparent_1px),linear-gradient(to_bottom,#ffffff02_1px,transparent_1px)] bg-[size:24px_24px] pointer-events-none" />
 
           {/* Top Edge Highlight */}
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-1/2 h-[2px] bg-gradient-to-r from-transparent via-zinc-400 to-transparent opacity-70" />

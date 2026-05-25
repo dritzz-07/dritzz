@@ -245,7 +245,8 @@ export default function Hero() {
           <img 
             src={heroImage} 
             alt="Dritzz Doorstep Car Wash" 
-            className="w-full h-auto rounded-[2rem] shadow-2xl relative z-10 border border-white/10 object-cover aspect-[4/3] bg-black"
+            className="w-full h-auto shadow-2xl relative z-10 object-cover aspect-[4/3] bg-black"
+            style={{ borderStyle: 'ridge', borderWidth: '5.3332999999999995px', borderRadius: '10px' }}
           />
         </motion.div>
       </div>

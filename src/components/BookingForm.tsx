@@ -869,7 +869,7 @@ export default function BookingForm({
               }}
               className="w-full relative btn-primary group overflow-hidden"
             >
-              <div className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/40 to-transparent -translate-x-full group-hover:animate-[shimmer_1.5s_infinite]" />
+              <div className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out" />
               {user ? (
                 <>Confirm Booking <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" /></>
               ) : (
