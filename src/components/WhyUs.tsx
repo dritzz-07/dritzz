@@ -37,7 +37,7 @@ const reasons = [
 
 export default function WhyUs() {
   return (
-    <section id="why-us" className="bg-black px-6 md:px-16 py-24 border-t border-white/5">
+    <section id="why-us" className="bg-black px-6 md:px-16 py-16 md:py-24 border-t border-white/5">
       <div className="section-label">Our Promise</div>
       <h2 className="section-title">WHY DRITZZ?</h2>
       

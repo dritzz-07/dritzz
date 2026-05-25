@@ -32,7 +32,7 @@ export default function Hero() {
     }, 2000);
   };
   return (
-    <section className="relative min-h-screen flex items-center px-6 md:px-16 pt-32 pb-20 overflow-hidden bg-black">
+    <section className="relative min-h-[90vh] md:min-h-screen flex items-center px-6 md:px-16 pt-[140px] md:pt-[200px] pb-12 md:pb-20 overflow-hidden bg-black">
       {/* Background Image of Wet Porsche */}
       <div className="absolute inset-0 pointer-events-none z-0">
         <div className="absolute inset-0 bg-black/60 z-10" />
@@ -100,19 +100,19 @@ export default function Hero() {
         ))}
       </div>
 
-      <div className="relative z-10 max-w-7xl mx-auto w-full flex flex-col lg:flex-row items-center justify-between gap-12">
+      <div className="relative z-10 max-w-7xl mx-auto w-full flex flex-col lg:flex-row items-center justify-between gap-12 -mb-[35px]">
         <div className="max-w-3xl flex-1 relative z-20">
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="inline-block px-3 py-1 mb-6 rounded-full bg-white/5 border border-white/10 text-xs font-bold uppercase tracking-widest text-neutral-100"
+          className="inline-block px-3 py-1 mb-[18px] rounded-full bg-white/5 border border-white/10 text-xs font-bold uppercase tracking-widest text-neutral-100 h-[25.7639px]"
         >
           Now Serving Hyderabad
         </motion.div>
 
         <motion.h1 
-          className="font-sporty font-black text-[62px] leading-[1.1] md:leading-[1.1] tracking-tighter mb-10 uppercase select-none flex flex-wrap gap-x-5 gap-y-2"
+          className="font-sporty font-black text-[28px] md:text-[46px] leading-[1.1] md:leading-[1.1] tracking-tighter mb-8 md:mb-10 uppercase select-none flex flex-wrap gap-x-3 md:gap-x-5 gap-y-1 md:gap-y-2"
         >
           {["India’s Smartest", "Doorstep Car", "Wash Service"].join(" ").split(" ").map((word, i) => (
             <motion.span

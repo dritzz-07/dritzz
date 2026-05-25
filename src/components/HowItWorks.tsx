@@ -26,7 +26,7 @@ const steps = [
 
 export default function HowItWorks() {
   return (
-    <section id="how-it-works" className="bg-black px-6 md:px-16 py-24 border-t border-white/5">
+    <section id="how-it-works" className="bg-black px-6 md:px-16 py-16 md:py-24 border-t border-white/5">
       <div className="section-label" style={{ color: '#000000' }}>Simple Process</div>
       <h2 className="section-title">HOW IT WORKS?</h2>
       <p className="text-neutral-100 max-w-md mb-16 uppercase tracking-wider">FOUR EASY STEPS TO A SPOTLESS CAR — WITHOUT LEAVING YOUR HOME.</p>

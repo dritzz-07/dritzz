@@ -48,7 +48,7 @@ export default function Pricing({ onSelectPackage }: PricingProps) {
   ].filter(Boolean) as Package[];
 
   return (
-    <section id="packages" className="px-6 md:px-16 py-32 bg-[#0a0a0a] border-t border-white/5 relative overflow-hidden">
+    <section id="packages" className="px-6 md:px-16 py-16 md:py-32 bg-[#0a0a0a] border-t border-white/5 relative overflow-hidden">
       {/* Premium Background elements */}
       <div className="absolute hidden md:block top-0 left-1/2 -translate-x-1/2 w-full max-w-5xl h-[500px] bg-zinc-600/10 opacity-10 rounded-full pointer-events-none" />
       <div className="absolute hidden md:block bottom-0 right-0 w-96 h-96 bg-zinc-500/5 opacity-10 rounded-full pointer-events-none" />

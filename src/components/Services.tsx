@@ -48,7 +48,7 @@ const SERVICES = [
 
 export default function Services() {
   return (
-    <section id="services" className="py-24 px-6 md:px-16 relative bg-[#0A0A0C]">
+    <section id="services" className="py-16 md:py-24 px-6 md:px-16 relative bg-[#0A0A0C]">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-16">
           <motion.div
@@ -73,7 +73,7 @@ export default function Services() {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-[#fcfcfc] border-[#fdfdfd] max-w-2xl mx-auto font-light leading-relaxed border"
+            className="text-[#a59b9b] max-w-2xl mx-auto font-light leading-relaxed border-none"
           >
             Experience premium doorstep car care. We use industry-leading equipment and sustainable products to give your vehicle the showroom finish it deserves.
           </motion.p>
