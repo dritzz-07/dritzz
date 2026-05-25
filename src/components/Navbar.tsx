@@ -60,7 +60,7 @@ export default function Navbar({ openLogin, openBookings, openSettings }: Navbar
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 pt-1 pb-4 md:px-16 bg-black/80 backdrop-blur-md border-b border-white/5">
-      <a href="#" className="flex items-center gap-2 decoration-none text-white group" onClick={handleNavClick}>
+      <a href="/" className="flex items-center gap-2 decoration-none text-white group" onClick={handleNavClick}>
         <motion.img 
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}

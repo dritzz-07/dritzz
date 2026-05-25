@@ -1,6 +1,6 @@
 import { motion } from 'motion/react';
 import { Home, Droplets, UserCheck, Clock, ShieldCheck, CreditCard } from 'lucide-react';
-import generatedImage from '../assets/images/regenerated_image_1779647188922.jpg';
+import generatedImage from '../assets/images/regenerated_image_1779745573278.png';
 
 const reasons = [
   {
