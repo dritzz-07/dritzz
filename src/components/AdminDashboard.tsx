@@ -656,90 +656,146 @@ export default function AdminDashboard() {
               ) : filteredBookings.length === 0 ? (
                 <div className="p-12 text-center text-neutral-300 text-xs font-medium">No bookings found for this category.</div>
               ) : (
-                <table className="w-full text-left text-xs whitespace-nowrap">
-                  <thead className="bg-white/5 text-neutral-100 text-xs uppercase tracking-wider">
-                    <tr>
-                      <th className="px-6 py-4 font-bold">Ref / Booking Date</th>
-                      <th className="px-6 py-4 font-bold">Customer Info</th>
-                      <th className="px-6 py-4 font-bold">Service Details</th>
-                      <th className="px-6 py-4 font-bold">Slot</th>
-                      <th className="px-6 py-4 font-bold">Status</th>
-                      <th className="px-6 py-4 font-bold">Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-white/5">
-                    {filteredBookings.map((b) => (
-                      <tr key={b.id} className="hover:bg-white/[0.02] transition-colors">
-                        <td className="px-6 py-4">
-                          <div className="flex flex-col gap-1">
-                            <span className="font-mono text-xs bg-black/50 px-2 py-1 rounded inline-block text-neutral-300 w-fit">
-                              {b.refId}
-                            </span>
-                            <span className="text-xs text-neutral-300 font-medium tracking-wider">
-                              Booked for: {b.date ? new Date(b.date + 'T00:00:00').toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) : '—'}
-                            </span>
-                            {b.createdAt && b.createdAt.toDate && (
-                              <span className="text-[11px] text-neutral-600 font-medium tracking-wider">
-                                Created: {b.createdAt.toDate().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}
+                <>
+                {/* Desktop View */}
+                <div className="hidden md:block overflow-x-auto">
+                  <table className="w-full text-left text-xs whitespace-nowrap">
+                    <thead className="bg-white/5 text-neutral-100 text-xs uppercase tracking-wider">
+                      <tr>
+                        <th className="px-6 py-4 font-bold">Ref / Booking Date</th>
+                        <th className="px-6 py-4 font-bold">Customer Info</th>
+                        <th className="px-6 py-4 font-bold">Service Details</th>
+                        <th className="px-6 py-4 font-bold">Slot</th>
+                        <th className="px-6 py-4 font-bold">Status</th>
+                        <th className="px-6 py-4 font-bold">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-white/5">
+                      {filteredBookings.map((b) => (
+                        <tr key={b.id} className="hover:bg-white/[0.02] transition-colors">
+                          <td className="px-6 py-4">
+                            <div className="flex flex-col gap-1">
+                              <span className="font-mono text-xs bg-black/50 px-2 py-1 rounded inline-block text-neutral-300 w-fit">
+                                {b.refId}
                               </span>
-                            )}
-                          </div>
-                        </td>
-                        <td className="px-6 py-4">
-                          <div className="font-bold text-white mb-1">{b.name}</div>
-                          <div className="text-xs text-neutral-300 flex flex-col gap-1">
-                            <span className="flex items-center gap-1"><Mail className="w-3 h-3"/> {b.email}</span>
-                            <span className="flex items-center gap-1"><Phone className="w-3 h-3"/> {b.phone}</span>
-                            {b.address && (
-                              b.latitude && b.longitude ? (
+                              <span className="text-xs text-neutral-300 font-medium tracking-wider">
+                                Booked for: {b.date ? new Date(b.date + 'T00:00:00').toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) : '—'}
+                              </span>
+                              {b.createdAt && b.createdAt.toDate && (
+                                <span className="text-[11px] text-neutral-600 font-medium tracking-wider">
+                                  Created: {b.createdAt.toDate().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}
+                                </span>
+                              )}
+                            </div>
+                          </td>
+                          <td className="px-6 py-4">
+                            <div className="font-bold text-white mb-1">{b.name}</div>
+                            <div className="text-xs text-neutral-300 flex flex-col gap-1">
+                              <span className="flex items-center gap-1"><Mail className="w-3 h-3"/> {b.email}</span>
+                              <span className="flex items-center gap-1"><Phone className="w-3 h-3"/> {b.phone}</span>
+                              {b.address && (
+                                b.latitude && b.longitude ? (
+                                  <a
+                                    href={`https://www.google.com/maps/dir/?api=1&destination=${b.latitude},${b.longitude}`}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    className="flex items-start gap-1 mt-1 pt-1 border-t border-white/5 text-[11px] text-white hover:text-neutral-300 max-w-[200px] leading-tight transition-colors cursor-pointer group"
+                                    title="Click to get directions on Google Maps"
+                                  >
+                                    <MapPin className="w-3 h-3 text-white shrink-0 mt-0.5 group-hover:scale-110 transition-transform" />
+                                    <span className="line-clamp-2 underline decoration-dashed decoration-zinc-500/30 group-hover:decoration-zinc-400">{b.address}</span>
+                                  </a>
+                                ) : (
+                                  <span className="flex items-start gap-1 mt-1 pt-1 border-t border-white/5 text-[11px] text-neutral-100 max-w-[200px] leading-tight" title={b.address}>
+                                    <MapPin className="w-3 h-3 text-neutral-300 shrink-0 mt-0.5" />
+                                    <span className="line-clamp-2">{b.address}</span>
+                                  </span>
+                                )
+                              )}
+                              {b.latitude && b.longitude && (
                                 <a
                                   href={`https://www.google.com/maps/dir/?api=1&destination=${b.latitude},${b.longitude}`}
                                   target="_blank"
                                   rel="noreferrer"
-                                  className="flex items-start gap-1 mt-1 pt-1 border-t border-white/5 text-[11px] text-white hover:text-neutral-300 max-w-[200px] leading-tight transition-colors cursor-pointer group"
-                                  title="Click to get directions on Google Maps"
+                                  className="inline-flex items-center gap-1 mt-1 text-xs text-white hover:text-neutral-300 font-bold uppercase tracking-widest bg-zinc-500/10 hover:bg-zinc-500/20 px-2 py-1 rounded transition-all w-fit cursor-pointer"
                                 >
-                                  <MapPin className="w-3 h-3 text-white shrink-0 mt-0.5 group-hover:scale-110 transition-transform" />
-                                  <span className="line-clamp-2 underline decoration-dashed decoration-zinc-500/30 group-hover:decoration-zinc-400">{b.address}</span>
+                                  <Navigation className="w-2.5 h-2.5 text-white animate-pulse" />
+                                  Get Directions
                                 </a>
-                              ) : (
-                                <span className="flex items-start gap-1 mt-1 pt-1 border-t border-white/5 text-[11px] text-neutral-100 max-w-[200px] leading-tight" title={b.address}>
-                                  <MapPin className="w-3 h-3 text-neutral-300 shrink-0 mt-0.5" />
-                                  <span className="line-clamp-2">{b.address}</span>
-                                </span>
-                              )
-                            )}
-                            {b.latitude && b.longitude && (
-                              <a
-                                href={`https://www.google.com/maps/dir/?api=1&destination=${b.latitude},${b.longitude}`}
-                                target="_blank"
-                                rel="noreferrer"
-                                className="inline-flex items-center gap-1 mt-1 text-xs text-white hover:text-neutral-300 font-bold uppercase tracking-widest bg-zinc-500/10 hover:bg-zinc-500/20 px-2 py-1 rounded transition-all w-fit cursor-pointer"
+                              )}
+                            </div>
+                          </td>
+                          <td className="px-6 py-4">
+                            <div className="flex items-center gap-2 mb-1">
+                              <Car className="w-4 h-4 text-neutral-100" />
+                              <span className="font-medium text-white capitalize">{b.vehicleMake} {b.vehicleModel}</span>
+                            </div>
+                            <div className="text-xs text-neutral-300 uppercase tracking-wider">
+                              {(b.vehicles && b.vehicles.length > 0) ? `${b.vehicles.length} Vehicles` : b.vehicleType} &bull; {b.packageId} &bull; ₹{b.amount}
+                            </div>
+                          </td>
+                          <td className="px-6 py-4 text-neutral-300">
+                            <div className="font-medium">{b.date}</div>
+                            <div className="text-xs text-neutral-300">{b.timeSlot}</div>
+                          </td>
+                          <td className="px-6 py-4">
+                            <select
+                              value={b.status}
+                              onChange={(e) => handleStatusChange(b.id, e.target.value)}
+                              className={`text-xs font-bold uppercase tracking-wider px-3 py-1.5 rounded-lg border-2 appearance-none cursor-pointer outline-none transition-colors
+                                ${b.status === 'completed' ? 'bg-green-500/10 text-green-400 border-green-500/20' : 
+                                  b.status === 'confirmed' ? 'bg-orange-500/10 text-orange-400 border-orange-500/20' : 
+                                  b.status === 'scheduled' ? 'bg-zinc-500/10 text-white border-white/5' : 
+                                  b.status === 'cancelled' ? 'bg-red-500/10 text-red-400 border-red-500/20' : 
+                                  'bg-neutral-800 text-neutral-300 border-neutral-700'}`}
+                            >
+                              <option value="pending">Pending</option>
+                              <option value="scheduled">Scheduled</option>
+                              <option value="confirmed">Confirmed</option>
+                              <option value="in-progress">In Progress</option>
+                              <option value="completed">Completed</option>
+                              <option value="cancelled">Cancelled</option>
+                            </select>
+                          </td>
+                          <td className="px-6 py-4">
+                            <div className="flex items-center gap-2">
+                              <button
+                                onClick={() => handleDownloadInvoice(b)}
+                                className="p-2 text-neutral-300 hover:text-white hover:bg-white/10 rounded-lg transition-colors"
+                                title="Download Invoice"
                               >
-                                <Navigation className="w-2.5 h-2.5 text-white animate-pulse" />
-                                Get Directions
-                              </a>
-                            )}
+                                <FileText className="w-4 h-4" />
+                              </button>
+                              <button 
+                                onClick={() => handleDeleteBooking(b.id)}
+                                className="p-2 text-neutral-300 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-colors"
+                                title="Delete Booking"
+                              >
+                                <Trash2 className="w-4 h-4" />
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+                {/* Mobile View */}
+                <div className="md:hidden flex flex-col gap-4 p-4 pb-20">
+                  {filteredBookings.map((b) => (
+                    <div key={b.id} className="bg-white/5 border border-white/10 rounded-2xl p-4 flex flex-col gap-3 relative">
+                       <div className="flex justify-between items-start gap-2">
+                          <div className="flex flex-col gap-1">
+                            <span className="font-mono text-[10px] bg-black/50 px-2 py-1 rounded inline-block text-neutral-300 w-fit">
+                              {b.refId}
+                            </span>
+                            <span className="font-bold text-white capitalize text-sm">{b.name}</span>
                           </div>
-                        </td>
-                        <td className="px-6 py-4">
-                          <div className="flex items-center gap-2 mb-1">
-                            <Car className="w-4 h-4 text-neutral-100" />
-                            <span className="font-medium text-white capitalize">{b.vehicleMake} {b.vehicleModel}</span>
-                          </div>
-                          <div className="text-xs text-neutral-300 uppercase tracking-wider">
-                            {(b.vehicles && b.vehicles.length > 0) ? `${b.vehicles.length} Vehicles` : b.vehicleType} &bull; {b.packageId} &bull; ₹{b.amount}
-                          </div>
-                        </td>
-                        <td className="px-6 py-4 text-neutral-300">
-                          <div className="font-medium">{b.date}</div>
-                          <div className="text-xs text-neutral-300">{b.timeSlot}</div>
-                        </td>
-                        <td className="px-6 py-4">
+                          
                           <select
                             value={b.status}
                             onChange={(e) => handleStatusChange(b.id, e.target.value)}
-                            className={`text-xs font-bold uppercase tracking-wider px-3 py-1.5 rounded-lg border-2 appearance-none cursor-pointer outline-none transition-colors
+                            className={`text-[10px] shrink-0 font-bold uppercase tracking-wider px-2 py-1 rounded-lg border-2 appearance-none cursor-pointer outline-none transition-colors
                               ${b.status === 'completed' ? 'bg-green-500/10 text-green-400 border-green-500/20' : 
                                 b.status === 'confirmed' ? 'bg-orange-500/10 text-orange-400 border-orange-500/20' : 
                                 b.status === 'scheduled' ? 'bg-zinc-500/10 text-white border-white/5' : 
@@ -753,29 +809,80 @@ export default function AdminDashboard() {
                             <option value="completed">Completed</option>
                             <option value="cancelled">Cancelled</option>
                           </select>
-                        </td>
-                        <td className="px-6 py-4">
-                          <div className="flex items-center gap-2">
+                       </div>
+
+                       <div className="flex flex-col gap-1 border-t border-white/5 pt-3">
+                          <div className="flex items-center gap-2 mb-1">
+                            <Car className="w-4 h-4 text-neutral-100" />
+                            <span className="font-medium text-white text-sm capitalize">{b.vehicleMake} {b.vehicleModel}</span>
+                          </div>
+                          <div className="text-[10px] text-neutral-400 font-medium">
+                            {(b.vehicles && b.vehicles.length > 0) ? `${b.vehicles.length} Vehicles` : b.vehicleType} &bull; {b.packageId} &bull; <span className="text-white font-bold">₹{b.amount}</span>
+                          </div>
+                       </div>
+                       
+                       <div className="flex items-center gap-4 bg-zinc-900 border border-white/5 rounded-xl p-3">
+                         <div className="w-10 h-10 bg-white/5 rounded-full flex items-center justify-center shrink-0">
+                           <Calendar className="w-4 h-4 text-white" />
+                         </div>
+                         <div className="flex flex-col flex-1">
+                           <span className="text-sm font-bold text-white">
+                             {b.date ? new Date(b.date + 'T00:00:00').toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) : '—'}
+                           </span>
+                           <span className="text-[10px] text-neutral-400 uppercase font-bold tracking-widest">{b.timeSlot}</span>
+                         </div>
+                       </div>
+                       
+                       <div className="flex flex-col gap-1.5 border-t border-white/5 pt-3">
+                          <div className="text-xs text-neutral-300 flex items-center gap-2">
+                             <Phone className="w-3 h-3 shrink-0"/> <a href={`tel:${b.phone}`} className="hover:text-white underline decoration-dashed decoration-white/20">{b.phone}</a>
+                          </div>
+                          {b.address && (
+                              <div className="flex items-start gap-2 text-xs text-neutral-300 mt-1">
+                                <MapPin className="w-4 h-4 shrink-0 mt-0.5 text-white" />
+                                <span className="line-clamp-2">{b.address}</span>
+                              </div>
+                          )}
+                          {b.latitude && b.longitude && (
+                                <a
+                                  href={`https://www.google.com/maps/dir/?api=1&destination=${b.latitude},${b.longitude}`}
+                                  target="_blank"
+                                  rel="noreferrer"
+                                  className="mt-1 flex items-center justify-center gap-1 text-[10px] text-black font-black uppercase tracking-widest bg-white hover:bg-neutral-200 px-3 py-2.5 rounded-lg transition-all w-full cursor-pointer shadow-md"
+                                >
+                                  <Navigation className="w-3 h-3 text-black animate-pulse" />
+                                  Navigate
+                                </a>
+                          )}
+                       </div>
+                       
+                       <div className="flex justify-between items-center border-t border-white/5 pt-3">
+                         {b.createdAt && b.createdAt.toDate && (
+                           <span className="text-[9px] text-neutral-500 font-mono">
+                             Booked: {b.createdAt.toDate().toLocaleDateString('en-GB') || 'N/A'}
+                           </span>
+                         )}
+                         <div className="flex gap-2 ml-auto">
                             <button
                               onClick={() => handleDownloadInvoice(b)}
-                              className="p-2 text-neutral-300 hover:text-white hover:bg-white/10 rounded-lg transition-colors"
+                              className="p-2 bg-white/5 text-neutral-300 hover:text-white hover:bg-white/10 rounded-lg transition-colors border border-white/10 shadow-sm"
                               title="Download Invoice"
                             >
                               <FileText className="w-4 h-4" />
                             </button>
                             <button 
                               onClick={() => handleDeleteBooking(b.id)}
-                              className="p-2 text-neutral-300 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-colors"
+                              className="p-2 bg-red-500/10 text-red-400 hover:bg-red-500/20 rounded-lg transition-colors border border-red-500/20 shadow-sm"
                               title="Delete Booking"
                             >
                               <Trash2 className="w-4 h-4" />
                             </button>
-                          </div>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+                         </div>
+                       </div>
+                    </div>
+                  ))}
+                </div>
+                </>
               )
             ) : (
               // Subscriptions Table
@@ -784,121 +891,235 @@ export default function AdminDashboard() {
               ) : filteredSubscriptions.length === 0 ? (
                 <div className="p-12 text-center text-neutral-300 text-xs font-medium">No active subscriptions found.</div>
               ) : (
-                <table className="w-full text-left text-xs whitespace-nowrap">
-                  <thead className="bg-white/5 text-neutral-100 text-xs uppercase tracking-wider">
-                    <tr>
-                      <th className="px-6 py-4 font-bold">Details</th>
-                      <th className="px-6 py-4 font-bold">Customer Info</th>
-                      <th className="px-6 py-4 font-bold">Status</th>
-                      <th className="px-6 py-4 font-bold">Usage</th>
-                      <th className="px-6 py-4 font-bold">Dates</th>
-                      <th className="px-6 py-4 font-bold">Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-white/5">
-                    {filteredSubscriptions.map((s) => {
-                      const isExpired = s.expiresAt?.toDate ? new Date() > s.expiresAt.toDate() : false;
-                      let activeStatus = s.status;
-                      if (!activeStatus) {
-                         activeStatus = isExpired ? 'expired' : ((s.remainingWashes || 0) > 0 ? 'active' : 'completed');
-                      }
-
-                      return (
-                      <tr key={s.id} className="hover:bg-white/[0.02] transition-colors">
-                        <td className="px-6 py-4">
-                          <div className="font-bold text-white capitalize flex flex-col gap-1">
-                             <span>{s.packageId || 'Plan'}</span>
-                             <span className="text-xs text-neutral-400">ID: {s.id.slice(0, 8)}</span>
-                          </div>
-                          <div className="text-[10px] text-neutral-300 uppercase tracking-widest mt-1">
-                             {s.vehicles?.length} Vehicle(s)
-                          </div>
-                        </td>
-                        <td className="px-6 py-4">
-                          <div className="font-bold text-white mb-1">{s.customerName}</div>
-                          <div className="text-xs text-neutral-300">
-                             {s.customerPhone} <br/>
-                             <span className="truncate block max-w-[150px]" title={s.address}>{s.address}</span>
-                          </div>
-                        </td>
-                        <td className="px-6 py-4">
-                          <select
-                            value={activeStatus}
-                            onChange={(e) => handleUpdateSubscription(s.id, { status: e.target.value })}
-                            className={`text-xs font-bold uppercase tracking-wider px-3 py-1.5 rounded-lg border-2 appearance-none cursor-pointer outline-none transition-colors
-                              ${activeStatus === 'active' ? 'bg-zinc-500/10 text-zinc-300 border-zinc-500/20' : 
-                                activeStatus === 'paused' ? 'bg-orange-500/10 text-orange-400 border-orange-500/20' : 
-                                activeStatus === 'cancelled' ? 'bg-red-500/10 text-red-500 border-red-500/20' : 
-                                'bg-neutral-800 text-neutral-400 border-neutral-700'}`}
-                          >
-                            <option value="active">Active</option>
-                            <option value="paused">Paused</option>
-                            <option value="cancelled">Cancelled</option>
-                            <option value="completed">Completed</option>
-                            <option value="expired">Expired</option>
-                          </select>
-                        </td>
-                        <td className="px-6 py-4 w-48">
-                          <div className="flex flex-col gap-2">
-                            <div className="text-[10px] text-neutral-400 uppercase tracking-widest font-bold text-center">Washes Used</div>
-                            <div className="flex items-center justify-center gap-3">
-                              <button
-                                disabled={(s.usedWashes || 0) <= 0}
-                                onClick={() => {
-                                  if(window.confirm(`Undo 1 wash deduction for ${s.customerName}?`)) {
-                                    handleUpdateSubscription(s.id, { remainingWashes: (s.remainingWashes || 0) + 1, usedWashes: (s.usedWashes || 0) - 1 })
-                                  }
-                                }}
-                                title="Undo Wash"
-                                className="w-7 h-7 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center text-white disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
-                              >
-                                <Minus className="w-3 h-3" />
-                              </button>
-                              
-                              <div className="flex flex-col items-center min-w-[3rem]">
-                                <span className="text-xl font-black text-white leading-none">{s.usedWashes || 0}</span>
-                                <span className="text-[9px] text-neutral-500 font-mono mt-0.5">/ {s.totalWashes || 0}</span>
-                              </div>
-
-                              <button
-                                disabled={(s.remainingWashes || 0) <= 0}
-                                onClick={() => {
-                                  if(window.confirm(`Log 1 wash for ${s.customerName}?`)) {
-                                    handleUpdateSubscription(s.id, { remainingWashes: (s.remainingWashes || 0) - 1, usedWashes: (s.usedWashes || 0) + 1 })
-                                  }
-                                }}
-                                title="Log Wash"
-                                className="w-7 h-7 rounded-full bg-zinc-100 hover:bg-white text-black flex items-center justify-center disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
-                              >
-                                <Plus className="w-3 h-3" />
-                              </button>
-                            </div>
-                            <div className="text-[9px] font-bold mt-1 text-center bg-zinc-800/50 py-1.5 rounded-md border border-white/5 uppercase tracking-widest">
-                              <span className={(s.remainingWashes || 0) > 0 ? "text-green-400" : "text-red-400"}>{s.remainingWashes || 0}</span>
-                              <span className="text-neutral-400"> Remaining</span>
-                            </div>
-                          </div>
-                        </td>
-                        <td className="px-6 py-4 text-[10px] text-neutral-100 font-mono">
-                          <div><span className="font-bold text-neutral-500 uppercase">Start:</span><br/>{s.createdAt?.toDate?.()?.toLocaleDateString('en-GB') || 'N/A'}</div>
-                          <div className="mt-1"><span className="font-bold text-neutral-500 uppercase">Exp:</span><br/>{s.expiresAt?.toDate?.()?.toLocaleDateString('en-GB') || 'N/A'}</div>
-                        </td>
-                        <td className="px-6 py-4">
-                          <button
-                            onClick={() => {
-                              const newExp = new Date(s.expiresAt?.toDate ? s.expiresAt.toDate() : new Date());
-                              newExp.setMonth(newExp.getMonth() + 1);
-                              handleUpdateSubscription(s.id, { expiresAt: newExp });
-                            }}
-                            className="px-3 py-1.5 bg-zinc-500/10 text-zinc-300 hover:bg-zinc-500/20 rounded-lg text-[10px] uppercase font-bold tracking-widest border border-zinc-500/20 transition-colors"
-                          >
-                            Extend 1M
-                          </button>
-                        </td>
+                <>
+                {/* Desktop View */}
+                <div className="hidden md:block overflow-x-auto">
+                  <table className="w-full text-left text-xs whitespace-nowrap">
+                    <thead className="bg-white/5 text-neutral-100 text-xs uppercase tracking-wider">
+                      <tr>
+                        <th className="px-6 py-4 font-bold">Details</th>
+                        <th className="px-6 py-4 font-bold">Customer Info</th>
+                        <th className="px-6 py-4 font-bold">Status</th>
+                        <th className="px-6 py-4 font-bold">Usage</th>
+                        <th className="px-6 py-4 font-bold">Dates</th>
+                        <th className="px-6 py-4 font-bold">Actions</th>
                       </tr>
-                    )})}
-                  </tbody>
-                </table>
+                    </thead>
+                    <tbody className="divide-y divide-white/5">
+                      {filteredSubscriptions.map((s) => {
+                        const isExpired = s.expiresAt?.toDate ? new Date() > s.expiresAt.toDate() : false;
+                        let activeStatus = s.status;
+                        if (!activeStatus) {
+                           activeStatus = isExpired ? 'expired' : ((s.remainingWashes || 0) > 0 ? 'active' : 'completed');
+                        }
+
+                        return (
+                        <tr key={s.id} className="hover:bg-white/[0.02] transition-colors">
+                          <td className="px-6 py-4">
+                            <div className="font-bold text-white capitalize flex flex-col gap-1">
+                               <span>{s.packageId || 'Plan'}</span>
+                               <span className="text-xs text-neutral-400">ID: {s.id.slice(0, 8)}</span>
+                            </div>
+                            <div className="text-[10px] text-neutral-300 uppercase tracking-widest mt-1">
+                               {s.vehicles?.length} Vehicle(s)
+                            </div>
+                          </td>
+                          <td className="px-6 py-4">
+                            <div className="font-bold text-white mb-1">{s.customerName}</div>
+                            <div className="text-xs text-neutral-300">
+                               {s.customerPhone} <br/>
+                               <span className="truncate block max-w-[150px]" title={s.address}>{s.address}</span>
+                            </div>
+                          </td>
+                          <td className="px-6 py-4">
+                            <select
+                              value={activeStatus}
+                              onChange={(e) => handleUpdateSubscription(s.id, { status: e.target.value })}
+                              className={`text-xs font-bold uppercase tracking-wider px-3 py-1.5 rounded-lg border-2 appearance-none cursor-pointer outline-none transition-colors
+                                ${activeStatus === 'active' ? 'bg-zinc-500/10 text-zinc-300 border-zinc-500/20' : 
+                                  activeStatus === 'paused' ? 'bg-orange-500/10 text-orange-400 border-orange-500/20' : 
+                                  activeStatus === 'cancelled' ? 'bg-red-500/10 text-red-500 border-red-500/20' : 
+                                  'bg-neutral-800 text-neutral-400 border-neutral-700'}`}
+                            >
+                              <option value="active">Active</option>
+                              <option value="paused">Paused</option>
+                              <option value="cancelled">Cancelled</option>
+                              <option value="completed">Completed</option>
+                              <option value="expired">Expired</option>
+                            </select>
+                          </td>
+                          <td className="px-6 py-4 w-48">
+                            <div className="flex flex-col gap-2">
+                              <div className="text-[10px] text-neutral-400 uppercase tracking-widest font-bold text-center">Washes Used</div>
+                              <div className="flex items-center justify-center gap-3">
+                                <button
+                                  disabled={(s.usedWashes || 0) <= 0}
+                                  onClick={() => {
+                                    if(window.confirm(`Undo 1 wash deduction for ${s.customerName}?`)) {
+                                      handleUpdateSubscription(s.id, { remainingWashes: (s.remainingWashes || 0) + 1, usedWashes: (s.usedWashes || 0) - 1 })
+                                    }
+                                  }}
+                                  title="Undo Wash"
+                                  className="w-7 h-7 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center text-white disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                                >
+                                  <Minus className="w-3 h-3" />
+                                </button>
+                                
+                                <div className="flex flex-col items-center min-w-[3rem]">
+                                  <span className="text-xl font-black text-white leading-none">{s.usedWashes || 0}</span>
+                                  <span className="text-[9px] text-neutral-500 font-mono mt-0.5">/ {s.totalWashes || 0}</span>
+                                </div>
+
+                                <button
+                                  disabled={(s.remainingWashes || 0) <= 0}
+                                  onClick={() => {
+                                    if(window.confirm(`Log 1 wash for ${s.customerName}?`)) {
+                                      handleUpdateSubscription(s.id, { remainingWashes: (s.remainingWashes || 0) - 1, usedWashes: (s.usedWashes || 0) + 1 })
+                                    }
+                                  }}
+                                  title="Log Wash"
+                                  className="w-7 h-7 rounded-full bg-zinc-100 hover:bg-white text-black flex items-center justify-center disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                                >
+                                  <Plus className="w-3 h-3" />
+                                </button>
+                              </div>
+                              <div className="text-[9px] font-bold mt-1 text-center bg-zinc-800/50 py-1.5 rounded-md border border-white/5 uppercase tracking-widest">
+                                <span className={(s.remainingWashes || 0) > 0 ? "text-green-400" : "text-red-400"}>{s.remainingWashes || 0}</span>
+                                <span className="text-neutral-400"> Remaining</span>
+                              </div>
+                            </div>
+                          </td>
+                          <td className="px-6 py-4 text-[10px] text-neutral-100 font-mono">
+                            <div><span className="font-bold text-neutral-500 uppercase">Start:</span><br/>{s.createdAt?.toDate?.()?.toLocaleDateString('en-GB') || 'N/A'}</div>
+                            <div className="mt-1"><span className="font-bold text-neutral-500 uppercase">Exp:</span><br/>{s.expiresAt?.toDate?.()?.toLocaleDateString('en-GB') || 'N/A'}</div>
+                          </td>
+                          <td className="px-6 py-4">
+                            <button
+                              onClick={() => {
+                                const newExp = new Date(s.expiresAt?.toDate ? s.expiresAt.toDate() : new Date());
+                                newExp.setMonth(newExp.getMonth() + 1);
+                                handleUpdateSubscription(s.id, { expiresAt: newExp });
+                              }}
+                              className="px-3 py-1.5 bg-zinc-500/10 text-zinc-300 hover:bg-zinc-500/20 rounded-lg text-[10px] uppercase font-bold tracking-widest border border-zinc-500/20 transition-colors"
+                            >
+                              Extend 1M
+                            </button>
+                          </td>
+                        </tr>
+                      )})}
+                    </tbody>
+                  </table>
+                </div>
+                {/* Mobile View */}
+                <div className="md:hidden flex flex-col gap-4 p-4 pb-20">
+                  {filteredSubscriptions.map((s) => {
+                    const isExpired = s.expiresAt?.toDate ? new Date() > s.expiresAt.toDate() : false;
+                    let activeStatus = s.status;
+                    if (!activeStatus) {
+                       activeStatus = isExpired ? 'expired' : ((s.remainingWashes || 0) > 0 ? 'active' : 'completed');
+                    }
+                    return (
+                      <div key={s.id} className="bg-white/5 border border-white/10 rounded-2xl p-4 flex flex-col gap-3">
+                         <div className="flex justify-between items-start">
+                            <div>
+                               <div className="font-bold text-white capitalize">{s.packageId || 'Plan'}</div>
+                               <div className="text-[10px] text-neutral-400">ID: {s.id.slice(0, 8)}</div>
+                               <div className="text-[10px] flex items-center gap-1 mt-1 text-neutral-300">
+                                  <Car className="w-3 h-3" />
+                                  {s.vehicles?.length} Vehicle(s)
+                               </div>
+                            </div>
+                            <select
+                              value={activeStatus}
+                              onChange={(e) => handleUpdateSubscription(s.id, { status: e.target.value })}
+                              className={`text-[10px] font-bold uppercase tracking-wider px-2 py-1.5 rounded-lg border-2 appearance-none cursor-pointer outline-none transition-colors
+                                ${activeStatus === 'active' ? 'bg-zinc-500/10 text-zinc-300 border-zinc-500/20' : 
+                                  activeStatus === 'paused' ? 'bg-orange-500/10 text-orange-400 border-orange-500/20' : 
+                                  activeStatus === 'cancelled' ? 'bg-red-500/10 text-red-500 border-red-500/20' : 
+                                  'bg-neutral-800 text-neutral-400 border-neutral-700'}`}
+                            >
+                              <option value="active">Active</option>
+                              <option value="paused">Paused</option>
+                              <option value="cancelled">Cancelled</option>
+                              <option value="completed">Completed</option>
+                              <option value="expired">Expired</option>
+                            </select>
+                         </div>
+
+                         <div className="flex flex-col gap-1 border-t border-white/5 pt-3">
+                            <div className="font-bold text-white text-sm">{s.customerName}</div>
+                            <div className="flex items-center gap-2 text-xs text-neutral-300">
+                               <Phone className="w-3 h-3"/> {s.customerPhone}
+                            </div>
+                            {s.address && (
+                               <div className="flex items-start gap-2 text-xs text-neutral-300 mt-1">
+                                  <MapPin className="w-3 h-3 shrink-0 mt-0.5 text-white" />
+                                  <span className="line-clamp-2">{s.address}</span>
+                               </div>
+                            )}
+                         </div>
+
+                         <div className="border-t border-white/5 pt-3 flex flex-col gap-3">
+                           <div className="w-full bg-zinc-900 border border-white/10 rounded-xl p-3">
+                             <div className="text-[10px] text-neutral-400 uppercase tracking-widest font-bold text-center mb-2">Washes Used</div>
+                              <div className="flex items-center justify-center gap-4">
+                                <button
+                                  disabled={(s.usedWashes || 0) <= 0}
+                                  onClick={() => {
+                                    if(window.confirm(`Undo 1 wash deduction for ${s.customerName}?`)) {
+                                      handleUpdateSubscription(s.id, { remainingWashes: (s.remainingWashes || 0) + 1, usedWashes: (s.usedWashes || 0) - 1 })
+                                    }
+                                  }}
+                                  className="w-10 h-10 shadow-md rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center text-white disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                                >
+                                  <Minus className="w-5 h-5" />
+                                </button>
+                                
+                                <div className="flex flex-col items-center min-w-[3rem]">
+                                  <span className="text-3xl font-black text-white leading-none">{s.usedWashes || 0}</span>
+                                  <span className="text-xs text-neutral-500 font-mono mt-1 font-bold">/ {s.totalWashes || 0}</span>
+                                </div>
+
+                                <button
+                                  disabled={(s.remainingWashes || 0) <= 0}
+                                  onClick={() => {
+                                    if(window.confirm(`Log 1 wash for ${s.customerName}?`)) {
+                                      handleUpdateSubscription(s.id, { remainingWashes: (s.remainingWashes || 0) - 1, usedWashes: (s.usedWashes || 0) + 1 })
+                                    }
+                                  }}
+                                  className="w-10 h-10 shadow-md rounded-full bg-zinc-100 hover:bg-white text-black flex items-center justify-center disabled:opacity-30 disabled:cursor-not-allowed transition-colors active:scale-95"
+                                >
+                                  <Plus className="w-5 h-5" />
+                                </button>
+                              </div>
+                              <div className="text-[10px] font-bold mt-3 text-center bg-zinc-800/80 py-2 rounded-lg border border-white/5 uppercase tracking-widest w-full">
+                                 <span className={(s.remainingWashes || 0) > 0 ? "text-green-400" : "text-red-400"}>{s.remainingWashes || 0}</span>
+                                 <span className="text-neutral-400"> Remaining</span>
+                              </div>
+                           </div>
+                         </div>
+                         
+                         <div className="flex justify-between items-center border-t border-white/5 pt-3">
+                            <div className="text-[10px] flex flex-col gap-0.5 text-neutral-300 font-mono">
+                               <span>Start: {s.createdAt?.toDate?.()?.toLocaleDateString('en-GB') || 'N/A'}</span>
+                               <span>Exp: {s.expiresAt?.toDate?.()?.toLocaleDateString('en-GB') || 'N/A'}</span>
+                            </div>
+                            <button
+                              onClick={() => {
+                                const newExp = new Date(s.expiresAt?.toDate ? s.expiresAt.toDate() : new Date());
+                                newExp.setMonth(newExp.getMonth() + 1);
+                                handleUpdateSubscription(s.id, { expiresAt: newExp });
+                              }}
+                              className="px-4 py-2 bg-zinc-500/10 shadow-inner text-zinc-300 rounded-lg text-[10px] uppercase font-bold tracking-widest border border-zinc-500/20 active:scale-95 transition-all"
+                            >
+                              Extend 1M
+                            </button>
+                         </div>
+                      </div>
+                    )
+                  })}
+                </div>
+                </>
               )
             )}
           </div>
