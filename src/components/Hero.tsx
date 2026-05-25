@@ -169,9 +169,9 @@ export default function Hero() {
                 ease: "easeInOut"
               }}
               className="w-12 h-12 rounded-full bg-zinc-500/20 flex items-center justify-center border border-white/10 shadow-[0_0_15px_rgba(255,255,255,0.3)]"
-              style={{ backgroundColor: '#1f70ff', borderColor: '#0a0808' }}
+              style={{ backgroundColor: '#399bec', borderColor: '#0a0808' }}
             >
-              <Droplets className="w-6 h-6 text-white" style={{ backgroundColor: '#0684ef' }} />
+              <Droplets className="w-6 h-6 text-white" style={{ backgroundColor: '#399bec' }} />
             </motion.div>
             <div className="flex flex-col">
               <span className="text-xs uppercase tracking-[0.2em] text-neutral-300 font-bold border-none text-shadow-none">WE USE OUR OWN</span>

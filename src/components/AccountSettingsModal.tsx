@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { X, MapPin, CarFront, FileText, LifeBuoy, Settings, Loader2, Download } from 'lucide-react';
+import { X, MapPin, CarFront, FileText, LifeBuoy, Settings, Loader2, Download, Trash2, CheckCircle2 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { db } from '../lib/firebase';
 import { collection, query, where, onSnapshot } from 'firebase/firestore';
@@ -28,6 +28,7 @@ export default function AccountSettingsModal({ isOpen, onClose, initialTab = 'se
   const [address, setAddress] = useState(userProfile?.address || '');
 
   const [saveSuccess, setSaveSuccess] = useState<string | null>(null);
+  const [hasInitialized, setHasInitialized] = useState(false);
 
   // Invoices data
   const [pastBookings, setPastBookings] = useState<BookingDocument[]>([]);
@@ -39,14 +40,19 @@ export default function AccountSettingsModal({ isOpen, onClose, initialTab = 'se
   }, [initialTab, isOpen]);
 
   useEffect(() => {
-    if (isOpen && userProfile) {
-      setCarModel(userProfile.carModel || '');
+    if (!isOpen) {
+      setHasInitialized(false);
+      return;
+    }
+    if (isOpen && userProfile && !hasInitialized) {
+      setCarModel('');
       setFullName(userProfile.fullName || '');
       setEmail(userProfile.email || '');
       setPhone(userProfile.phone || '');
-      setAddress(userProfile.address || '');
+      setAddress('');
+      setHasInitialized(true);
     }
-  }, [isOpen]); // Only initialize when modal opens
+  }, [isOpen, userProfile, hasInitialized]);
 
   useEffect(() => {
     if (!isOpen || !user?.uid) return;
@@ -77,13 +83,39 @@ export default function AccountSettingsModal({ isOpen, onClose, initialTab = 'se
     if (!carModel.trim()) return;
     setIsSaving(true);
     try {
-      await updateUserProfile({ carModel });
+      const vehicles = userProfile?.vehicles || [];
+      const updatedVehicles = Array.from(new Set([carModel, ...vehicles]));
+      await updateUserProfile({ carModel, vehicles: updatedVehicles });
+      setCarModel('');
       setSaveSuccess('vehicles');
       setTimeout(() => setSaveSuccess(null), 2000);
     } catch (e) {
       console.error(e);
     }
     setIsSaving(false);
+  };
+
+  const handleDeleteVehicle = async (index: number) => {
+    if (!userProfile?.vehicles) return;
+    const newVehicles = userProfile.vehicles.filter((_, i) => i !== index);
+    const newCarModel = newVehicles.length > 0 ? newVehicles[0] : '';
+    try {
+      await updateUserProfile({ vehicles: newVehicles, carModel: newCarModel });
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const handleMakeDefaultVehicle = async (index: number) => {
+    if (!userProfile?.vehicles || index === 0) return;
+    const newVehicles = [...userProfile.vehicles];
+    const [selected] = newVehicles.splice(index, 1);
+    newVehicles.unshift(selected);
+    try {
+      await updateUserProfile({ vehicles: newVehicles, carModel: newVehicles[0] });
+    } catch (e) {
+      console.error(e);
+    }
   };
 
   const handleSaveSettings = async () => {
@@ -99,15 +131,42 @@ export default function AccountSettingsModal({ isOpen, onClose, initialTab = 'se
   };
 
   const handleSaveAddress = async () => {
+    if (!address.trim()) return;
     setIsSaving(true);
     try {
-      await updateUserProfile({ address });
+      const addresses = userProfile?.addresses || [];
+      const updatedAddresses = Array.from(new Set([address, ...addresses]));
+      await updateUserProfile({ address, addresses: updatedAddresses });
+      setAddress('');
       setSaveSuccess('addresses');
       setTimeout(() => setSaveSuccess(null), 2000);
     } catch (e) {
       console.error(e);
     }
     setIsSaving(false);
+  };
+
+  const handleDeleteAddress = async (index: number) => {
+    if (!userProfile?.addresses) return;
+    const newAddresses = userProfile.addresses.filter((_, i) => i !== index);
+    const newDefaultAddress = newAddresses.length > 0 ? newAddresses[0] : '';
+    try {
+      await updateUserProfile({ addresses: newAddresses, address: newDefaultAddress });
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const handleMakeDefaultAddress = async (index: number) => {
+    if (!userProfile?.addresses || index === 0) return;
+    const newAddresses = [...userProfile.addresses];
+    const [selected] = newAddresses.splice(index, 1);
+    newAddresses.unshift(selected);
+    try {
+      await updateUserProfile({ addresses: newAddresses, address: newAddresses[0] });
+    } catch (e) {
+      console.error(e);
+    }
   };
 
   if (!isOpen) return null;
@@ -171,7 +230,7 @@ export default function AccountSettingsModal({ isOpen, onClose, initialTab = 'se
                   
                   <div className="space-y-4 max-w-md">
                     <div>
-                      <label className="block text-xs font-semibold text-neutral-100 uppercase tracking-wider mb-2">Primary Vehicle Model</label>
+                      <label className="block text-xs font-semibold text-neutral-100 uppercase tracking-wider mb-2">Add New Vehicle Model</label>
                       <input 
                         type="text"
                         value={carModel}
@@ -182,11 +241,36 @@ export default function AccountSettingsModal({ isOpen, onClose, initialTab = 'se
                     </div>
                     <button
                       onClick={handleSaveCarOption}
-                      disabled={isSaving}
+                      disabled={isSaving || !carModel.trim()}
                       className={`w-full flex justify-center items-center gap-2 font-bold py-3 rounded-xl transition-colors disabled:opacity-50 ${saveSuccess === 'vehicles' ? 'bg-zinc-600 hover:bg-zinc-500 text-white' : 'bg-zinc-600 hover:bg-zinc-500 text-white'}`}
                     >
                       {isSaving ? <Loader2 className="w-4 h-4 animate-spin" /> : saveSuccess === 'vehicles' ? 'Saved Successfully' : 'Save Vehicle'}
                     </button>
+
+                    {userProfile?.vehicles && userProfile.vehicles.length > 0 && (
+                      <div className="mt-8 pt-6 border-t border-white/10">
+                        <label className="block text-xs font-semibold text-neutral-100 uppercase tracking-wider mb-4">Your Saved Vehicles</label>
+                        <div className="space-y-3">
+                          {userProfile.vehicles.map((vehicle, idx) => (
+                            <div key={idx} className="bg-white/5 border border-white/10 p-4 rounded-xl text-neutral-100 font-medium flex items-center justify-between group">
+                              <span className="truncate pr-4">{vehicle}</span>
+                              <div className="flex items-center gap-2 shrink-0">
+                                {idx === 0 ? (
+                                  <span className="text-[10px] uppercase tracking-wider font-bold bg-white/10 px-2 py-1.5 rounded-md text-white">Default</span>
+                                ) : (
+                                  <button onClick={() => handleMakeDefaultVehicle(idx)} className="text-zinc-400 hover:text-white p-1.5 hover:bg-white/10 rounded-md transition-colors" title="Make Default">
+                                    <CheckCircle2 className="w-4 h-4" />
+                                  </button>
+                                )}
+                                <button onClick={() => handleDeleteVehicle(idx)} className="text-zinc-500 hover:text-red-400 p-1.5 hover:bg-white/10 rounded-md transition-colors" title="Delete">
+                                  <Trash2 className="w-4 h-4" />
+                                </button>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </motion.div>
               )}
@@ -198,7 +282,7 @@ export default function AccountSettingsModal({ isOpen, onClose, initialTab = 'se
                   
                   <div className="space-y-4 max-w-md">
                     <div>
-                      <label className="block text-xs font-semibold text-neutral-100 uppercase tracking-wider mb-2">Primary Address</label>
+                      <label className="block text-xs font-semibold text-neutral-100 uppercase tracking-wider mb-2">Add New Address</label>
                       <textarea 
                         value={address}
                         onChange={(e) => setAddress(e.target.value)}
@@ -208,11 +292,36 @@ export default function AccountSettingsModal({ isOpen, onClose, initialTab = 'se
                     </div>
                     <button
                       onClick={handleSaveAddress}
-                      disabled={isSaving}
+                      disabled={isSaving || !address.trim()}
                       className={`w-full flex justify-center items-center gap-2 font-bold py-3 rounded-xl transition-colors disabled:opacity-50 ${saveSuccess === 'addresses' ? 'bg-zinc-600 hover:bg-zinc-500 text-white' : 'bg-zinc-600 hover:bg-zinc-500 text-white'}`}
                     >
                       {isSaving ? <Loader2 className="w-4 h-4 animate-spin" /> : saveSuccess === 'addresses' ? 'Saved Successfully' : 'Save Address'}
                     </button>
+                    
+                    {userProfile?.addresses && userProfile.addresses.length > 0 && (
+                      <div className="mt-8 pt-6 border-t border-white/10">
+                        <label className="block text-xs font-semibold text-neutral-100 uppercase tracking-wider mb-4">Your Saved Addresses</label>
+                        <div className="space-y-3">
+                          {userProfile.addresses.map((addr, idx) => (
+                            <div key={idx} className="bg-white/5 border border-white/10 p-4 rounded-xl text-neutral-100 font-medium whitespace-pre-wrap flex items-start justify-between gap-4 group">
+                              <span className="flex-1">{addr}</span>
+                              <div className="flex items-center gap-2 shrink-0 mt-0.5">
+                                {idx === 0 ? (
+                                  <span className="text-[10px] uppercase tracking-wider font-bold bg-white/10 px-2 py-1.5 rounded-md text-white">Default</span>
+                                ) : (
+                                  <button onClick={() => handleMakeDefaultAddress(idx)} className="text-zinc-400 hover:text-white p-1.5 hover:bg-white/10 rounded-md transition-colors" title="Make Default">
+                                    <CheckCircle2 className="w-4 h-4" />
+                                  </button>
+                                )}
+                                <button onClick={() => handleDeleteAddress(idx)} className="text-zinc-500 hover:text-red-400 p-1.5 hover:bg-white/10 rounded-md transition-colors" title="Delete">
+                                  <Trash2 className="w-4 h-4" />
+                                </button>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </motion.div>
               )}
@@ -292,9 +401,9 @@ export default function AccountSettingsModal({ isOpen, onClose, initialTab = 'se
                       <p className="font-bold text-white">Chat with us</p>
                       <p className="text-xs text-neutral-100 mt-1">Typically replies in 5 minutes</p>
                     </button>
-                    <button className="w-full p-4 bg-black/30 border border-white/5 hover:border-white/20 rounded-xl text-left transition-colors">
+                    <button className="w-full p-4 bg-black/30 border border-white/5 hover:border-white/20 rounded-xl text-left transition-colors" onClick={() => window.location.href = 'mailto:dritzz.info@gmail.com'}>
                       <p className="font-bold text-white">Email Support</p>
-                      <p className="text-xs text-neutral-100 mt-1">support@dritzz.com</p>
+                      <p className="text-xs text-neutral-100 mt-1">dritzz.info@gmail.com</p>
                     </button>
                   </div>
                 </motion.div>

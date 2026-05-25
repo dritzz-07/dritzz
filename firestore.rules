@@ -28,9 +28,7 @@ service cloud.firestore {
     }
 
     match /users/{userId} {
-      allow read: if isAdmin() || isOwner(userId);
-      allow create, update: if isOwner(userId) || isAdmin();
-      allow delete: if isAdmin();
+      allow read, write: if isOwner(userId) || isAdmin();
     }
 
     match /bookings/{bookingId} {

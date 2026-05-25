@@ -141,11 +141,22 @@ function MainApp() {
   );
 }
 
+import AboutUs from './pages/AboutUs';
+import PrivacyPolicy from './pages/PrivacyPolicy';
+import TermsConditions from './pages/TermsConditions';
+import RefundPolicy from './pages/RefundPolicy';
+import ContactUs from './pages/ContactUs';
+
 export default function App() {
   return (
     <Routes>
       <Route path="/" element={<MainApp />} />
       <Route path="/admin" element={<AdminDashboard />} />
+      <Route path="/about-us" element={<AboutUs />} />
+      <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+      <Route path="/terms-and-conditions" element={<TermsConditions />} />
+      <Route path="/refund-policy" element={<RefundPolicy />} />
+      <Route path="/contact-us" element={<ContactUs />} />
     </Routes>
   );
 }

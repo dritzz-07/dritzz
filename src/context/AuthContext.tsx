@@ -19,7 +19,9 @@ export interface UserProfile {
   email: string | null;
   city: string | null;
   address?: string | null;
+  addresses?: string[];
   carModel: string | null;
+  vehicles?: string[];
   profileCompleted: boolean;
   provider: string | null;
   isAdmin: boolean;
@@ -183,8 +185,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (data.fullName && user.displayName !== data.fullName) {
         await updateProfile(user, { displayName: data.fullName });
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error updating user profile:', error);
+      alert('Error saving data: ' + (error.message || error));
       throw error;
     }
   };
