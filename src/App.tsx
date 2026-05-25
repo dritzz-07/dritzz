@@ -20,6 +20,8 @@ import { useAuth } from './context/AuthContext';
 import { BookingDetails, VehicleType, Package } from './types';
 import { PACKAGES } from './constants';
 
+import Services from './components/Services';
+
 function MainApp() {
   const { user } = useAuth();
   const [selectedVehicle, setSelectedVehicle] = useState<VehicleType>('hatchback');
@@ -95,6 +97,7 @@ function MainApp() {
           <Hero />
           <ShowcaseVideo />
           <HowItWorks />
+          <Services />
           <Pricing 
             onSelectPackage={handleSelectPackage} 
           />

@@ -112,7 +112,7 @@ export default function Hero() {
         </motion.div>
 
         <motion.h1 
-          className="font-sporty font-black text-4xl md:text-6xl lg:text-7xl leading-[1.1] md:leading-[1.1] tracking-tighter mb-10 uppercase select-none flex flex-wrap gap-x-5 gap-y-2"
+          className="font-sporty font-black text-[62px] leading-[1.1] md:leading-[1.1] tracking-tighter mb-10 uppercase select-none flex flex-wrap gap-x-5 gap-y-2"
         >
           {["India’s Smartest", "Doorstep Car", "Wash Service"].join(" ").split(" ").map((word, i) => (
             <motion.span

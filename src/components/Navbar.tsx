@@ -80,7 +80,7 @@ export default function Navbar({ openLogin, openBookings, openSettings }: Navbar
             Home
           </a>
         </li>
-        {['Packages', 'How It Works', 'Why Us', 'Contact'].map((item) => (
+        {['Services', 'Packages', 'How It Works', 'Why Us', 'Contact'].map((item) => (
           <li key={item}>
             <a 
               href={`#${item.toLowerCase().replace(/\s+/g, '-')}`} 
