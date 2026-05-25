@@ -135,7 +135,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       await signInWithEmailAndPassword(auth, email, pass);
     } catch (error) {
-      console.error('Error logging in with Email:', error);
       throw error;
     }
   };
@@ -163,7 +162,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         lastLogin: serverTimestamp()
       });
     } catch (error) {
-      console.error('Error signing up with Email:', error);
       throw error;
     }
   };

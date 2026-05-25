@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { db } from '../lib/firebase';
 import { collection, query, getDocs, updateDoc, doc, addDoc, serverTimestamp, deleteDoc } from 'firebase/firestore';
-import { Mail, Lock, LogIn, ArrowRight, TrendingUp, Calendar, CheckCircle2, Car, Search, Phone, Plus, X, Trash2, Download, FileText, MapPin, Navigation } from 'lucide-react';
+import { Mail, Lock, LogIn, ArrowRight, TrendingUp, Calendar, CheckCircle2, Car, Search, Phone, Plus, Minus, X, Trash2, Download, FileText, MapPin, Navigation, Gem, LayoutList } from 'lucide-react';
 import * as XLSX from 'xlsx';
 import { PACKAGES } from '../constants';
 import { generateInvoice } from '../lib/pdf';
@@ -72,9 +72,20 @@ export default function AdminDashboard() {
           await signupWithEmail(email, password, 'Admin');
           return; // successful signup auto logs in
         } catch (signupErr: any) {
-          setLoginError(signupErr.message || 'Failed to initialize admin account.');
+          if (signupErr.code === 'auth/email-already-in-use') {
+            setLoginError('Invalid email or password.');
+          } else if (signupErr.code === 'auth/network-request-failed') {
+            setLoginError('Network request failed. Please check your connection or turn off adblockers.');
+          } else {
+            setLoginError(signupErr.message || 'Failed to initialize admin account.');
+          }
           return;
         }
+      }
+      
+      if (err?.code === 'auth/network-request-failed') {
+         setLoginError('Network request failed. Please check your connection or turn off adblockers.');
+         return;
       }
       setLoginError(err.message || 'Failed to login.');
     } finally {
@@ -123,6 +134,15 @@ export default function AdminDashboard() {
     } finally {
       setLoading(false);
       setIsRefreshing(false);
+    }
+  };
+
+  const handleUpdateSubscription = async (subId: string, updates: any) => {
+    try {
+      await updateDoc(doc(db, 'subscriptions', subId), updates);
+      fetchBookings();
+    } catch (e: any) {
+      alert("Failed to update subscription. " + e.message);
     }
   };
 
@@ -293,6 +313,21 @@ export default function AdminDashboard() {
   });
   const displayBookingsCount = displayBookingsArr.length;
   const displayRevenue = displayBookingsArr.reduce((sum, b) => sum + (b.amount || 0), 0);
+  
+  // Subscription Stats
+  const activeSubs = subscriptions.filter(s => {
+    const isExpired = s.expiresAt?.toDate ? new Date() > s.expiresAt.toDate() : false;
+    const activeStatus = s.status || (isExpired ? 'expired' : ((s.remainingWashes || 0) > 0 ? 'active' : 'completed'));
+    return activeStatus === 'active';
+  }).length;
+  const washesCompleted = subscriptions.reduce((sum, s) => sum + (s.usedWashes || 0), 0);
+  const scheduledWashesPending = bookings.filter(b => b.subscriptionId && ['pending', 'scheduled'].includes(b.status)).length;
+  const expiringNext7Days = subscriptions.filter(s => {
+     if (!s.expiresAt || !s.expiresAt.toDate) return false;
+     const exp = s.expiresAt.toDate();
+     const diff = exp.getTime() - Date.now();
+     return diff > 0 && diff < 7 * 24 * 60 * 60 * 1000;
+  }).length;
 
   if (!isAdmin) {
     return (
@@ -438,49 +473,100 @@ export default function AdminDashboard() {
         </div>
       </header>
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-8 space-y-6 md:space-y-8 pb-24 md:pb-8">
         
         {/* Stats Row */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
-          <div className="bg-neutral-900 border border-white/5 rounded-3xl p-6">
-            <div className="w-12 h-12 bg-white/5 rounded-xl flex items-center justify-center mb-4">
-              <Calendar className="w-6 h-6 text-neutral-100" />
+        {activeTab === 'subscriptions' ? (
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6">
+            <div className="bg-neutral-900 border border-white/5 rounded-2xl md:rounded-3xl p-4 md:p-6 flex flex-col justify-between">
+              <div className="w-8 h-8 md:w-12 md:h-12 bg-white/5 rounded-lg md:rounded-xl flex items-center justify-center mb-2 md:mb-4">
+                <Gem className="w-4 h-4 md:w-6 md:h-6 text-neutral-100" />
+              </div>
+              <div>
+                <p className="text-neutral-400 text-[10px] md:text-xs font-medium mb-1 truncate">Active Subs</p>
+                <p className="text-2xl md:text-4xl font-black tracking-tighter text-white">{activeSubs}</p>
+              </div>
             </div>
-            <p className="text-neutral-300 text-xs font-medium mb-1">{filterDate ? 'Filtered Bookings' : "Today's Bookings"}</p>
-            <p className="text-4xl font-black tracking-tighter">{displayBookingsCount}</p>
-          </div>
-          <div className="bg-neutral-900 border border-white/5 rounded-3xl p-6">
-            <div className="w-12 h-12 bg-green-500/10 rounded-xl flex items-center justify-center mb-4">
-              <TrendingUp className="w-6 h-6 text-green-400" />
+            <div className="bg-neutral-900 border border-white/5 rounded-2xl md:rounded-3xl p-4 md:p-6 flex flex-col justify-between">
+              <div className="w-8 h-8 md:w-12 md:h-12 bg-green-500/10 rounded-lg md:rounded-xl flex items-center justify-center mb-2 md:mb-4">
+                <CheckCircle2 className="w-4 h-4 md:w-6 md:h-6 text-green-400" />
+              </div>
+              <div>
+                 <p className="text-neutral-400 text-[10px] md:text-xs font-medium mb-1 truncate">Total Washes Done</p>
+                 <p className="text-2xl md:text-4xl font-black tracking-tighter text-white">{washesCompleted}</p>
+              </div>
             </div>
-            <p className="text-neutral-300 text-xs font-medium mb-1">{filterDate ? 'Filtered Revenue' : "Today's Revenue"}</p>
-            <p className="text-4xl font-black tracking-tighter">₹{displayRevenue}</p>
-          </div>
-          <div className="bg-neutral-900 border border-white/5 rounded-3xl p-6">
-            <div className="w-12 h-12 bg-white/5 rounded-xl flex items-center justify-center mb-4">
-              <Calendar className="w-6 h-6 text-neutral-100" />
+            <div className="bg-neutral-900 border border-white/5 rounded-2xl md:rounded-3xl p-4 md:p-6 flex flex-col justify-between">
+              <div className="w-8 h-8 md:w-12 md:h-12 bg-orange-500/10 rounded-lg md:rounded-xl flex items-center justify-center mb-2 md:mb-4">
+                <Calendar className="w-4 h-4 md:w-6 md:h-6 text-orange-400" />
+              </div>
+              <div>
+                 <p className="text-neutral-400 text-[10px] md:text-xs font-medium mb-1 truncate">Pending scheduled</p>
+                 <p className="text-2xl md:text-4xl font-black tracking-tighter text-white">{scheduledWashesPending}</p>
+              </div>
             </div>
-            <p className="text-neutral-300 text-xs font-medium mb-1">Total Bookings</p>
-            <p className="text-4xl font-black tracking-tighter">{totalBookings}</p>
-          </div>
-          <div className="bg-neutral-900 border border-white/5 rounded-3xl p-6">
-            <div className="w-12 h-12 bg-green-500/10 rounded-xl flex items-center justify-center mb-4">
-              <TrendingUp className="w-6 h-6 text-green-400" />
+            <div className="bg-neutral-900 border border-white/5 rounded-2xl md:rounded-3xl p-4 md:p-6 flex flex-col justify-between">
+              <div className="w-8 h-8 md:w-12 md:h-12 bg-red-500/10 rounded-lg md:rounded-xl flex items-center justify-center mb-2 md:mb-4">
+                <LayoutList className="w-4 h-4 md:w-6 md:h-6 text-red-400" />
+              </div>
+              <div>
+                 <p className="text-neutral-400 text-[10px] md:text-xs font-medium mb-1 truncate">Expiring (7 days)</p>
+                 <p className="text-2xl md:text-4xl font-black tracking-tighter text-white">{expiringNext7Days}</p>
+              </div>
             </div>
-            <p className="text-neutral-300 text-xs font-medium mb-1">Total Revenue</p>
-            <p className="text-4xl font-black tracking-tighter">₹{totalRevenue}</p>
           </div>
-          <div className="bg-neutral-900 border border-white/5 rounded-3xl p-6">
-            <div className="w-12 h-12 bg-orange-500/10 rounded-xl flex items-center justify-center mb-4">
-              <CheckCircle2 className="w-6 h-6 text-orange-400" />
+        ) : (
+          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-5 gap-3 md:gap-6">
+            <div className="bg-neutral-900 border border-white/5 rounded-2xl md:rounded-3xl p-4 md:p-6 flex flex-col justify-between">
+              <div className="w-8 h-8 md:w-12 md:h-12 bg-white/5 rounded-lg md:rounded-xl flex items-center justify-center mb-2 md:mb-4">
+                <Calendar className="w-4 h-4 md:w-6 md:h-6 text-neutral-100" />
+              </div>
+              <div>
+                <p className="text-neutral-400 text-[10px] md:text-xs font-medium mb-1 truncate">{filterDate ? 'Filtered Bookings' : "Today's Bookings"}</p>
+                <p className="text-2xl md:text-4xl font-black tracking-tighter text-white">{displayBookingsCount}</p>
+              </div>
             </div>
-            <p className="text-neutral-300 text-xs font-medium mb-1">Active / Pending</p>
-            <p className="text-4xl font-black tracking-tighter">{pendingBookings}</p>
+            <div className="bg-neutral-900 border border-white/5 rounded-2xl md:rounded-3xl p-4 md:p-6 flex flex-col justify-between">
+              <div className="w-8 h-8 md:w-12 md:h-12 bg-green-500/10 rounded-lg md:rounded-xl flex items-center justify-center mb-2 md:mb-4">
+                <TrendingUp className="w-4 h-4 md:w-6 md:h-6 text-green-400" />
+              </div>
+              <div>
+                 <p className="text-neutral-400 text-[10px] md:text-xs font-medium mb-1 truncate">{filterDate ? 'Filtered Revenue' : "Today's Revenue"}</p>
+                 <p className="text-2xl md:text-4xl font-black tracking-tighter text-white">₹{displayRevenue}</p>
+              </div>
+            </div>
+            <div className="bg-neutral-900 border border-white/5 rounded-2xl md:rounded-3xl p-4 md:p-6 flex flex-col justify-between hidden md:flex">
+              <div className="w-8 h-8 md:w-12 md:h-12 bg-white/5 rounded-lg md:rounded-xl flex items-center justify-center mb-2 md:mb-4">
+                <Calendar className="w-4 h-4 md:w-6 md:h-6 text-neutral-100" />
+              </div>
+              <div>
+                 <p className="text-neutral-400 text-[10px] md:text-xs font-medium mb-1 truncate">Total Bookings</p>
+                 <p className="text-2xl md:text-4xl font-black tracking-tighter text-white">{totalBookings}</p>
+              </div>
+            </div>
+            <div className="bg-neutral-900 border border-white/5 rounded-2xl md:rounded-3xl p-4 md:p-6 flex flex-col justify-between hidden lg:flex">
+              <div className="w-8 h-8 md:w-12 md:h-12 bg-green-500/10 rounded-lg md:rounded-xl flex items-center justify-center mb-2 md:mb-4">
+                <TrendingUp className="w-4 h-4 md:w-6 md:h-6 text-green-400" />
+              </div>
+              <div>
+                 <p className="text-neutral-400 text-[10px] md:text-xs font-medium mb-1 truncate">Total Revenue</p>
+                 <p className="text-2xl md:text-4xl font-black tracking-tighter text-white">₹{totalRevenue}</p>
+              </div>
+            </div>
+            <div className="bg-neutral-900 border border-white/5 rounded-2xl md:rounded-3xl p-4 md:p-6 flex flex-col justify-between col-span-2 sm:col-span-1">
+              <div className="w-8 h-8 md:w-12 md:h-12 bg-orange-500/10 rounded-lg md:rounded-xl flex items-center justify-center mb-2 md:mb-4">
+                <CheckCircle2 className="w-4 h-4 md:w-6 md:h-6 text-orange-400" />
+              </div>
+              <div>
+                 <p className="text-neutral-400 text-[10px] md:text-xs font-medium mb-1 truncate">Active / Pending</p>
+                 <p className="text-2xl md:text-4xl font-black tracking-tighter text-white">{pendingBookings}</p>
+              </div>
+            </div>
           </div>
-        </div>
+        )}
 
-        {/* Tabs */}
-        <div className="flex gap-2 p-1 bg-white/5 w-fit rounded-xl border border-white/10 flex-wrap">
+        {/* Tabs - Hidden on mobile, shown in bottom nav */}
+        <div className="hidden md:flex gap-2 p-1 bg-white/5 w-fit rounded-xl border border-white/10 flex-wrap">
           <button 
             onClick={() => setActiveTab('bookings')}
             className={`px-6 py-2.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-all ${activeTab === 'bookings' ? 'bg-zinc-800 text-white border border-white/10' : 'text-neutral-100 hover:text-white'}`}
@@ -703,20 +789,28 @@ export default function AdminDashboard() {
                     <tr>
                       <th className="px-6 py-4 font-bold">Details</th>
                       <th className="px-6 py-4 font-bold">Customer Info</th>
-                      <th className="px-6 py-4 font-bold">Status & Usage</th>
+                      <th className="px-6 py-4 font-bold">Status</th>
+                      <th className="px-6 py-4 font-bold">Usage</th>
                       <th className="px-6 py-4 font-bold">Dates</th>
+                      <th className="px-6 py-4 font-bold">Actions</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-white/5">
                     {filteredSubscriptions.map((s) => {
                       const isExpired = s.expiresAt?.toDate ? new Date() > s.expiresAt.toDate() : false;
-                      const activeStatus = isExpired ? 'Expired' : (s.remainingWashes > 0 ? 'Active' : 'Completed');
+                      let activeStatus = s.status;
+                      if (!activeStatus) {
+                         activeStatus = isExpired ? 'expired' : ((s.remainingWashes || 0) > 0 ? 'active' : 'completed');
+                      }
 
                       return (
                       <tr key={s.id} className="hover:bg-white/[0.02] transition-colors">
                         <td className="px-6 py-4">
-                          <div className="font-bold text-white capitalize">{s.packageId || 'Plan'}</div>
-                          <div className="text-xs text-neutral-300 uppercase tracking-widest mt-1">
+                          <div className="font-bold text-white capitalize flex flex-col gap-1">
+                             <span>{s.packageId || 'Plan'}</span>
+                             <span className="text-xs text-neutral-400">ID: {s.id.slice(0, 8)}</span>
+                          </div>
+                          <div className="text-[10px] text-neutral-300 uppercase tracking-widest mt-1">
                              {s.vehicles?.length} Vehicle(s)
                           </div>
                         </td>
@@ -724,20 +818,82 @@ export default function AdminDashboard() {
                           <div className="font-bold text-white mb-1">{s.customerName}</div>
                           <div className="text-xs text-neutral-300">
                              {s.customerPhone} <br/>
-                             <span className="truncate block max-w-[200px]" title={s.address}>{s.address}</span>
+                             <span className="truncate block max-w-[150px]" title={s.address}>{s.address}</span>
                           </div>
                         </td>
                         <td className="px-6 py-4">
-                          <span className={`px-2 py-1 rounded text-xs font-black uppercase tracking-widest ${activeStatus === 'Active' ? 'bg-zinc-500/20 text-white' : 'bg-red-500/20 text-red-500'}`}>
-                             {activeStatus}
-                          </span>
-                          <div className="text-xs text-neutral-300 mt-2 font-mono">
-                             Used: {s.usedWashes} / {s.totalWashes} (Rem: {s.remainingWashes})
+                          <select
+                            value={activeStatus}
+                            onChange={(e) => handleUpdateSubscription(s.id, { status: e.target.value })}
+                            className={`text-xs font-bold uppercase tracking-wider px-3 py-1.5 rounded-lg border-2 appearance-none cursor-pointer outline-none transition-colors
+                              ${activeStatus === 'active' ? 'bg-zinc-500/10 text-zinc-300 border-zinc-500/20' : 
+                                activeStatus === 'paused' ? 'bg-orange-500/10 text-orange-400 border-orange-500/20' : 
+                                activeStatus === 'cancelled' ? 'bg-red-500/10 text-red-500 border-red-500/20' : 
+                                'bg-neutral-800 text-neutral-400 border-neutral-700'}`}
+                          >
+                            <option value="active">Active</option>
+                            <option value="paused">Paused</option>
+                            <option value="cancelled">Cancelled</option>
+                            <option value="completed">Completed</option>
+                            <option value="expired">Expired</option>
+                          </select>
+                        </td>
+                        <td className="px-6 py-4 w-48">
+                          <div className="flex flex-col gap-2">
+                            <div className="text-[10px] text-neutral-400 uppercase tracking-widest font-bold text-center">Washes Used</div>
+                            <div className="flex items-center justify-center gap-3">
+                              <button
+                                disabled={(s.usedWashes || 0) <= 0}
+                                onClick={() => {
+                                  if(window.confirm(`Undo 1 wash deduction for ${s.customerName}?`)) {
+                                    handleUpdateSubscription(s.id, { remainingWashes: (s.remainingWashes || 0) + 1, usedWashes: (s.usedWashes || 0) - 1 })
+                                  }
+                                }}
+                                title="Undo Wash"
+                                className="w-7 h-7 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center text-white disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                              >
+                                <Minus className="w-3 h-3" />
+                              </button>
+                              
+                              <div className="flex flex-col items-center min-w-[3rem]">
+                                <span className="text-xl font-black text-white leading-none">{s.usedWashes || 0}</span>
+                                <span className="text-[9px] text-neutral-500 font-mono mt-0.5">/ {s.totalWashes || 0}</span>
+                              </div>
+
+                              <button
+                                disabled={(s.remainingWashes || 0) <= 0}
+                                onClick={() => {
+                                  if(window.confirm(`Log 1 wash for ${s.customerName}?`)) {
+                                    handleUpdateSubscription(s.id, { remainingWashes: (s.remainingWashes || 0) - 1, usedWashes: (s.usedWashes || 0) + 1 })
+                                  }
+                                }}
+                                title="Log Wash"
+                                className="w-7 h-7 rounded-full bg-zinc-100 hover:bg-white text-black flex items-center justify-center disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                              >
+                                <Plus className="w-3 h-3" />
+                              </button>
+                            </div>
+                            <div className="text-[9px] font-bold mt-1 text-center bg-zinc-800/50 py-1.5 rounded-md border border-white/5 uppercase tracking-widest">
+                              <span className={(s.remainingWashes || 0) > 0 ? "text-green-400" : "text-red-400"}>{s.remainingWashes || 0}</span>
+                              <span className="text-neutral-400"> Remaining</span>
+                            </div>
                           </div>
                         </td>
-                        <td className="px-6 py-4 text-xs text-neutral-100">
-                          <div><span className="font-bold">Created:</span> {s.createdAt?.toDate?.()?.toLocaleDateString('en-GB') || 'N/A'}</div>
-                          <div><span className="font-bold">Expires:</span> {s.expiresAt?.toDate?.()?.toLocaleDateString('en-GB') || 'N/A'}</div>
+                        <td className="px-6 py-4 text-[10px] text-neutral-100 font-mono">
+                          <div><span className="font-bold text-neutral-500 uppercase">Start:</span><br/>{s.createdAt?.toDate?.()?.toLocaleDateString('en-GB') || 'N/A'}</div>
+                          <div className="mt-1"><span className="font-bold text-neutral-500 uppercase">Exp:</span><br/>{s.expiresAt?.toDate?.()?.toLocaleDateString('en-GB') || 'N/A'}</div>
+                        </td>
+                        <td className="px-6 py-4">
+                          <button
+                            onClick={() => {
+                              const newExp = new Date(s.expiresAt?.toDate ? s.expiresAt.toDate() : new Date());
+                              newExp.setMonth(newExp.getMonth() + 1);
+                              handleUpdateSubscription(s.id, { expiresAt: newExp });
+                            }}
+                            className="px-3 py-1.5 bg-zinc-500/10 text-zinc-300 hover:bg-zinc-500/20 rounded-lg text-[10px] uppercase font-bold tracking-widest border border-zinc-500/20 transition-colors"
+                          >
+                            Extend 1M
+                          </button>
                         </td>
                       </tr>
                     )})}
@@ -759,6 +915,33 @@ export default function AdminDashboard() {
           }}
         />
       )}
+
+      {/* Mobile Bottom Nav */}
+      <div className="md:hidden fixed bottom-0 left-0 right-0 bg-neutral-900 border-t border-white/5 pb-safe z-40">
+        <div className="flex items-center justify-around p-2">
+          <button 
+            onClick={() => setActiveTab('bookings')}
+            className={`flex flex-col items-center gap-1 p-2 w-full transition-colors ${activeTab === 'bookings' ? 'text-white' : 'text-neutral-500 hover:text-neutral-300'}`}
+          >
+            <Calendar className="w-5 h-5" />
+            <span className="text-[10px] font-bold uppercase tracking-wider">Bookings</span>
+          </button>
+          <button 
+            onClick={() => setActiveTab('sub_tasks')}
+            className={`flex flex-col items-center gap-1 p-2 w-full transition-colors ${activeTab === 'sub_tasks' ? 'text-orange-400' : 'text-neutral-500 hover:text-neutral-300'}`}
+          >
+            <LayoutList className="w-5 h-5" />
+            <span className="text-[10px] font-bold uppercase tracking-wider">Tasks</span>
+          </button>
+          <button 
+            onClick={() => setActiveTab('subscriptions')}
+            className={`flex flex-col items-center gap-1 p-2 w-full transition-colors ${activeTab === 'subscriptions' ? 'text-zinc-400' : 'text-neutral-500 hover:text-neutral-300'}`}
+          >
+            <Gem className="w-5 h-5" />
+            <span className="text-[10px] font-bold uppercase tracking-wider">Members</span>
+          </button>
+        </div>
+      </div>
     </div>
   );
 }

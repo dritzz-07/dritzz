@@ -190,6 +190,16 @@ export default function MyBookingsModal({ isOpen, onClose, initialTab = 'upcomin
                 >
                   Booking History
                 </button>
+                <button
+                  onClick={() => setActiveTab('subscriptions')}
+                  className={`px-4 py-2 rounded-lg text-[11px] font-bold uppercase tracking-widest transition-all whitespace-nowrap ${
+                    activeTab === 'subscriptions' 
+                      ? 'bg-zinc-500 text-black shadow-md' 
+                      : 'text-neutral-100 hover:text-white'
+                  }`}
+                >
+                  Dritzz Membership
+                </button>
               </div>
             </div>
 
@@ -199,6 +209,103 @@ export default function MyBookingsModal({ isOpen, onClose, initialTab = 'upcomin
                   <Loader2 className="w-8 h-8 animate-spin mb-4" />
                   <p className="text-xs uppercase tracking-widest font-bold">Loading Data...</p>
                 </div>
+              ) : activeTab === 'subscriptions' ? (
+                subscriptions.length === 0 ? (
+                  <div className="text-center py-20">
+                    <div className="w-16 h-16 bg-white/5 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <Gem className="w-6 h-6 text-white/30" />
+                    </div>
+                    <h3 className="text-white font-bold mb-2">No Active Memberships</h3>
+                    <p className="text-neutral-300 text-xs">You don't have any active Dritzz memberships.</p>
+                  </div>
+                ) : (
+                  <div className="space-y-6">
+                    {subscriptions.map((sub) => {
+                      const remain = sub.remainingWashes || 0;
+                      const total = sub.totalWashes || 0;
+                      const used = sub.usedWashes || 0;
+                      const pkg = PACKAGES.find(p => p.id === sub.packageId);
+                      
+                      return (
+                        <div key={sub.id} className="bg-white/[0.03] border border-white/10 p-6 rounded-3xl overflow-hidden relative">
+                          <div className="absolute top-0 right-0 w-32 h-32 bg-zinc-500/10 blur-3xl -mr-10 -mt-10 pointer-events-none" />
+                          <div className="flex flex-col md:flex-row justify-between items-start gap-6 relative z-10">
+                            <div className="space-y-4 flex-1 w-full">
+                              <div className="flex items-center gap-3">
+                                <span className={`px-3 py-1 text-[10px] font-black uppercase tracking-widest rounded-full border ${sub.status === 'active' ? 'bg-zinc-500/20 text-zinc-300 border-zinc-500/50' : 'bg-red-500/10 text-red-400 border-red-500/20'}`}>
+                                  {sub.status}
+                                </span>
+                                <span className="text-neutral-400 text-xs font-mono tracking-wider">ID: {sub.id?.slice(0, 8)}</span>
+                              </div>
+                              <div>
+                                <h3 className="text-2xl font-black text-white uppercase tracking-tighter flex items-center gap-2">
+                                  <Gem className="w-6 h-6 text-zinc-400" />
+                                  {pkg?.name || 'Membership'}
+                                </h3>
+                                <p className="text-neutral-400 text-xs mt-1">
+                                  Vehicles attached: {sub.vehicles?.map(v => v.brand || 'Vehicle').join(', ') || 'None'}
+                                </p>
+                              </div>
+                              
+                              <div className="flex flex-wrap gap-6 pt-4">
+                                <div>
+                                  <div className="text-[10px] uppercase tracking-widest text-neutral-500 font-bold mb-1">Total Washes</div>
+                                  <div className="text-xl font-bold text-white">{total}</div>
+                                </div>
+                                <div>
+                                  <div className="text-[10px] uppercase tracking-widest text-neutral-500 font-bold mb-1">Used</div>
+                                  <div className="text-xl font-bold text-white">{used}</div>
+                                </div>
+                                <div>
+                                  <div className="text-[10px] uppercase tracking-widest text-zinc-500 font-bold mb-1">Remaining</div>
+                                  <div className="text-xl font-bold text-zinc-400">{remain}</div>
+                                </div>
+                              </div>
+                              
+                              <div className="pt-2">
+                                <div className="flex justify-between items-end mb-2">
+                                  <span className="text-[10px] uppercase tracking-widest text-neutral-400 font-bold">Progress</span>
+                                  <span className="text-xs font-bold text-white tracking-widest">{used} / {total} Used</span>
+                                </div>
+                                <div className="h-1.5 w-full bg-white/5 rounded-full overflow-hidden">
+                                  <motion.div 
+                                    className="h-full bg-zinc-400 rounded-full"
+                                    initial={{ width: 0 }}
+                                    animate={{ width: `${total > 0 ? (used / total) * 100 : 0}%` }}
+                                    transition={{ duration: 1, ease: 'easeOut' }}
+                                  />
+                                </div>
+                              </div>
+                              
+                              <div className="flex justify-between text-xs text-neutral-500 pt-2 border-t border-white/5 font-mono">
+                                <span>Start: {sub.createdAt?.toDate ? sub.createdAt.toDate().toLocaleDateString() : 'N/A'}</span>
+                                {sub.expiresAt && <span>Expiry: {sub.expiresAt?.toDate ? sub.expiresAt.toDate().toLocaleDateString() : 'N/A'}</span>}
+                              </div>
+                            </div>
+                            
+                            <div className="shrink-0 flex flex-col gap-3 w-full md:w-auto md:min-w-[200px]">
+                              {remain > 0 && sub.status === 'active' && (
+                                <button
+                                  onClick={() => {
+                                    setSchedulingSub(sub);
+                                    // Set default date to tomorrow
+                                    const tmrw = new Date();
+                                    tmrw.setDate(tmrw.getDate() + 1);
+                                    setScheduleDate(tmrw.toISOString().split('T')[0]);
+                                  }}
+                                  className="w-full shrink-0 flex items-center justify-center gap-2 px-6 py-4 bg-zinc-100 hover:bg-white text-black rounded-2xl text-[11px] font-black uppercase tracking-widest transition-all hover:scale-[1.02] active:scale-[0.98]"
+                                >
+                                  <Calendar className="w-4 h-4" />
+                                  Schedule Wash
+                                </button>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      )
+                    })}
+                  </div>
+                )
               ) : displayedBookings.length === 0 ? (
                 <div className="text-center py-20">
                   <div className="w-16 h-16 bg-white/5 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -328,6 +435,60 @@ export default function MyBookingsModal({ isOpen, onClose, initialTab = 'upcomin
               )}
             </div>
           </motion.div>
+
+          {/* Scheduling Overlay */}
+          <AnimatePresence>
+            {schedulingSub && (
+               <motion.div
+                 initial={{ opacity: 0, scale: 0.95 }}
+                 animate={{ opacity: 1, scale: 1 }}
+                 exit={{ opacity: 0, scale: 0.95 }}
+                 className="absolute inset-x-4 max-w-sm mx-auto top-1/2 -translate-y-1/2 bg-neutral-900 border border-white/10 p-6 rounded-3xl shadow-2xl z-50 flex flex-col items-center"
+               >
+                 <h3 className="text-xl font-black text-white uppercase tracking-tighter mb-4">Schedule Wash</h3>
+                 <div className="w-full space-y-4">
+                    <div>
+                       <label className="block text-[10px] font-bold text-neutral-400 uppercase tracking-widest mb-1">Select Date</label>
+                       <input 
+                         type="date" 
+                         value={scheduleDate}
+                         onChange={(e) => setScheduleDate(e.target.value)}
+                         className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-zinc-500"
+                       />
+                    </div>
+                    <div>
+                       <label className="block text-[10px] font-bold text-neutral-400 uppercase tracking-widest mb-1">Select Time Segment</label>
+                       <select
+                         value={scheduleTime}
+                         onChange={(e) => setScheduleTime(e.target.value)}
+                         className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-zinc-500"
+                       >
+                         <option value="09:00 AM - 11:00 AM">09:00 AM - 11:00 AM</option>
+                         <option value="11:00 AM - 01:00 PM">11:00 AM - 01:00 PM</option>
+                         <option value="02:00 PM - 04:00 PM">02:00 PM - 04:00 PM</option>
+                         <option value="04:00 PM - 06:00 PM">04:00 PM - 06:00 PM</option>
+                       </select>
+                    </div>
+                    <div className="flex gap-3 pt-4 w-full">
+                       <button
+                         onClick={() => setSchedulingSub(null)}
+                         className="flex-1 px-4 py-3 border border-white/10 rounded-xl text-xs font-bold text-white uppercase tracking-widest hover:bg-white/5 transition-colors"
+                       >
+                         Cancel
+                       </button>
+                       <button
+                         onClick={handleScheduleSubmit}
+                         disabled={isSubmittingSchedule}
+                         className="flex-1 px-4 py-3 bg-zinc-100 hover:bg-white text-black rounded-xl text-xs font-black uppercase tracking-widest transition-all disabled:opacity-50"
+                       >
+                         {isSubmittingSchedule ? 'Booking...' : 'Confirm'}
+                       </button>
+                    </div>
+                 </div>
+               </motion.div>
+            )}
+          </AnimatePresence>
+
         </div>
       )}
     </AnimatePresence>
