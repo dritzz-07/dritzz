@@ -1,17 +1,25 @@
-import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
-import { User, Mail, MapPin, Car, ArrowRight, Sparkles, AlertCircle } from 'lucide-react';
-import { useAuth } from '../context/AuthContext';
+import React, { useState } from "react";
+import { motion, AnimatePresence } from "motion/react";
+import {
+  User,
+  Mail,
+  MapPin,
+  Car,
+  ArrowRight,
+  Sparkles,
+  AlertCircle,
+} from "lucide-react";
+import { useAuth } from "../context/AuthContext";
 
 export default function ProfileSetupOverlay() {
   const { userProfile, updateUserProfile } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const [fullName, setFullName] = useState(userProfile?.fullName || '');
-  const [email, setEmail] = useState(userProfile?.email || '');
-  const [city, setCity] = useState(userProfile?.city || '');
-  const [carModel, setCarModel] = useState(userProfile?.carModel || '');
+  const [fullName, setFullName] = useState(userProfile?.fullName || "");
+  const [email, setEmail] = useState(userProfile?.email || "");
+  const [city, setCity] = useState(userProfile?.city || "");
+  const [carModel, setCarModel] = useState(userProfile?.carModel || "");
 
   // Only show if userProfile is loaded and profileCompleted is false
   if (!userProfile || userProfile.profileCompleted) {
@@ -25,7 +33,7 @@ export default function ProfileSetupOverlay() {
 
     try {
       if (!fullName.trim()) {
-        throw new Error('Full Name is required');
+        throw new Error("Full Name is required");
       }
 
       await updateUserProfile({
@@ -33,10 +41,10 @@ export default function ProfileSetupOverlay() {
         email: email.trim() || null,
         city: city.trim() || null,
         carModel: carModel.trim() || null,
-        profileCompleted: true
+        profileCompleted: true,
       });
     } catch (err: any) {
-      setError(err.message || 'Failed to save profile. Please try again.');
+      setError(err.message || "Failed to save profile. Please try again.");
       setIsLoading(false);
     }
   };
@@ -51,7 +59,7 @@ export default function ProfileSetupOverlay() {
           className="absolute inset-0 bg-black/80 "
           // No onClick to close because this is mandatory
         />
-        
+
         <motion.div
           initial={{ scale: 0.95, opacity: 0, y: 20 }}
           animate={{ scale: 1, opacity: 1, y: 0 }}
@@ -63,7 +71,7 @@ export default function ProfileSetupOverlay() {
               <div className="w-16 h-16 bg-white rounded-2xl flex items-center justify-center mb-6 shadow-[0_0_40px_rgba(255,255,255,0.1)]">
                 <Sparkles className="w-8 h-8 text-black" />
               </div>
-              
+
               <h2 className="text-3xl font-black text-white tracking-tighter mb-2 uppercase">
                 COMPLETE PROFILE
               </h2>
@@ -73,7 +81,7 @@ export default function ProfileSetupOverlay() {
             </div>
 
             {error && (
-              <motion.div 
+              <motion.div
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
                 className="mb-6 p-4 bg-red-500/10 border border-red-500/20 rounded-2xl flex items-center gap-3 text-red-400 text-xs"
@@ -142,7 +150,7 @@ export default function ProfileSetupOverlay() {
                 disabled={isLoading || !fullName.trim()}
                 className="w-full h-14 btn-primary !mt-4"
               >
-                {isLoading ? 'Saving...' : 'Complete Setup'}
+                {isLoading ? "Saving..." : "Complete Setup"}
                 <ArrowRight className="w-4 h-4" />
               </button>
             </form>

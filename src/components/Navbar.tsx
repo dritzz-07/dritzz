@@ -1,20 +1,45 @@
-import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
-import { Droplets, Car, User, LogOut, Calendar, Crown, MapPin, CarFront, FileText, LifeBuoy, Settings, ShieldCheck, Sparkles, ChevronRight } from 'lucide-react';
-import { useAuth } from '../context/AuthContext';
-import logoImage from '../assets/images/regenerated_image_1779231339878.png';
+import React, { useState } from "react";
+import { motion, AnimatePresence } from "motion/react";
+import {
+  Droplets,
+  Car,
+  User,
+  LogOut,
+  Calendar,
+  Crown,
+  MapPin,
+  CarFront,
+  FileText,
+  LifeBuoy,
+  Settings,
+  ShieldCheck,
+  Sparkles,
+  ChevronRight,
+} from "lucide-react";
+import { useAuth } from "../context/AuthContext";
+import logoImage from "../assets/images/regenerated_image_1779231339878.png";
 
-import { collection, query, where, onSnapshot } from 'firebase/firestore';
-import { db } from '../lib/firebase';
+import { collection, query, where, onSnapshot } from "firebase/firestore";
+import { db } from "../lib/firebase";
 
 interface NavbarProps {
   openLogin: () => void;
-  openBookings: (tab?: 'upcoming' | 'history' | 'subscriptions') => void;
-  openSettings?: (tab?: 'addresses' | 'vehicles' | 'invoices' | 'support' | 'settings') => void;
+  openBookings: (tab?: "upcoming" | "history" | "subscriptions") => void;
+  openSettings?: (
+    tab?: "addresses" | "vehicles" | "invoices" | "support" | "settings",
+  ) => void;
 }
 
-const MenuButton = ({ icon: Icon, label, onClick }: { icon: any, label: string, onClick: () => void }) => (
-  <button 
+const MenuButton = ({
+  icon: Icon,
+  label,
+  onClick,
+}: {
+  icon: any;
+  label: string;
+  onClick: () => void;
+}) => (
+  <button
     onClick={onClick}
     className="w-full px-3 py-2.5 text-left text-[13px] font-medium text-neutral-300 hover:text-white hover:bg-white/5 rounded-xl flex items-center justify-between transition-colors group"
   >
@@ -28,8 +53,14 @@ const MenuButton = ({ icon: Icon, label, onClick }: { icon: any, label: string, 
   </button>
 );
 
-export default function Navbar({ openLogin, openBookings, openSettings }: NavbarProps) {
-  const [splashes, setSplashes] = useState<{ id: number; x: number; y: number }[]>([]);
+export default function Navbar({
+  openLogin,
+  openBookings,
+  openSettings,
+}: NavbarProps) {
+  const [splashes, setSplashes] = useState<
+    { id: number; x: number; y: number }[]
+  >([]);
   const { user, userProfile, logout } = useAuth();
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const menuRef = React.useRef<HTMLDivElement>(null);
@@ -43,33 +74,41 @@ export default function Navbar({ openLogin, openBookings, openSettings }: Navbar
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
-  
-  const displayName = userProfile?.fullName?.split(' ')[0] || user?.displayName?.split(' ')[0] || localStorage.getItem('authFullName')?.split(' ')[0] || 'Customer';
+
+  const displayName =
+    userProfile?.fullName?.split(" ")[0] ||
+    user?.displayName?.split(" ")[0] ||
+    localStorage.getItem("authFullName")?.split(" ")[0] ||
+    "Customer";
 
   const handleNavClick = (e: React.MouseEvent) => {
     const splash = {
       id: Date.now(),
       x: e.clientX,
-      y: e.clientY
+      y: e.clientY,
     };
-    setSplashes(prev => [...prev, splash]);
+    setSplashes((prev) => [...prev, splash]);
     setTimeout(() => {
-      setSplashes(prev => prev.filter(s => s.id !== splash.id));
+      setSplashes((prev) => prev.filter((s) => s.id !== splash.id));
     }, 1000);
   };
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 pt-1 pb-4 md:px-16 bg-black/80 backdrop-blur-md border-b border-white/5">
-      <a href="/" className="flex items-center gap-2 decoration-none text-white group" onClick={handleNavClick}>
-        <motion.img 
+      <a
+        href="/"
+        className="flex items-center gap-2 decoration-none text-white group"
+        onClick={handleNavClick}
+      >
+        <motion.img
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
-          src={logoImage} 
-          alt="Dritzz Logo" 
-          className="w-[100px] h-[100px] md:w-[150px] md:h-[150px] object-contain transition-all" 
+          src={logoImage}
+          alt="Dritzz Logo"
+          className="w-[100px] h-[100px] md:w-[150px] md:h-[150px] object-contain transition-all"
         />
       </a>
-      
+
       <ul className="hidden md:flex items-center gap-10 list-none">
         <li>
           <a
@@ -80,23 +119,25 @@ export default function Navbar({ openLogin, openBookings, openSettings }: Navbar
             Home
           </a>
         </li>
-        {['Services', 'Packages', 'How It Works', 'Why Us', 'Contact'].map((item) => (
-          <li key={item}>
-            <a 
-              href={`#${item.toLowerCase().replace(/\s+/g, '-')}`} 
-              onClick={handleNavClick}
-              className="text-xs font-medium text-neutral-100 hover:text-white transition-colors decoration-none relative"
-            >
-              {item}
-            </a>
-          </li>
-        ))}
+        {["Services", "Packages", "How It Works", "Why Us", "Contact"].map(
+          (item) => (
+            <li key={item}>
+              <a
+                href={`#${item.toLowerCase().replace(/\s+/g, "-")}`}
+                onClick={handleNavClick}
+                className="text-xs font-medium text-neutral-100 hover:text-white transition-colors decoration-none relative"
+              >
+                {item}
+              </a>
+            </li>
+          ),
+        )}
       </ul>
 
       <div className="flex items-center gap-4 md:gap-6">
         {user ? (
           <div className="relative" ref={menuRef}>
-            <motion.button 
+            <motion.button
               onClick={() => setShowProfileMenu(!showProfileMenu)}
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
@@ -104,16 +145,19 @@ export default function Navbar({ openLogin, openBookings, openSettings }: Navbar
             >
               <div className="w-8 h-8 rounded-full overflow-hidden bg-white/10 border border-white/10 flex items-center justify-center">
                 {user.photoURL ? (
-                  <img src={user.photoURL} alt="Profile" referrerPolicy="no-referrer" className="w-full h-full object-cover" />
+                  <img
+                    src={user.photoURL}
+                    alt="Profile"
+                    referrerPolicy="no-referrer"
+                    className="w-full h-full object-cover"
+                  />
                 ) : (
                   <span className="text-[13px] font-black text-white">
                     {displayName.charAt(0).toUpperCase()}
                   </span>
                 )}
               </div>
-              <span className="max-w-[120px] truncate">
-                Hi, {displayName}
-              </span>
+              <span className="max-w-[120px] truncate">Hi, {displayName}</span>
             </motion.button>
 
             <AnimatePresence>
@@ -131,7 +175,12 @@ export default function Navbar({ openLogin, openBookings, openSettings }: Navbar
                   <div className="flex-shrink-0 relative p-5 border-b border-white/5 flex items-center gap-4">
                     <div className="w-12 h-12 rounded-full overflow-hidden bg-gradient-to-br from-zinc-600/30 to-zinc-900/20 border border-white/10 flex items-center justify-center flex-shrink-0 shadow-[inset_0_0_20px_rgba(255,255,255,0.3)]">
                       {user.photoURL ? (
-                        <img src={user.photoURL} alt="Profile" referrerPolicy="no-referrer" className="w-full h-full object-cover" />
+                        <img
+                          src={user.photoURL}
+                          alt="Profile"
+                          referrerPolicy="no-referrer"
+                          className="w-full h-full object-cover"
+                        />
                       ) : (
                         <span className="text-lg font-bold text-white">
                           {displayName.charAt(0).toUpperCase()}
@@ -139,10 +188,16 @@ export default function Navbar({ openLogin, openBookings, openSettings }: Navbar
                       )}
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-[11px] text-neutral-100 mb-0.5">Good Evening,</p>
-                      <p className="text-xs text-white font-medium truncate tracking-tight">{displayName}</p>
+                      <p className="text-[11px] text-neutral-100 mb-0.5">
+                        Good Evening,
+                      </p>
+                      <p className="text-xs text-white font-medium truncate tracking-tight">
+                        {displayName}
+                      </p>
                       <div className="flex items-center gap-1.5 mt-1.5">
-                        <span className="text-xs uppercase tracking-widest font-bold text-neutral-100 bg-white/5 border border-white/5 px-2 py-0.5 rounded-full">Member</span>
+                        <span className="text-xs uppercase tracking-widest font-bold text-neutral-100 bg-white/5 border border-white/5 px-2 py-0.5 rounded-full">
+                          Member
+                        </span>
                       </div>
                     </div>
                   </div>
@@ -151,17 +206,37 @@ export default function Navbar({ openLogin, openBookings, openSettings }: Navbar
                     <div className="p-2">
                       <div className="px-2 py-2 mb-1">
                         <div className="flex items-center justify-between text-xs mb-1 px-2">
-                          <span className="text-neutral-300 font-medium">Verified Phone</span>
                           <span className="text-neutral-300 font-medium">
-                            {userProfile?.phone ? userProfile.phone.replace(/(\+\d{2})(\d{5})(\d{5})/, "$1 $2 $3") : (user?.phoneNumber?.replace(/(\+\d{2})(\d{5})(\d{5})/, "$1 $2 $3") || 'Not set')}
+                            Verified Phone
+                          </span>
+                          <span className="text-neutral-300 font-medium">
+                            {userProfile?.phone
+                              ? userProfile.phone.replace(
+                                  /(\+\d{2})(\d{5})(\d{5})/,
+                                  "$1 $2 $3",
+                                )
+                              : user?.phoneNumber?.replace(
+                                  /(\+\d{2})(\d{5})(\d{5})/,
+                                  "$1 $2 $3",
+                                ) || "Not set"}
                           </span>
                         </div>
                         <div className="flex items-center justify-between text-xs mb-1 px-2 mt-4">
-                          <span className="text-neutral-300 font-medium">Your Vehicle</span>
+                          <span className="text-neutral-300 font-medium">
+                            Your Vehicle
+                          </span>
                           {userProfile?.carModel ? (
-                            <span className="text-white font-medium">{userProfile.carModel}</span>
+                            <span className="text-white font-medium">
+                              {userProfile.carModel}
+                            </span>
                           ) : (
-                            <button onClick={() => { openSettings?.('vehicles'); setShowProfileMenu(false); }} className="text-white font-medium hover:text-neutral-300 transition-colors">
+                            <button
+                              onClick={() => {
+                                openSettings?.("vehicles");
+                                setShowProfileMenu(false);
+                              }}
+                              className="text-white font-medium hover:text-neutral-300 transition-colors"
+                            >
                               + Add Vehicle
                             </button>
                           )}
@@ -169,19 +244,64 @@ export default function Navbar({ openLogin, openBookings, openSettings }: Navbar
                       </div>
 
                       <div className="space-y-0.5 mt-2">
-                        <MenuButton icon={Calendar} label="My Bookings" onClick={() => { openBookings('upcoming'); setShowProfileMenu(false); }} />
-                        <MenuButton icon={MapPin} label="Saved Addresses" onClick={() => { openSettings?.('addresses'); setShowProfileMenu(false); }} />
-                        <MenuButton icon={CarFront} label="Saved Vehicles" onClick={() => { openSettings?.('vehicles'); setShowProfileMenu(false); }} />
-                        <MenuButton icon={FileText} label="Invoices" onClick={() => { openSettings?.('invoices'); setShowProfileMenu(false); }} />
-                        <MenuButton icon={LifeBuoy} label="Support" onClick={() => { openSettings?.('support'); setShowProfileMenu(false); }} />
-                        <MenuButton icon={Settings} label="Account Settings" onClick={() => { openSettings?.('settings'); setShowProfileMenu(false); }} />
+                        <MenuButton
+                          icon={Calendar}
+                          label="My Bookings"
+                          onClick={() => {
+                            openBookings("upcoming");
+                            setShowProfileMenu(false);
+                          }}
+                        />
+                        <MenuButton
+                          icon={MapPin}
+                          label="Saved Addresses"
+                          onClick={() => {
+                            openSettings?.("addresses");
+                            setShowProfileMenu(false);
+                          }}
+                        />
+                        <MenuButton
+                          icon={CarFront}
+                          label="Saved Vehicles"
+                          onClick={() => {
+                            openSettings?.("vehicles");
+                            setShowProfileMenu(false);
+                          }}
+                        />
+                        <MenuButton
+                          icon={FileText}
+                          label="Invoices"
+                          onClick={() => {
+                            openSettings?.("invoices");
+                            setShowProfileMenu(false);
+                          }}
+                        />
+                        <MenuButton
+                          icon={LifeBuoy}
+                          label="Support"
+                          onClick={() => {
+                            openSettings?.("support");
+                            setShowProfileMenu(false);
+                          }}
+                        />
+                        <MenuButton
+                          icon={Settings}
+                          label="Account Settings"
+                          onClick={() => {
+                            openSettings?.("settings");
+                            setShowProfileMenu(false);
+                          }}
+                        />
                       </div>
                     </div>
                   </div>
 
                   <div className="flex-shrink-0 p-2 border-t border-white/5 bg-black/40 relative z-10">
-                    <button 
-                      onClick={() => { logout(); setShowProfileMenu(false); }}
+                    <button
+                      onClick={() => {
+                        logout();
+                        setShowProfileMenu(false);
+                      }}
                       className="w-full px-3 py-3 text-left text-[13px] font-medium text-red-400 hover:text-red-300 hover:bg-red-500/10 rounded-xl flex items-center justify-between transition-colors group"
                     >
                       <div className="flex items-center gap-3">
@@ -198,7 +318,7 @@ export default function Navbar({ openLogin, openBookings, openSettings }: Navbar
           </div>
         ) : (
           <>
-            <motion.button 
+            <motion.button
               onClick={openLogin}
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
@@ -213,24 +333,31 @@ export default function Navbar({ openLogin, openBookings, openSettings }: Navbar
 
       <div className="fixed inset-0 pointer-events-none z-[60]">
         <AnimatePresence>
-          {splashes.map(splash => (
-            <div key={splash.id} className="absolute" style={{ left: splash.x, top: splash.y }}>
+          {splashes.map((splash) => (
+            <div
+              key={splash.id}
+              className="absolute"
+              style={{ left: splash.x, top: splash.y }}
+            >
               {[...Array(8)].map((_, i) => (
                 <motion.div
                   key={i}
                   initial={{ opacity: 1, x: 0, y: 0, scale: 0.5 }}
-                  animate={{ 
+                  animate={{
                     opacity: 0,
                     x: (Math.random() - 0.5) * 150,
                     y: (Math.random() - 0.5) * 150,
                     scale: 0,
-                    rotate: Math.random() * 360
+                    rotate: Math.random() * 360,
                   }}
                   exit={{ opacity: 0 }}
                   transition={{ duration: 0.8, ease: "easeOut" }}
                   className="absolute"
                 >
-                  <Droplets size={20} className="text-white fill-zinc-400/40 shadow-[0_0_10px_rgba(255,255,255,0.5)]" />
+                  <Droplets
+                    size={20}
+                    className="text-white fill-zinc-400/40 shadow-[0_0_10px_rgba(255,255,255,0.5)]"
+                  />
                 </motion.div>
               ))}
             </div>

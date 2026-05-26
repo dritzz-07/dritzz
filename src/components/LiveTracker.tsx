@@ -1,5 +1,14 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { MapPin, Navigation, Compass, Shield, User, Star, Clock, Info } from 'lucide-react';
+import React, { useEffect, useRef, useState } from "react";
+import {
+  MapPin,
+  Navigation,
+  Compass,
+  Shield,
+  User,
+  Star,
+  Clock,
+  Info,
+} from "lucide-react";
 
 interface LiveTrackerProps {
   bookingId: string;
@@ -11,7 +20,15 @@ interface LiveTrackerProps {
   longitude?: number;
 }
 
-export default function LiveTracker({ bookingId, refId, address, status, onClose, latitude, longitude }: LiveTrackerProps) {
+export default function LiveTracker({
+  bookingId,
+  refId,
+  address,
+  status,
+  onClose,
+  latitude,
+  longitude,
+}: LiveTrackerProps) {
   const [leafletLoaded, setLeafletLoaded] = useState(false);
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<any>(null);
@@ -25,37 +42,37 @@ export default function LiveTracker({ bookingId, refId, address, status, onClose
   // cancelled -> Recall
   const getSubStatus = (statusStr: string) => {
     switch (statusStr.toLowerCase()) {
-      case 'cancelled':
+      case "cancelled":
         return {
-          title: 'Cancelled',
-          desc: 'This booking has been cancelled.',
-          eta: '-- mins',
-          washerState: 'recalled',
-          step: 0
+          title: "Cancelled",
+          desc: "This booking has been cancelled.",
+          eta: "-- mins",
+          washerState: "recalled",
+          step: 0,
         };
-      case 'completed':
+      case "completed":
         return {
-          title: 'Job Completed',
-          desc: 'Your vehicle has been successfully washed & sanitised.',
-          eta: 'Completed',
-          washerState: 'finished',
-          step: 4
+          title: "Job Completed",
+          desc: "Your vehicle has been successfully washed & sanitised.",
+          eta: "Completed",
+          washerState: "finished",
+          step: 4,
         };
-      case 'confirmed':
+      case "confirmed":
         return {
-          title: 'En Route',
-          desc: 'Dritzz expert is driving towards your location.',
-          eta: '12 mins',
-          washerState: 'moving',
-          step: 2
+          title: "En Route",
+          desc: "Dritzz expert is driving towards your location.",
+          eta: "12 mins",
+          washerState: "moving",
+          step: 2,
         };
       default: // pending
         return {
-          title: 'Preparing Dispatch',
-          desc: 'Assigning nearest service crew & prepping tools.',
-          eta: '25 mins',
-          washerState: 'preparing',
-          step: 1
+          title: "Preparing Dispatch",
+          desc: "Assigning nearest service crew & prepping tools.",
+          eta: "25 mins",
+          washerState: "preparing",
+          step: 1,
         };
     }
   };
@@ -67,18 +84,29 @@ export default function LiveTracker({ bookingId, refId, address, status, onClose
     const addrLower = addr.toLowerCase();
     let base: [number, number] = [18.5204, 73.8567]; // Default Pune, India
 
-    if (addrLower.includes('delhi') || addrLower.includes('noida') || addrLower.includes('gurgaon')) {
-      base = [28.6139, 77.2090];
-    } else if (addrLower.includes('mumbai') || addrLower.includes('thane') || addrLower.includes('navi')) {
-      base = [19.0760, 72.8777];
-    } else if (addrLower.includes('bangalore') || addrLower.includes('bengaluru')) {
+    if (
+      addrLower.includes("delhi") ||
+      addrLower.includes("noida") ||
+      addrLower.includes("gurgaon")
+    ) {
+      base = [28.6139, 77.209];
+    } else if (
+      addrLower.includes("mumbai") ||
+      addrLower.includes("thane") ||
+      addrLower.includes("navi")
+    ) {
+      base = [19.076, 72.8777];
+    } else if (
+      addrLower.includes("bangalore") ||
+      addrLower.includes("bengaluru")
+    ) {
       base = [12.9716, 77.5946];
-    } else if (addrLower.includes('chennai')) {
+    } else if (addrLower.includes("chennai")) {
       base = [13.0827, 80.2707];
-    } else if (addrLower.includes('kolkata')) {
+    } else if (addrLower.includes("kolkata")) {
       base = [22.5726, 88.3639];
-    } else if (addrLower.includes('hyderabad')) {
-      base = [17.3850, 78.4867];
+    } else if (addrLower.includes("hyderabad")) {
+      base = [17.385, 78.4867];
     } else {
       // Deterministic offset based on reference ID to place it uniquely
       let hash = 0;
@@ -92,23 +120,24 @@ export default function LiveTracker({ bookingId, refId, address, status, onClose
     return base;
   };
 
-  const customerCoords = (latitude && longitude)
-    ? [latitude, longitude] as [number, number]
-    : getCoordinates(address, refId);
+  const customerCoords =
+    latitude && longitude
+      ? ([latitude, longitude] as [number, number])
+      : getCoordinates(address, refId);
 
   // Load Leaflet resources dynamically
   useEffect(() => {
-    if (!document.getElementById('leaflet-css')) {
-      const link = document.createElement('link');
-      link.id = 'leaflet-css';
-      link.rel = 'stylesheet';
-      link.href = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css';
+    if (!document.getElementById("leaflet-css")) {
+      const link = document.createElement("link");
+      link.id = "leaflet-css";
+      link.rel = "stylesheet";
+      link.href = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.css";
       document.head.appendChild(link);
     }
 
     if (!(window as any).L) {
-      const script = document.createElement('script');
-      script.src = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';
+      const script = document.createElement("script");
+      script.src = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.js";
       script.async = true;
       script.onload = () => setLeafletLoaded(true);
       document.body.appendChild(script);
@@ -133,14 +162,17 @@ export default function LiveTracker({ bookingId, refId, address, status, onClose
     // Create Leaflet Map with beautiful CartoDB Dark Matter tiles
     const map = L.map(mapContainerRef.current, {
       zoomControl: false,
-      attributionControl: false
+      attributionControl: false,
     }).setView(customerCoords, 14);
 
     mapRef.current = map;
 
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-      maxZoom: 19
-    }).addTo(map);
+    L.tileLayer(
+      "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",
+      {
+        maxZoom: 19,
+      },
+    ).addTo(map);
 
     // Beautiful Custom Icons
     const customerIcon = L.divIcon({
@@ -152,9 +184,9 @@ export default function LiveTracker({ bookingId, refId, address, status, onClose
           </div>
         </div>
       `,
-      className: '',
+      className: "",
       iconSize: [40, 40],
-      iconAnchor: [20, 20]
+      iconAnchor: [20, 20],
     });
 
     const washerIcon = L.divIcon({
@@ -166,45 +198,64 @@ export default function LiveTracker({ bookingId, refId, address, status, onClose
           </div>
         </div>
       `,
-      className: '',
+      className: "",
       iconSize: [48, 48],
-      iconAnchor: [24, 24]
+      iconAnchor: [24, 24],
     });
 
     // Customer Target Marker
     L.marker(customerCoords, { icon: customerIcon })
       .addTo(map)
-      .bindPopup(`<div class="text-xs font-bold text-neutral-800">Your Car Location</div>`)
+      .bindPopup(
+        `<div class="text-xs font-bold text-neutral-800">Your Car Location</div>`,
+      )
       .openPopup();
 
     // Setup simulated vehicle location based on status
-    if (tracker.washerState === 'recalled') {
+    if (tracker.washerState === "recalled") {
       // Show recalled far away
-      const washerStart: [number, number] = [customerCoords[0] + 0.015, customerCoords[1] + 0.012];
-      washerMarkerRef.current = L.marker(washerStart, { icon: washerIcon }).addTo(map);
-      routePolylineRef.current = L.polyline([washerStart, customerCoords], {
-        color: '#ef4444',
-        weight: 3,
-        dashArray: '5, 8',
-        opacity: 0.5
+      const washerStart: [number, number] = [
+        customerCoords[0] + 0.015,
+        customerCoords[1] + 0.012,
+      ];
+      washerMarkerRef.current = L.marker(washerStart, {
+        icon: washerIcon,
       }).addTo(map);
-    } else if (tracker.washerState === 'finished') {
-      // Washer is at customer's house
-      washerMarkerRef.current = L.marker(customerCoords, { icon: washerIcon }).addTo(map);
-    } else if (tracker.washerState === 'preparing') {
-      // Preparing inside workshop
-      const washerStart: [number, number] = [customerCoords[0] - 0.012, customerCoords[1] - 0.015];
-      washerMarkerRef.current = L.marker(washerStart, { icon: washerIcon }).addTo(map);
       routePolylineRef.current = L.polyline([washerStart, customerCoords], {
-        color: '#ffffff',
+        color: "#ef4444",
         weight: 3,
-        dashArray: '4, 8',
-        opacity: 0.4
+        dashArray: "5, 8",
+        opacity: 0.5,
+      }).addTo(map);
+    } else if (tracker.washerState === "finished") {
+      // Washer is at customer's house
+      washerMarkerRef.current = L.marker(customerCoords, {
+        icon: washerIcon,
+      }).addTo(map);
+    } else if (tracker.washerState === "preparing") {
+      // Preparing inside workshop
+      const washerStart: [number, number] = [
+        customerCoords[0] - 0.012,
+        customerCoords[1] - 0.015,
+      ];
+      washerMarkerRef.current = L.marker(washerStart, {
+        icon: washerIcon,
+      }).addTo(map);
+      routePolylineRef.current = L.polyline([washerStart, customerCoords], {
+        color: "#ffffff",
+        weight: 3,
+        dashArray: "4, 8",
+        opacity: 0.4,
       }).addTo(map);
     } else {
       // Animated Transit
-      const startCoord: [number, number] = [customerCoords[0] - 0.016, customerCoords[1] - 0.011];
-      washerMarkerRef.current = L.marker(startCoord, { icon: washerIcon }).addTo(map);
+      const startCoord: [number, number] = [
+        customerCoords[0] - 0.016,
+        customerCoords[1] - 0.011,
+      ];
+      washerMarkerRef.current = L.marker(startCoord, {
+        icon: washerIcon,
+      }).addTo(map);
 
       // Create neon-cyan path line
       const routePoints: [number, number][] = [
@@ -213,13 +264,13 @@ export default function LiveTracker({ bookingId, refId, address, status, onClose
         [startCoord[0] + 0.007, startCoord[1] + 0.006],
         [startCoord[0] + 0.011, startCoord[1] + 0.007],
         [startCoord[0] + 0.014, startCoord[1] + 0.009],
-        customerCoords
+        customerCoords,
       ];
 
       routePolylineRef.current = L.polyline(routePoints, {
-        color: '#06b6d4', // Cyan neon
+        color: "#06b6d4", // Cyan neon
         weight: 4,
-        opacity: 0.8
+        opacity: 0.8,
       }).addTo(map);
 
       // Animate movement loop
@@ -273,11 +324,15 @@ export default function LiveTracker({ bookingId, refId, address, status, onClose
         <div className="flex items-center gap-2.5">
           <div className="w-2.5 h-2.5 bg-zinc-500 rounded-full animate-ping shrink-0" />
           <div>
-            <h4 className="text-xs font-black text-white tracking-wide uppercase">Live Wash Tracker</h4>
-            <p className="text-neutral-300 font-mono text-xs">Reference: {refId}</p>
+            <h4 className="text-xs font-black text-white tracking-wide uppercase">
+              Live Wash Tracker
+            </h4>
+            <p className="text-neutral-300 font-mono text-xs">
+              Reference: {refId}
+            </p>
           </div>
         </div>
-        <button 
+        <button
           onClick={onClose}
           className="text-neutral-300 hover:text-white text-xs font-bold uppercase tracking-wider bg-white/5 hover:bg-white/10 px-3 py-1.5 rounded-lg border border-white/10 transition-colors self-start sm:self-auto"
         >
@@ -287,21 +342,33 @@ export default function LiveTracker({ bookingId, refId, address, status, onClose
 
       {/* Map Stage Container */}
       <div className="relative w-full h-[260px] bg-neutral-900 overflow-hidden">
-        <div ref={mapContainerRef} className="w-full h-full" style={{ minHeight: '260px' }} />
-        
+        <div
+          ref={mapContainerRef}
+          className="w-full h-full"
+          style={{ minHeight: "260px" }}
+        />
+
         {/* Dynamic Map HUD Overlays */}
         <div className="absolute top-3 left-3 z-[10] bg-black/75  px-3 py-2 rounded-xl border border-white/10 flex items-center gap-2">
           <Clock className="w-3.5 h-3.5 text-white" />
           <div className="text-left font-mono">
-            <div className="text-[11px] text-neutral-300 font-bold uppercase leading-none">ETA</div>
-            <div className="text-xs font-black text-white leading-tight">{tracker.eta}</div>
+            <div className="text-[11px] text-neutral-300 font-bold uppercase leading-none">
+              ETA
+            </div>
+            <div className="text-xs font-black text-white leading-tight">
+              {tracker.eta}
+            </div>
           </div>
         </div>
 
         <div className="absolute bottom-3 right-3 z-[10] bg-black/75  px-3 py-2 rounded-xl border border-white/10 flex items-center gap-2">
           <Compass className="w-3.5 h-3.5 text-amber-400" />
           <div className="text-left font-mono text-[11px] text-neutral-100">
-            {tracker.washerState === 'moving' ? 'WASHER EN ROUTE' : tracker.washerState === 'finished' ? 'SERVICES COMPLETE' : 'GPS LOCKED'}
+            {tracker.washerState === "moving"
+              ? "WASHER EN ROUTE"
+              : tracker.washerState === "finished"
+                ? "SERVICES COMPLETE"
+                : "GPS LOCKED"}
           </div>
         </div>
       </div>
@@ -312,31 +379,43 @@ export default function LiveTracker({ bookingId, refId, address, status, onClose
         <div className="relative flex justify-between items-center px-2">
           {/* Progress bar line */}
           <div className="absolute left-6 right-6 top-[15px] h-0.5 bg-white/10 z-0">
-            <div 
-              className="h-full bg-zinc-500 transition-all duration-1000" 
-              style={{ width: `${(tracker.step / 4) * 100}%` }} 
+            <div
+              className="h-full bg-zinc-500 transition-all duration-1000"
+              style={{ width: `${(tracker.step / 4) * 100}%` }}
             />
           </div>
 
           {/* Step circles */}
-          {['Booked', 'Dispatched', 'En Route', 'Washing', 'Finished'].map((name, idx) => {
-            const isCompleted = tracker.step >= idx;
-            const isActive = tracker.step === idx;
-            const isCancelled = status.toLowerCase() === 'cancelled';
-            return (
-              <div key={name} className="relative z-10 flex flex-col items-center">
-                <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs shadow-md transition-colors duration-300
-                  ${isCancelled ? 'bg-red-500/10 border-red-500 text-red-500' : 
-                    isCompleted ? 'bg-zinc-500/10 border-zinc-500 text-white border-2' : 
-                    'bg-neutral-800 border-neutral-700 text-neutral-300 border border-dashed'}
-                  ${isActive ? 'scale-110 shadow-[0_0_12px_rgba(16,185,129,0.3)] ring-4 ring-zinc-500/15' : ''}`}
+          {["Booked", "Dispatched", "En Route", "Washing", "Finished"].map(
+            (name, idx) => {
+              const isCompleted = tracker.step >= idx;
+              const isActive = tracker.step === idx;
+              const isCancelled = status.toLowerCase() === "cancelled";
+              return (
+                <div
+                  key={name}
+                  className="relative z-10 flex flex-col items-center"
                 >
-                  {isCancelled ? '✕' : isCompleted ? '✓' : idx + 1}
+                  <div
+                    className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs shadow-md transition-colors duration-300
+                  ${
+                    isCancelled
+                      ? "bg-red-500/10 border-red-500 text-red-500"
+                      : isCompleted
+                        ? "bg-zinc-500/10 border-zinc-500 text-white border-2"
+                        : "bg-neutral-800 border-neutral-700 text-neutral-300 border border-dashed"
+                  }
+                  ${isActive ? "scale-110 shadow-[0_0_12px_rgba(16,185,129,0.3)] ring-4 ring-zinc-500/15" : ""}`}
+                  >
+                    {isCancelled ? "✕" : isCompleted ? "✓" : idx + 1}
+                  </div>
+                  <span className="text-[11px] font-black uppercase tracking-wider text-neutral-300 mt-2">
+                    {name}
+                  </span>
                 </div>
-                <span className="text-[11px] font-black uppercase tracking-wider text-neutral-300 mt-2">{name}</span>
-              </div>
-            );
-          })}
+              );
+            },
+          )}
         </div>
 
         {/* Crew assignment info */}
@@ -346,18 +425,28 @@ export default function LiveTracker({ bookingId, refId, address, status, onClose
               <User className="w-5 h-5 text-white" />
             </div>
             <div>
-              <div className="text-xs uppercase font-black tracking-widest text-neutral-300">Service Pro</div>
-              <div className="text-xs font-bold text-white">Amar & Vinay (Dritzz Crew)</div>
+              <div className="text-xs uppercase font-black tracking-widest text-neutral-300">
+                Service Pro
+              </div>
+              <div className="text-xs font-bold text-white">
+                Amar & Vinay (Dritzz Crew)
+              </div>
               <div className="flex items-center gap-1.5 mt-0.5">
                 <Star className="w-3 h-3 text-amber-400 fill-amber-400" />
-                <span className="text-xs text-neutral-100 font-bold">4.9 · Verified Wash Experts</span>
+                <span className="text-xs text-neutral-100 font-bold">
+                  4.9 · Verified Wash Experts
+                </span>
               </div>
             </div>
           </div>
 
           <div className="flex flex-col sm:items-end justify-center">
-            <div className="text-xs uppercase font-black tracking-widest text-neutral-300">Service Location</div>
-            <div className="text-xs text-neutral-300 font-medium truncate max-w-[200px] mt-0.5">{address}</div>
+            <div className="text-xs uppercase font-black tracking-widest text-neutral-300">
+              Service Location
+            </div>
+            <div className="text-xs text-neutral-300 font-medium truncate max-w-[200px] mt-0.5">
+              {address}
+            </div>
           </div>
         </div>
 
