@@ -559,7 +559,7 @@ export default function BookingForm({
         <div className="text-xs uppercase tracking-[0.3em] font-black text-white mb-4 drop-shadow-sm">
           Reserve Your Slot
         </div>
-        <h2 className="text-4xl md:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-white via-neutral-200 to-neutral-400 tracking-tight mb-4 pb-1">
+        <h2 className="text-[34px] font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-white via-neutral-200 to-neutral-400 tracking-tight mb-4 pb-1">
           BOOK YOUR WASH
         </h2>
         <p className="text-neutral-100 max-w-md text-sm md:text-xs font-medium">

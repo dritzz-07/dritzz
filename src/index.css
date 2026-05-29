@@ -62,7 +62,7 @@
       rgba(255, 255, 255, 0) 100%
     );
     transform: skewX(-20deg);
-    animation: diamond-shine 3s infinite;
+    animation: diamond-shine 6s infinite;
   }
 
   .animate-slow-shine {
@@ -89,7 +89,7 @@
     0% {
       left: -100%;
     }
-    20% {
+    50% {
       left: 200%;
     }
     100% {
@@ -110,7 +110,7 @@
     color: transparent;
     -webkit-background-clip: text;
     background-clip: text;
-    animation: text-diamond-shine 3s linear infinite;
+    animation: text-diamond-shine 6s linear infinite;
   }
   @keyframes text-diamond-shine {
     0% {

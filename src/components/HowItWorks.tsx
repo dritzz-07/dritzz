@@ -1,5 +1,7 @@
+import { useRef } from "react";
 import { motion } from "motion/react";
 import { Calendar, CreditCard, Car, Sparkles } from "lucide-react";
+import { useAutoScroll } from "../hooks/useAutoScroll";
 
 const steps = [
   {
@@ -25,6 +27,9 @@ const steps = [
 ];
 
 export default function HowItWorks() {
+  const scrollRef = useRef<HTMLDivElement>(null);
+  useAutoScroll(scrollRef, 2000);
+
   return (
     <section
       id="how-it-works"
@@ -64,7 +69,10 @@ export default function HowItWorks() {
       </div>
 
       {/* Mobile Swipe View */}
-      <div className="md:hidden flex overflow-x-auto snap-x snap-mandatory gap-4 pb-8 -mx-6 px-6 hide-scrollbar relative">
+      <div 
+        ref={scrollRef}
+        className="md:hidden flex overflow-x-auto snap-x snap-mandatory gap-4 pb-8 -mx-6 px-6 hide-scrollbar relative"
+      >
         {steps.map((step, i) => (
           <motion.div
             key={i}

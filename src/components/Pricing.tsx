@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import {
   Droplets,
@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import { PACKAGES } from "../constants";
 import { VehicleType, Package } from "../types";
+import { useAutoScroll } from "../hooks/useAutoScroll";
 
 const IconMap: Record<string, any> = {
   Droplets,
@@ -23,6 +24,8 @@ interface PricingProps {
 
 export default function Pricing({ onSelectPackage }: PricingProps) {
   const [vehicle, setVehicle] = useState<VehicleType>("hatchback");
+  const scrollRef = useRef<HTMLDivElement>(null);
+  useAutoScroll(scrollRef, 2000);
 
   const getButtonText = (pkgId: string) => {
     switch (pkgId) {
@@ -85,7 +88,7 @@ export default function Pricing({ onSelectPackage }: PricingProps) {
         </p>
 
         {/* Vehicle Toggle */}
-        <div className="flex flex-wrap items-center justify-center gap-2 mt-12 bg-black/80 p-2 rounded-full border border-white/10 shadow-[0_0_30px_rgba(0,0,0,0.8)]">
+        <div className="flex flex-wrap items-center justify-center gap-2 mt-12 bg-black/80 p-2 rounded-full border border-white/10 shadow-[0_0_30px_rgba(0,0,0,0.8)]" style={{ borderColor: "#444040" }}>
           {(["hatchback", "sedan", "suv"] as VehicleType[]).map((v) => (
             <button
               key={v}
@@ -290,7 +293,10 @@ export default function Pricing({ onSelectPackage }: PricingProps) {
       </div>
 
       {/* Mobile Swipe View */}
-      <div className="md:hidden flex overflow-x-auto snap-x snap-mandatory gap-4 pb-8 pt-6 -mx-6 px-6 hide-scrollbar relative z-10">
+      <div 
+        ref={scrollRef}
+        className="md:hidden flex overflow-x-auto snap-x snap-mandatory gap-4 pb-8 pt-6 -mx-6 px-6 hide-scrollbar relative z-10"
+      >
         {orderedPackages.map((pkg) => {
           const Icon = IconMap[pkg.icon] || Droplets;
           const price = pkg.price[vehicle];
@@ -391,7 +397,7 @@ export default function Pricing({ onSelectPackage }: PricingProps) {
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="relative px-8 py-16 md:p-24 rounded-[3rem] bg-[#050505] border border-white/10 overflow-hidden group shadow-[0_0_80px_-20px_rgba(255,255,255,0.3)] text-center"
+          className="relative px-[30px] pt-[62px] pb-[62px] text-[16px] rounded-[3rem] bg-[#050505] border border-white/10 overflow-hidden group shadow-[0_0_80px_-20px_rgba(255,255,255,0.3)] text-center"
         >
           {/* Animated Background Gradients & Glows */}
           <div className="absolute hidden md:block -top-40 -right-40 w-[500px] h-[500px] bg-zinc-600/20 opacity-10 rounded-full group-hover:bg-zinc-500/30 transition-colors duration-1000 pointer-events-none" />
@@ -422,13 +428,13 @@ export default function Pricing({ onSelectPackage }: PricingProps) {
             </motion.div>
 
             <h3 className="text-4xl md:text-6xl font-black mb-6 tracking-tight leading-tight">
-              <span className="text-white drop-shadow-md">One Membership.</span>{" "}
+              <span className="text-white drop-shadow-md text-[28px]">One Membership.</span>{" "}
               <br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-zinc-300 via-zinc-100 to-zinc-400 drop-shadow-sm">
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-zinc-300 via-zinc-100 to-zinc-400 drop-shadow-sm text-[28px]">
                 Clean Car All Month.
               </span>
             </h3>
-            <p className="text-neutral-100 text-lg md:text-xl font-medium mb-12 max-w-2xl mx-auto leading-relaxed">
+            <p className="text-neutral-100 text-[14px] font-medium mb-12 max-w-2xl mx-auto leading-relaxed">
               Join hundreds of smart car owners choosing an effortless, premium
               doorstep car care experience.
             </p>
@@ -436,7 +442,7 @@ export default function Pricing({ onSelectPackage }: PricingProps) {
             <div className="flex flex-col sm:flex-row items-center justify-center gap-6 w-full">
               <button
                 onClick={() => onSelectPackage("monthly", vehicle)}
-                className="w-full sm:w-auto btn-primary"
+                className="w-full sm:w-auto btn-primary text-[8px] leading-[16.3333px]"
               >
                 <Gem className="w-4 h-4" />
                 Get Membership
@@ -447,7 +453,7 @@ export default function Pricing({ onSelectPackage }: PricingProps) {
                     .getElementById("packages")
                     ?.scrollIntoView({ behavior: "smooth" })
                 }
-                className="w-full sm:w-auto btn-secondary"
+                className="w-full sm:w-auto btn-secondary text-[10px]"
               >
                 Schedule Wash
               </button>

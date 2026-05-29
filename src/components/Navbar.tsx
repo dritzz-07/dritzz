@@ -94,7 +94,7 @@ export default function Navbar({
   };
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 pt-1 pb-4 md:px-16 bg-black/80 backdrop-blur-md border-b border-white/5">
+    <nav className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 pt-1 pb-4 md:px-8 lg:px-16 bg-black/80 backdrop-blur-md border-b border-white/5">
       <a
         href="/"
         className="flex items-center gap-2 decoration-none text-white group"
@@ -105,11 +105,11 @@ export default function Navbar({
           whileTap={{ scale: 0.95 }}
           src={logoImage}
           alt="Dritzz Logo"
-          className="w-[100px] h-[100px] md:w-[150px] md:h-[150px] object-contain transition-all"
+          className="w-[100px] h-[100px] lg:w-[150px] lg:h-[150px] object-contain transition-all"
         />
       </a>
 
-      <ul className="hidden md:flex items-center gap-10 list-none">
+      <ul className="hidden md:flex items-center md:gap-6 lg:gap-10 list-none">
         <li>
           <a
             href="/"

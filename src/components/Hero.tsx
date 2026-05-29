@@ -1,279 +1,155 @@
-import { motion } from "motion/react";
+import { motion, AnimatePresence } from "motion/react";
 import { Star, Droplets, Zap } from "lucide-react";
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 
-import heroImage from "../assets/images/regenerated_image_1779233473318.png";
+const BG_IMAGES = [
+  "/slide_7.png",
+  "/slide_3.jpg",
+  "/slide_6.jpg",
+  "/slide_5.jpg",
+];
 
 export default function Hero() {
-  const audioRef = useRef<HTMLAudioElement | null>(null);
-  const [isStarting, setIsStarting] = useState(false);
+  const [currentImageIdx, setCurrentImageIdx] = useState(0);
 
-  const handleCarClick = () => {
-    if (isStarting) return;
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentImageIdx((prev) => (prev + 1) % BG_IMAGES.length);
+    }, 4000); // Faster transition
+    return () => clearInterval(timer);
+  }, []);
 
-    setIsStarting(true);
-    if (!audioRef.current) {
-      // We will look for a locally uploaded file named car-start.mp3 in the public folder
-      audioRef.current = new Audio("/car-start.mp3");
-      audioRef.current.load();
-    }
-
-    const playPromise = audioRef.current.play();
-
-    if (playPromise !== undefined) {
-      playPromise.catch((e) => {
-        console.warn(
-          "Local audio not found, please upload car-start.mp3 to the public folder. Error:",
-          e,
-        );
-        setIsStarting(false);
-      });
-    }
-
-    setTimeout(() => {
-      setIsStarting(false);
-    }, 2000);
-  };
   return (
-    <section className="relative min-h-[70vh] md:min-h-screen flex items-center px-6 md:px-16 pt-[120px] md:pt-[200px] pb-10 md:pb-20 overflow-hidden bg-black">
-      {/* Background Image of Wet Porsche */}
-      <div className="absolute inset-0 pointer-events-none z-0">
-        <div className="absolute inset-0 bg-black/60 z-10" />
-        <div className="absolute inset-0 bg-gradient-to-r from-black via-black/80 to-transparent md:w-2/3 z-10" />
-        <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black/80 z-10" />
-        <motion.img
-          initial={{ scale: 1.05, opacity: 0 }}
-          animate={{ scale: 1, opacity: 0.6 }}
-          transition={{ duration: 1.5, ease: "easeOut" }}
-          src="https://images.unsplash.com/photo-1503376712394-6b22c7104b90?q=80&w=2500&auto=format&fit=crop"
-          alt="Wet Black Porsche"
-          className="w-full h-full object-cover object-[70%_center] md:object-right"
-          referrerPolicy="no-referrer"
-          fetchPriority="high"
-        />
-      </div>
-
-      {/* Background Animation Elements */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden z-0">
-        {/* Animated Bubbles/Droplets */}
-        {[...Array(20)].map((_, i) => (
-          <motion.div
-            key={i}
-            initial={{
-              x: Math.random() * 100 + "%",
-              y: "110%",
-              opacity: Math.random() * 0.3 + 0.1,
-              scale: Math.random() * 0.5 + 0.5,
-            }}
-            animate={{
-              y: "-10%",
-              x: Math.random() * 100 - 50 + "%",
-            }}
-            transition={{
-              duration: Math.random() * 5 + 5,
-              repeat: Infinity,
-              ease: "linear",
-              delay: Math.random() * 5,
-            }}
-            className="absolute"
-          >
-            <Droplets className="text-white/20 w-4 h-4" />
-          </motion.div>
-        ))}
-
-        {/* High Pressure Spray Lines */}
-        {[...Array(5)].map((_, i) => (
-          <motion.div
-            key={`spray-${i}`}
-            initial={{ x: "-10%", y: 20 + i * 15 + "%", scaleX: 0, opacity: 0 }}
-            animate={{
-              x: ["0%", "100%"],
-              scaleX: [0, 1, 0],
-              opacity: [0, 0.3, 0],
-            }}
-            transition={{
-              duration: 1.5,
-              repeat: Infinity,
-              delay: i * 0.5,
-              ease: "easeInOut",
-            }}
-            className="absolute h-px w-64 bg-linear-to-r from-transparent via-white to-transparent"
-          />
-        ))}
-      </div>
-
-      <div className="relative z-10 max-w-7xl mx-auto w-full flex flex-col lg:flex-row items-center justify-between gap-12 -mb-[35px]">
-        <div className="max-w-3xl flex-1 relative z-20">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="inline-block px-3 py-1 mb-[18px] rounded-full bg-white/5 border border-white/10 text-xs font-bold uppercase tracking-widest text-neutral-100 h-[25.7639px]"
-          >
-            Now Serving Hyderabad
-          </motion.div>
-
-          <motion.h1 className="font-sporty font-black text-[28px] md:text-[46px] leading-[1.1] md:leading-[1.1] tracking-tighter mb-8 md:mb-10 uppercase select-none flex flex-wrap gap-x-3 md:gap-x-5 gap-y-1 md:gap-y-2">
-            {["India’s Smartest", "Doorstep Car", "Wash Service"]
-              .join(" ")
-              .split(" ")
-              .map((word, i) => (
-                <motion.span
-                  key={i}
-                  initial={{ opacity: 0, y: 40, scale: 0.9 }}
-                  animate={{
-                    opacity: 1,
-                    y: [0, -15, 0], // Floating animation
-                    scale: 1,
-                  }}
-                  transition={{
-                    opacity: { duration: 0.8, delay: 0.2 + i * 0.1 },
-                    y: {
-                      duration: 4,
-                      repeat: Infinity,
-                      ease: "easeInOut",
-                      delay: 0.5 + i * 0.2,
-                    },
-                    scale: { duration: 0.8, delay: 0.2 + i * 0.1 },
-                  }}
-                  className="inline-block bg-linear-to-b from-white via-neutral-100 to-neutral-400 bg-clip-text text-transparent drop-shadow-sm"
-                >
-                  {word}
-                </motion.span>
-              ))}
-          </motion.h1>
-
-          <motion.p
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.8 }}
-            className="text-sm md:text-xs text-neutral-100 leading-relaxed max-w-2xl mb-12 uppercase font-display tracking-[0.2em] font-medium"
-          >
-            PROFESSIONAL CLEANING AT YOUR HOME, OFFICE, OR APARTMENT — FAST,
-            AFFORDABLE, AND HASSLE-FREE.
-          </motion.p>
-
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.5 }}
-            className="flex flex-col sm:flex-row flex-wrap items-start sm:items-center gap-4 sm:gap-x-8 sm:gap-y-4 md:mb-12 mb-8"
-          >
-            <div className="flex items-center gap-4 bg-white/5 border border-white/10 px-5 py-3 rounded-2xl shadow-[0_0_20px_rgba(255,255,255,0.05)] w-full sm:w-auto">
-              <motion.div
-                animate={{
-                  scale: [1, 1.2, 1],
-                  opacity: [0.7, 1, 0.7],
-                }}
-                transition={{
-                  duration: 2,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                }}
-                className="w-12 h-12 rounded-full bg-zinc-500/20 flex items-center justify-center border border-white/10 shadow-[0_0_15px_rgba(255,255,255,0.3)]"
-                style={{ backgroundColor: "#66a7e9", borderColor: "#0a0808" }}
-              >
-                <Droplets
-                  className="w-6 h-6 text-white"
-                  style={{ backgroundColor: "#66a7e9" }}
-                />
-              </motion.div>
-              <div className="flex flex-col">
-                <span className="text-xs uppercase tracking-[0.2em] text-neutral-300 font-bold border-none text-shadow-none">
-                  WE USE OUR OWN
-                </span>
-                <span className="text-xs uppercase tracking-widest text-white font-black border-none text-shadow-none">
-                  WATER SOURCE
-                </span>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-4 bg-white/5 border border-white/10 px-5 py-3 rounded-2xl shadow-[0_0_20px_rgba(255,255,255,0.05)] w-full sm:w-auto">
-              <motion.div
-                animate={{
-                  scale: [1, 1.2, 1],
-                  opacity: [0.7, 1, 0.7],
-                }}
-                transition={{
-                  duration: 2,
-                  delay: 1,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                }}
-                className="w-12 h-12 rounded-full bg-yellow-500/20 flex items-center justify-center border border-yellow-500/30 shadow-[0_0_15px_rgba(234,179,8,0.3)]"
-              >
-                <Zap className="w-6 h-6 text-yellow-400" />
-              </motion.div>
-              <div className="flex flex-col">
-                <span className="text-xs uppercase tracking-[0.2em] text-yellow-300 font-bold border-none text-shadow-none">
-                  WE USE OUR OWN
-                </span>
-                <span className="text-xs uppercase tracking-widest text-white font-black border-none text-shadow-none">
-                  ELECTRICITY
-                </span>
-              </div>
-            </div>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.6 }}
-            className="flex flex-col sm:flex-row flex-wrap gap-4 md:mb-20 mb-8"
-          >
-            <a href="#booking" className="btn-primary decoration-none">
-              Book Now
-            </a>
-            <a
-              href="#packages"
-              className="btn-secondary decoration-none hover:!text-white"
-            >
-              View Pricing
-            </a>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 1, delay: 0.8 }}
-            className="flex flex-wrap gap-12 pt-8 border-t border-white/5"
-          >
-            {[
-              { label: "Happy Cars", value: "250+" },
-              { label: "Avg Rating", value: "4.9", icon: true },
-              { label: "Avg Service Time", value: "30 Min" },
-            ].map((stat, i) => (
-              <div key={i} className="flex flex-col">
-                <div className="font-display text-4xl text-white flex items-center gap-1">
-                  {stat.value}
-                  {stat.icon && <Star className="w-6 h-6 fill-white" />}
-                </div>
-                <div className="text-xs uppercase tracking-widest text-neutral-300 font-bold">
-                  {stat.label}
-                </div>
-              </div>
-            ))}
-          </motion.div>
-        </div>
-
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95, x: 20 }}
-          animate={{ opacity: 1, scale: 1, x: 0 }}
-          transition={{ duration: 0.8, delay: 0.8 }}
-          className="flex-1 w-full max-w-2xl relative z-20 mt-12 lg:mt-0"
-        >
-          <div className="absolute hidden md:block inset-0 bg-white/5 rounded-3xl opacity-10 transform scale-105" />
-          <img
-            src={heroImage}
-            alt="Dritzz Doorstep Car Wash"
-            className="w-full h-auto shadow-2xl relative z-10 object-cover aspect-[4/3] bg-black"
-            style={{
-              borderStyle: "none",
-              borderRadius: "10px",
-              backgroundColor: "#000000",
-            }}
+    <section className="relative min-h-[100dvh] w-full flex flex-col justify-between overflow-hidden bg-[#0a0a0a] text-center pt-[90px] lg:pt-[200px] pb-8 md:pb-[8dvh] px-6">
+      {/* Background Image below header */}
+      <div className="relative flex-1 w-full lg:absolute lg:inset-0 pointer-events-none z-0 min-h-[35vh]">
+        <AnimatePresence mode="popLayout">
+          <motion.img
+            key={currentImageIdx}
+            initial={{ opacity: 0, scale: 1.05 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 1.5, ease: "easeOut" }}
+            src={BG_IMAGES[currentImageIdx]}
+            alt="Premium Car Detailing"
+            className="absolute inset-0 w-full h-full object-contain object-center lg:object-cover lg:object-center"
+            referrerPolicy="no-referrer"
             fetchPriority="high"
           />
+        </AnimatePresence>
+
+        {/* Gradient Overlay for Text Readability */}
+        <div className="absolute inset-0 bg-black/10 z-10 lg:block hidden" />
+        <div className="absolute inset-x-0 bottom-0 h-[20vh] lg:h-[70vh] bg-gradient-to-t from-[#0a0a0a] via-[#0a0a0a]/60 to-transparent z-10 pointer-events-none" />
+      </div>
+
+      {/* Text Section Overlay */}
+      <div 
+        className="relative z-20 max-w-5xl mx-auto w-full flex flex-col items-center gap-4 lg:gap-5 mt-4 lg:mt-auto"
+      >
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.2 }}
+          className="inline-block px-4 py-1.5 rounded-full border border-white/10 bg-white/5 backdrop-blur-xl text-white text-[8px] sm:text-[10px] font-semibold tracking-[0.2em] uppercase shadow-2xl mb-1 mt-6"
+        >
+          Now Serving Hyderabad
+        </motion.div>
+
+        <motion.h1 className="font-sporty font-black text-2xl sm:text-3xl md:text-4xl lg:text-5xl leading-[1.05] tracking-tighter uppercase select-none flex flex-wrap justify-center gap-x-2 sm:gap-x-4 gap-y-1 text-center text-white drop-shadow-2xl">
+          {["India’s", "Smartest", "Doorstep", "Car", "Wash", "Services"].map(
+            (word, i) => (
+              <motion.span
+                key={i}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{
+                  duration: 0.8,
+                  delay: 0.3 + i * 0.1,
+                  type: "spring",
+                  stiffness: 120,
+                  damping: 20,
+                }}
+                className="inline-block drop-shadow-2xl text-transparent bg-clip-text bg-gradient-to-b from-white via-white to-white/70"
+              >
+                {word}
+              </motion.span>
+            )
+          )}
+        </motion.h1>
+
+        <motion.p
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.8 }}
+          className="text-[9px] sm:text-[10px] md:text-xs text-neutral-300 leading-relaxed max-w-sm font-medium mt-1 text-center drop-shadow-md"
+        >
+          Professional Detailing at your home, office, or apartment. Fast,
+          affordable, and spotless.
+        </motion.p>
+
+        <motion.div
+          initial={{ opacity: 0, y: 15 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.5 }}
+          className="flex flex-col sm:flex-row items-center justify-center gap-3 mt-4 sm:mt-6 w-full mx-auto"
+        >
+          <motion.div
+            animate={{
+              y: [0, -3, 0],
+              boxShadow: [
+                "0 0 0px rgba(0,0,0,0)",
+                "0 15px 30px rgba(0,0,0,0.4)",
+                "0 0 0px rgba(0,0,0,0)",
+              ],
+            }}
+            transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+            className="flex items-center justify-start gap-4 bg-[#111111]/90 backdrop-blur-2xl border border-white/20 px-5 sm:px-8 py-3 sm:py-4 rounded-2xl w-full sm:w-auto text-left shadow-2xl relative overflow-hidden group"
+          >
+            <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-blue-500/15 flex items-center justify-center border border-blue-500/30 shrink-0 shadow-[0_0_15px_rgba(59,130,246,0.3)]">
+              <Droplets className="w-5 h-5 sm:w-6 sm:h-6 text-blue-400" />
+            </div>
+            <div className="flex flex-col relative z-10">
+              <span className="text-[9px] sm:text-[11px] uppercase tracking-[0.25em] text-blue-300 font-bold leading-tight mb-1">
+                We use our own
+              </span>
+              <span className="text-[14px] sm:text-[18px] uppercase tracking-wider text-white font-black leading-tight drop-shadow-lg">
+                Water
+              </span>
+            </div>
+          </motion.div>
+
+          <motion.div
+            animate={{
+              y: [0, -3, 0],
+              boxShadow: [
+                "0 0 0px rgba(0,0,0,0)",
+                "0 15px 30px rgba(0,0,0,0.4)",
+                "0 0 0px rgba(0,0,0,0)",
+              ],
+            }}
+            transition={{
+              duration: 4,
+              repeat: Infinity,
+              ease: "easeInOut",
+              delay: 2,
+            }}
+            className="flex items-center justify-start gap-4 bg-[#111111]/90 backdrop-blur-2xl border border-white/20 px-5 sm:px-8 py-3 sm:py-4 rounded-2xl w-full sm:w-auto text-left shadow-2xl relative overflow-hidden group"
+          >
+            <div className="absolute inset-0 bg-gradient-to-r from-yellow-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-yellow-500/15 flex items-center justify-center border border-yellow-500/30 shrink-0 shadow-[0_0_15px_rgba(234,179,8,0.3)]">
+              <Zap className="w-5 h-5 sm:w-6 sm:h-6 text-yellow-400" />
+            </div>
+            <div className="flex flex-col relative z-10">
+              <span className="text-[9px] sm:text-[11px] uppercase tracking-[0.25em] text-yellow-500 font-bold leading-tight mb-1">
+                We use our own
+              </span>
+              <span className="text-[14px] sm:text-[18px] uppercase tracking-wider text-white font-black leading-tight drop-shadow-lg">
+                Electricity
+              </span>
+            </div>
+          </motion.div>
         </motion.div>
       </div>
     </section>

@@ -1,3 +1,4 @@
+import { useRef } from "react";
 import { motion } from "motion/react";
 import {
   Droplets,
@@ -7,6 +8,7 @@ import {
   PaintBucket,
   CircleDashed,
 } from "lucide-react";
+import { useAutoScroll } from "../hooks/useAutoScroll";
 
 const SERVICES = [
   {
@@ -60,6 +62,9 @@ const SERVICES = [
 ];
 
 export default function Services() {
+  const scrollRef = useRef<HTMLDivElement>(null);
+  useAutoScroll(scrollRef, 2000);
+
   return (
     <section
       id="services"
@@ -144,7 +149,10 @@ export default function Services() {
         </div>
 
         {/* Mobile Swipe View */}
-        <div className="md:hidden flex overflow-x-auto snap-x snap-mandatory gap-4 pb-8 -mx-6 px-6 hide-scrollbar">
+        <div 
+          ref={scrollRef}
+          className="md:hidden flex overflow-x-auto snap-x snap-mandatory gap-4 pb-8 -mx-6 px-6 hide-scrollbar"
+        >
           {SERVICES.map((service, index) => {
             const Icon = service.icon;
             return (

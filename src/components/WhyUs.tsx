@@ -1,3 +1,4 @@
+import { useRef } from "react";
 import { motion } from "motion/react";
 import {
   Home,
@@ -8,6 +9,7 @@ import {
   CreditCard,
 } from "lucide-react";
 import generatedImage from "../assets/images/regenerated_image_1779745573278.png";
+import { useAutoScroll } from "../hooks/useAutoScroll";
 
 const reasons = [
   {
@@ -43,6 +45,9 @@ const reasons = [
 ];
 
 export default function WhyUs() {
+  const scrollRef = useRef<HTMLDivElement>(null);
+  useAutoScroll(scrollRef, 2000);
+
   return (
     <section
       id="why-us"
@@ -79,7 +84,10 @@ export default function WhyUs() {
           </div>
 
           {/* Mobile Swipe View */}
-          <div className="md:hidden flex overflow-x-auto snap-x snap-mandatory gap-4 pb-4 -mx-6 px-6 hide-scrollbar relative">
+          <div 
+            ref={scrollRef}
+            className="md:hidden flex overflow-x-auto snap-x snap-mandatory gap-4 pb-4 -mx-6 px-6 hide-scrollbar relative"
+          >
             {reasons.map((reason, i) => (
               <motion.div
                 key={i}

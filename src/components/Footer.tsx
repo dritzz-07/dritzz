@@ -8,7 +8,7 @@ export default function Footer() {
       id="contact"
       className="bg-black border-t border-white/5 pt-16 pb-8 px-6 md:px-16 text-neutral-300"
     >
-      <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-12 mb-12">
+      <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 mb-12">
         {/* Brand & Setup */}
         <div className="flex flex-col items-start text-left">
           <Link to="/" className="mb-6 flex items-center gap-3">

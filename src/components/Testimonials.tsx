@@ -1,4 +1,6 @@
+import { useRef } from "react";
 import { Star } from "lucide-react";
+import { useAutoScroll } from "../hooks/useAutoScroll";
 
 const reviews = [
   {
@@ -22,12 +24,15 @@ const reviews = [
 ];
 
 export default function Testimonials() {
+  const scrollRef = useRef<HTMLDivElement>(null);
+  useAutoScroll(scrollRef, 2000);
+
   return (
     <section className="bg-black px-6 md:px-16 py-16 md:py-24 border-t border-white/5">
       <div className="section-label">What Customers Say</div>
       <h2 className="section-title">REVIEWS</h2>
 
-      <div className="hidden md:grid grid-cols-1 md:grid-cols-3 gap-8 mt-16">
+      <div className="hidden md:grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-16">
         {reviews.map((review, i) => (
           <div
             key={i}
@@ -57,7 +62,10 @@ export default function Testimonials() {
       </div>
 
       {/* Mobile Swipe View */}
-      <div className="md:hidden flex overflow-x-auto snap-x snap-mandatory gap-4 pb-8 -mx-6 px-6 mt-12 hide-scrollbar">
+      <div 
+        ref={scrollRef}
+        className="md:hidden flex overflow-x-auto snap-x snap-mandatory gap-4 pb-8 -mx-6 px-6 mt-12 hide-scrollbar"
+      >
         {reviews.map((review, i) => (
           <div
             key={i}
