@@ -20,9 +20,9 @@ export default function Hero() {
   }, []);
 
   return (
-    <section className="relative min-h-[100dvh] w-full flex flex-col justify-between overflow-hidden bg-[#0a0a0a] text-center pt-[90px] lg:pt-[200px] pb-8 md:pb-[8dvh] px-6">
+    <section className="relative min-h-[100dvh] w-full flex flex-col lg:justify-between overflow-hidden bg-[#0a0a0a] text-center pt-[70px] lg:pt-[200px] pb-8 md:pb-[8dvh]">
       {/* Background Image below header */}
-      <div className="relative flex-1 w-full lg:absolute lg:inset-0 pointer-events-none z-0 min-h-[35vh]">
+      <div className="relative w-full h-[35vh] lg:absolute lg:inset-0 lg:h-full pointer-events-none z-0 mt-4 lg:mt-0">
         <AnimatePresence mode="popLayout">
           <motion.img
             key={currentImageIdx}
@@ -32,7 +32,7 @@ export default function Hero() {
             transition={{ duration: 1.5, ease: "easeOut" }}
             src={BG_IMAGES[currentImageIdx]}
             alt="Premium Car Detailing"
-            className="absolute inset-0 w-full h-full object-contain object-center lg:object-cover lg:object-center"
+            className="absolute inset-0 w-full h-full object-contain lg:object-cover object-center"
             referrerPolicy="no-referrer"
             fetchPriority="high"
           />
@@ -40,18 +40,18 @@ export default function Hero() {
 
         {/* Gradient Overlay for Text Readability */}
         <div className="absolute inset-0 bg-black/10 z-10 lg:block hidden" />
-        <div className="absolute inset-x-0 bottom-0 h-[20vh] lg:h-[70vh] bg-gradient-to-t from-[#0a0a0a] via-[#0a0a0a]/60 to-transparent z-10 pointer-events-none" />
+        <div className="absolute inset-x-0 bottom-0 h-[15vh] lg:h-[70vh] bg-gradient-to-t from-[#0a0a0a] via-[#0a0a0a]/80 to-transparent z-10 pointer-events-none" />
       </div>
 
       {/* Text Section Overlay */}
       <div 
-        className="relative z-20 max-w-5xl mx-auto w-full flex flex-col items-center gap-4 lg:gap-5 mt-4 lg:mt-auto"
+        className="relative z-20 px-6 max-w-5xl mx-auto w-full flex flex-col items-center gap-3 lg:gap-5 -mt-4 lg:mt-auto"
       >
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
-          className="inline-block px-4 py-1.5 rounded-full border border-white/10 bg-white/5 backdrop-blur-xl text-white text-[8px] sm:text-[10px] font-semibold tracking-[0.2em] uppercase shadow-2xl mb-1 mt-6"
+          className="inline-block px-4 py-1.5 rounded-full border border-white/10 bg-white/5 backdrop-blur-xl text-white text-[8px] sm:text-[10px] font-semibold tracking-[0.2em] uppercase shadow-2xl mb-1 lg:mt-6"
         >
           Now Serving Hyderabad
         </motion.div>

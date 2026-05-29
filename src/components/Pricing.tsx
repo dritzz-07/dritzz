@@ -376,7 +376,7 @@ export default function Pricing({ onSelectPackage }: PricingProps) {
                 onClick={() => onSelectPackage(pkg.id, vehicle)}
                 className={
                   isMonthly
-                    ? "w-full btn-primary py-3 text-[10px]"
+                    ? "w-full btn-primary py-3 text-[10px] animate-diamond-shine"
                     : "w-full btn-secondary py-3 text-[10px]"
                 }
                 style={!isMonthly ? { backgroundColor: "#000000" } : undefined}
@@ -442,7 +442,7 @@ export default function Pricing({ onSelectPackage }: PricingProps) {
             <div className="flex flex-col sm:flex-row items-center justify-center gap-6 w-full">
               <button
                 onClick={() => onSelectPackage("monthly", vehicle)}
-                className="w-full sm:w-auto btn-primary text-[8px] leading-[16.3333px]"
+                className="w-full sm:w-auto btn-primary text-[8px] leading-[16.3333px] animate-diamond-shine"
               >
                 <Gem className="w-4 h-4" />
                 Get Membership

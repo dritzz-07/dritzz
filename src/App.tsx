@@ -200,18 +200,21 @@ function MainApp() {
         </div>
 
         {/* Mobile Bottom Navigation Bar */}
-        <div className="md:hidden fixed bottom-0 left-0 right-0 bg-[#0A0A0C]/90 backdrop-blur-xl border-t border-white/10 z-[100] flex items-center justify-around px-4 shadow-[0_-10px_40px_rgba(0,0,0,0.5)]" style={{ paddingBottom: 'env(safe-area-inset-bottom)', height: 'calc(80px + env(safe-area-inset-bottom))' }}>
+        <div className="md:hidden fixed bottom-0 left-0 right-0 bg-black/80 backdrop-blur-3xl border-t border-white/10 z-[100] flex items-center justify-around px-2 sm:px-6 lg:px-8 shadow-[0_-20px_40px_rgba(0,0,0,0.8)] before:absolute before:inset-x-0 before:top-0 before:h-px before:bg-gradient-to-r before:from-transparent before:via-white/20 before:to-transparent" style={{ paddingBottom: 'env(safe-area-inset-bottom)', height: 'calc(80px + env(safe-area-inset-bottom))' }}>
           <button
             onClick={() => {
               setMobileTab("home");
               window.scrollTo({ top: 0, behavior: "smooth" });
             }}
-            className={`flex flex-col items-center justify-center w-[70px] h-[80px] gap-1.5 transition-colors ${
-              mobileTab === "home" ? "text-blue-400" : "text-gray-400 hover:text-white"
-            }`}
+            className="group relative flex flex-col items-center justify-center w-full max-w-[80px] h-[80px] gap-1.5 transition-all duration-300"
           >
-            <Home className="w-6 h-6" />
-            <span className="text-[10px] uppercase tracking-wider font-semibold">Home</span>
+            {mobileTab === "home" && (
+              <div className="absolute top-0 inset-x-0 h-0.5 bg-white animate-pulse shadow-[0_0_10px_rgba(255,255,255,0.8)] rounded-b-full"></div>
+            )}
+            <div className={`p-2 rounded-xl transition-all duration-300 ${mobileTab === "home" ? "bg-white/10 text-white scale-110 animate-diamond-shine" : "text-gray-400 group-hover:text-white group-hover:bg-white/5"}`}>
+              <Home className={`w-[22px] h-[22px] ${mobileTab === "home" ? "drop-shadow-[0_0_8px_rgba(255,255,255,0.5)]" : ""}`} strokeWidth={mobileTab === "home" ? 2.5 : 2} />
+            </div>
+            <span className={`text-[10px] uppercase font-bold tracking-[0.1em] transition-all duration-300 ${mobileTab === "home" ? "text-white text-diamond-shine" : "text-gray-500"}`}>Home</span>
           </button>
           
           <button
@@ -219,12 +222,15 @@ function MainApp() {
               setMobileTab("services");
               window.scrollTo({ top: 0, behavior: "smooth" });
             }}
-            className={`flex flex-col items-center justify-center w-[70px] h-[80px] gap-1.5 transition-colors ${
-              mobileTab === "services" ? "text-blue-400" : "text-gray-400 hover:text-white"
-            }`}
+            className="group relative flex flex-col items-center justify-center w-full max-w-[80px] h-[80px] gap-1.5 transition-all duration-300"
           >
-            <Sparkles className="w-6 h-6" />
-            <span className="text-[10px] uppercase tracking-wider font-semibold">Services</span>
+             {mobileTab === "services" && (
+              <div className="absolute top-0 inset-x-0 h-0.5 bg-white animate-pulse shadow-[0_0_10px_rgba(255,255,255,0.8)] rounded-b-full"></div>
+            )}
+            <div className={`p-2 rounded-xl transition-all duration-300 ${mobileTab === "services" ? "bg-white/10 text-white scale-110 animate-diamond-shine" : "text-gray-400 group-hover:text-white group-hover:bg-white/5"}`}>
+              <Sparkles className={`w-[22px] h-[22px] ${mobileTab === "services" ? "drop-shadow-[0_0_8px_rgba(255,255,255,0.5)]" : ""}`} strokeWidth={mobileTab === "services" ? 2.5 : 2} />
+            </div>
+            <span className={`text-[10px] uppercase font-bold tracking-[0.1em] transition-all duration-300 ${mobileTab === "services" ? "text-white text-diamond-shine" : "text-gray-500"}`}>Services</span>
           </button>
 
           <button
@@ -232,12 +238,15 @@ function MainApp() {
               setMobileTab("packages");
               window.scrollTo({ top: 0, behavior: "smooth" });
             }}
-            className={`flex flex-col items-center justify-center w-[70px] h-[80px] gap-1.5 transition-colors ${
-              mobileTab === "packages" ? "text-blue-400" : "text-gray-400 hover:text-white"
-            }`}
+            className="group relative flex flex-col items-center justify-center w-full max-w-[80px] h-[80px] gap-1.5 transition-all duration-300"
           >
-            <PackageIcon className="w-6 h-6" />
-            <span className="text-[10px] uppercase tracking-wider font-semibold">Packages</span>
+             {mobileTab === "packages" && (
+              <div className="absolute top-0 inset-x-0 h-0.5 bg-white animate-pulse shadow-[0_0_10px_rgba(255,255,255,0.8)] rounded-b-full"></div>
+            )}
+            <div className={`p-2 rounded-xl transition-all duration-300 ${mobileTab === "packages" ? "bg-white/10 text-white scale-110 animate-diamond-shine" : "text-gray-400 group-hover:text-white group-hover:bg-white/5"}`}>
+              <PackageIcon className={`w-[22px] h-[22px] ${mobileTab === "packages" ? "drop-shadow-[0_0_8px_rgba(255,255,255,0.5)]" : ""}`} strokeWidth={mobileTab === "packages" ? 2.5 : 2} />
+            </div>
+            <span className={`text-[10px] uppercase font-bold tracking-[0.1em] transition-all duration-300 ${mobileTab === "packages" ? "text-white text-diamond-shine" : "text-gray-500"}`}>Packages</span>
           </button>
 
           <button
@@ -245,12 +254,15 @@ function MainApp() {
               setMobileTab("book");
               window.scrollTo({ top: 0, behavior: "smooth" });
             }}
-            className={`flex flex-col items-center justify-center w-[70px] h-[80px] gap-1.5 transition-colors ${
-              mobileTab === "book" ? "text-blue-400" : "text-gray-400 hover:text-white"
-            }`}
+            className="group relative flex flex-col items-center justify-center w-full max-w-[80px] h-[80px] gap-1.5 transition-all duration-300"
           >
-            <Calendar className="w-6 h-6" />
-            <span className="text-[10px] uppercase tracking-wider font-semibold">Book</span>
+             {mobileTab === "book" && (
+              <div className="absolute top-0 inset-x-0 h-0.5 bg-white animate-pulse shadow-[0_0_10px_rgba(255,255,255,0.8)] rounded-b-full"></div>
+            )}
+            <div className={`p-2 rounded-xl transition-all duration-300 ${mobileTab === "book" ? "bg-white/10 text-white scale-110 animate-diamond-shine" : "text-gray-400 group-hover:text-white group-hover:bg-white/5"}`}>
+              <Calendar className={`w-[22px] h-[22px] ${mobileTab === "book" ? "drop-shadow-[0_0_8px_rgba(255,255,255,0.5)]" : ""}`} strokeWidth={mobileTab === "book" ? 2.5 : 2} />
+            </div>
+            <span className={`text-[10px] uppercase font-bold tracking-[0.1em] transition-all duration-300 ${mobileTab === "book" ? "text-white text-diamond-shine" : "text-gray-500"}`}>Book</span>
           </button>
         </div>
 
