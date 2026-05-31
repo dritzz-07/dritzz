@@ -32,7 +32,7 @@ export default function Hero() {
             transition={{ duration: 1.5, ease: "easeOut" }}
             src={BG_IMAGES[currentImageIdx]}
             alt="Premium Car Detailing"
-            className="absolute inset-0 w-full h-full object-contain lg:object-cover object-center"
+            className="absolute inset-0 w-full h-full object-cover object-center"
             referrerPolicy="no-referrer"
             fetchPriority="high"
           />

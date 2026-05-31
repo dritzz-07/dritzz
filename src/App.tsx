@@ -8,6 +8,7 @@ import { useAuth } from "./context/AuthContext";
 import { BookingDetails, VehicleType, Package } from "./types";
 import { PACKAGES } from "./constants";
 import WaterSplashEffects from "./components/WaterSplashEffects";
+import Chatbot from "./components/Chatbot";
 
 const HowItWorks = lazy(() => import("./components/HowItWorks"));
 const Pricing = lazy(() => import("./components/Pricing"));
@@ -294,6 +295,8 @@ function MainApp() {
             amount={amount}
           />
         </Suspense>
+
+        <Chatbot />
       </div>
     </div>
   );
