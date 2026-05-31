@@ -70,6 +70,8 @@ async function startServer() {
   // Chat API endpoint
   app.post("/api/chat", async (req, res) => {
     console.log(`[Chat API] Received request to /api/chat. NODE_ENV: ${process.env.NODE_ENV}`);
+    console.log(`[Chat API] process.env keys: ${Object.keys(process.env).join(', ')}`);
+    console.log(`[Chat API] GEMINI_API_KEY exists? ${!!process.env.GEMINI_API_KEY}`);
     const { GEMINI_API_KEY } = process.env;
     const { messages } = req.body;
 
