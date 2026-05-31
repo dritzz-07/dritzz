@@ -7,7 +7,7 @@ dotenv.config();
 
 async function startServer() {
   const app = express();
-  const PORT = 3000;
+  const PORT = process.env.PORT || 3000;
 
   app.use(express.json());
 
@@ -69,12 +69,15 @@ async function startServer() {
 
   // Chat API endpoint
   app.post("/api/chat", async (req, res) => {
+    console.log(`[Chat API] Received request to /api/chat. NODE_ENV: ${process.env.NODE_ENV}`);
     const { GEMINI_API_KEY } = process.env;
     const { messages } = req.body;
 
     if (!GEMINI_API_KEY) {
-      console.warn("[Chat] GEMINI_API_KEY not configured. Responding with mock.");
+      console.error("[Chat API] 🚨 GEMINI_API_KEY is NOT set in the environment variables!");
       return res.json({ text: "I'm currently running in demo mode without AI capabilities. How can I assist you with Dritzz Car Wash services today?" });
+    } else {
+      console.log(`[Chat API] ✅ GEMINI_API_KEY is available (starts with ${GEMINI_API_KEY.substring(0, 4)}...).`);
     }
 
     try {

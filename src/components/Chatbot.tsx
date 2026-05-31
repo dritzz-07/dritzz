@@ -71,8 +71,8 @@ export default function Chatbot() {
           text: data.text || "I apologize, I am unable to process that request at the moment.",
         },
       ]);
-    } catch (error) {
-      console.error("Chat error:", error);
+    } catch (error: any) {
+      console.error("[PRODUCTION DEBUG] /api/chat fetch failed:", error.message || error);
        setMessages((prev) => [
         ...prev,
         {
