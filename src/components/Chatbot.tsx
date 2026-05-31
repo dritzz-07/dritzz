@@ -58,7 +58,9 @@ export default function Chatbot() {
       });
 
       if (!res.ok) {
-        throw new Error(`Server returned ${res.status}`);
+        const errorText = await res.text();
+        console.error(`[PRODUCTION DEBUG] Server returned ${res.status}: ${errorText}`);
+        throw new Error(`Server returned ${res.status}: ${errorText}`);
       }
 
       const data = await res.json();

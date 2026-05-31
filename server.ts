@@ -109,9 +109,9 @@ async function startServer() {
       });
 
       res.json({ text: response.text });
-    } catch (error) {
-      console.error("[Chat] Error:", error);
-      res.status(500).json({ error: "Failed to generate AI response." });
+    } catch (error: any) {
+      console.error("[Chat] Error generating content:", error);
+      res.status(500).json({ error: "Failed to generate AI response.", details: error.message || String(error) });
     }
   });
 
