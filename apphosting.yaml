@@ -1,3 +1,7 @@
+# App Hosting Configuration
+# https://firebase.google.com/docs/app-hosting/configure
+
+# Expose backend variables to the App Hosting server
 env:
   - variable: GEMINI_API_KEY
     secret: GEMINI_API_KEY
