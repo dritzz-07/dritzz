@@ -83,17 +83,25 @@ async function startServer() {
       
       const systemInstruction = "You are a professional customer support assistant for Dritzz, a premium car wash and detailing service in Hyderabad. You must be polite, professional, concise, and helpful. DO NOT use markdown characters like asterisks (*), underscores (_), or slashes in your responses. Always use plain text formatting. If someone asks about prices or packages, provide the exact package details. We have 3 packages: 1. Basic Care: Hatchback/Sedan/SUV/MUV Rs.449 (Exterior Foam Wash, Tyre Cleaning & Shine, Doorstep Service). 2. Premium Care: Hatchback Rs.799, Sedan Rs.899, SUV/MUV Rs.1099 (Exterior Foam Wash, Interior Vacuum, Dashboard Cleaning, Tyre Shine, Doorstep Service). 3. Monthly Care: Hatchback Rs.2499, Sedan Rs.2799, SUV/MUV Rs.3199 (4 Washes/month, Exterior Wash, Interior Vacuum, Dashboard Cleaning, Tyre Shine, Priority Booking).";
       
-      let contents = [];
+      let formattedContents = [];
       if (messages && messages.length > 0) {
-          contents = messages.map((m: any) => ({
+          const contents = messages.map((m: any) => ({
              role: m.role === 'user' ? 'user' : 'model',
              parts: [{text: m.text}]
           }));
+          
+          let expectedRole = 'user';
+          for (let i = contents.length - 1; i >= 0; i--) {
+              if (contents[i].role === expectedRole) {
+                  formattedContents.unshift(contents[i]);
+                  expectedRole = expectedRole === 'user' ? 'model' : 'user';
+              }
+          }
       }
 
       const response = await ai.models.generateContent({
         model: "gemini-2.5-flash",
-        contents: contents,
+        contents: formattedContents,
         config: { systemInstruction }
       });
 

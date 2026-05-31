@@ -57,6 +57,10 @@ export default function Chatbot() {
         body: JSON.stringify({ messages: chatHistory }),
       });
 
+      if (!res.ok) {
+        throw new Error(`Server returned ${res.status}`);
+      }
+
       const data = await res.json();
       
       setMessages((prev) => [
@@ -91,7 +95,7 @@ export default function Chatbot() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.95 }}
             transition={{ duration: 0.2 }}
-            className="bg-[#0a0a0a] border border-white/10 rounded-2xl shadow-2xl w-[90vw] md:w-[380px] max-w-sm mb-4 overflow-hidden flex flex-col h-[480px] max-h-[70vh] font-sans"
+            className="bg-[#0a0a0a] border border-white/10 rounded-2xl shadow-2xl w-[90vw] md:w-[380px] max-w-sm mb-4 overflow-hidden flex flex-col h-[400px] md:h-[480px] max-h-[60dvh] md:max-h-[70vh] font-sans"
           >
             {/* Header */}
             <div className="bg-[#111111] p-4 border-b border-white/5 flex justify-between items-center backdrop-blur-md">
@@ -100,7 +104,7 @@ export default function Chatbot() {
                   <Sparkles className="w-4 h-4 text-white" />
                 </div>
                 <div>
-                  <h3 className="font-medium text-white tracking-wide text-sm">Dritzz Concierge</h3>
+                  <h3 className="font-medium text-white tracking-wide text-sm">Dritzz Assistant</h3>
                   <div className="flex items-center gap-1.5 mt-0.5">
                     <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span>
                     <p className="text-[11px] text-gray-400 uppercase tracking-wider font-medium">Online</p>
@@ -178,7 +182,7 @@ export default function Chatbot() {
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   placeholder="Type your message..."
-                  className="w-full bg-transparent border-none text-gray-100 text-[14px] font-medium placeholder-gray-500 focus:outline-none focus:ring-0 py-3"
+                  className="w-full bg-transparent border-none text-gray-100 text-[16px] font-medium placeholder-gray-500 focus:outline-none focus:ring-0 py-3"
                 />
                 <button
                   type="submit"
