@@ -61,6 +61,7 @@ export default function Navbar({
   const [splashes, setSplashes] = useState<
     { id: number; x: number; y: number }[]
   >([]);
+  const [scrolled, setScrolled] = useState(false);
   const { user, userProfile, logout } = useAuth();
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const menuRef = React.useRef<HTMLDivElement>(null);
@@ -71,8 +72,15 @@ export default function Navbar({
         setShowProfileMenu(false);
       }
     }
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 20);
+    };
     document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      window.removeEventListener("scroll", handleScroll);
+    };
   }, []);
 
   const displayName =
@@ -94,7 +102,7 @@ export default function Navbar({
   };
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 pt-1 pb-4 md:px-8 lg:px-16 bg-black/80 backdrop-blur-md border-b border-white/5">
+    <nav className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 pt-1 pb-4 md:px-8 lg:px-16 bg-black/30 backdrop-blur-md border-b border-white/5 h-[110px]">
       <a
         href="/"
         className="flex items-center gap-2 decoration-none text-white group"
@@ -114,7 +122,7 @@ export default function Navbar({
           <a
             href="/"
             onClick={handleNavClick}
-            className="text-xs font-medium text-neutral-100 hover:text-white transition-colors decoration-none relative"
+            className="text-[14px] font-medium text-neutral-100 hover:text-white transition-colors decoration-none relative"
           >
             Home
           </a>
@@ -125,7 +133,7 @@ export default function Navbar({
               <a
                 href={`#${item.toLowerCase().replace(/\s+/g, "-")}`}
                 onClick={handleNavClick}
-                className="text-xs font-medium text-neutral-100 hover:text-white transition-colors decoration-none relative"
+                className="text-[14px] font-medium text-neutral-100 hover:text-white transition-colors decoration-none relative"
               >
                 {item}
               </a>
