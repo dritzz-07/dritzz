@@ -104,16 +104,28 @@ async function startServer() {
           }
       }
 
+      console.log(`[Chat API] About to call Gemini. Model: gemini-2.5-flash`);
       const response = await ai.models.generateContent({
         model: "gemini-2.5-flash",
         contents: formattedContents,
         config: { systemInstruction }
       });
 
+      console.log(`[Chat API] Gemini responded successfully`);
       res.json({ text: response.text });
     } catch (error: any) {
       console.error("[Chat] Error generating content:", error);
-      res.status(500).json({ error: "Failed to generate AI response.", details: error.message || String(error) });
+      
+      if (error?.status === 429 || error?.message?.includes("429") || error?.message?.includes("quota")) {
+        return res.status(429).json({ error: "API Quota Exceeded", details: "The free tier limit for the Gemini 2.5 Flash model has been reached. Please wait a moment or upgrade your Google Cloud billing plan."});
+      }
+
+      if (error?.status === 503 || error?.message?.includes("503") || error?.message?.includes("UNAVAILABLE") || error?.message?.includes("high demand")) {
+        return res.status(503).json({ error: "Service Unavailable", details: "The AI model is currently experiencing high demand. Please try again later."});
+      }
+
+      console.error("[Chat] Stack trace:", error.stack);
+      res.status(500).json({ error: "Failed to generate AI response.", details: error.message || String(error), stack: error.stack });
     }
   });
 

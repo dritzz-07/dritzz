@@ -60,7 +60,19 @@ export default function Chatbot() {
       if (!res.ok) {
         const errorText = await res.text();
         console.error(`[PRODUCTION DEBUG] Server returned ${res.status}: ${errorText}`);
-        throw new Error(`Server returned ${res.status}: ${errorText}`);
+        let errorMessage = "I apologize, I am unable to process that request at the moment.";
+        if (res.status === 429) {
+          errorMessage = "It looks like our AI service has reached its request limit for the moment. Please try again in about a minute.";
+        } else if (res.status === 503) {
+          errorMessage = "The AI model is currently experiencing high demand. Please try again in a few moments.";
+        } else {
+          try {
+            const parsed = JSON.parse(errorText);
+            if (parsed.details) errorMessage = `Error: ${parsed.details}`;
+          } catch(e) {}
+        }
+        
+        throw new Error(errorMessage);
       }
 
       const data = await res.json();
@@ -80,7 +92,7 @@ export default function Chatbot() {
         {
           id: (Date.now() + 1).toString(),
           role: "bot",
-          text: "I apologize, our systems are currently unavailable. Please try again later.",
+          text: error.message || "An unexpected error occurred.",
         },
       ]);
     } finally {

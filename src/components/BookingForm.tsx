@@ -56,10 +56,13 @@ const reverseGeocode = async (lat: number, lng: number): Promise<string> => {
           const google = (window as any).google;
           if (!google || !google.maps || !google.maps.Geocoder) {
             fetch(
-              `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`,
+              `https://photon.komoot.io/reverse?lon=${lng}&lat=${lat}`,
             )
               .then((res) => res.json())
-              .then((data) => resolve(data?.display_name || `${lat}, ${lng}`))
+              .then((data) => {
+                const props = data.features?.[0]?.properties;
+                resolve(props ? [props.name, props.street, props.city, props.state].filter(Boolean).join(", ") : `${lat}, ${lng}`)
+              })
               .catch(() => resolve(`${lat}, ${lng}`));
             return;
           }
@@ -71,12 +74,13 @@ const reverseGeocode = async (lat: number, lng: number): Promise<string> => {
                 resolve(results[0].formatted_address);
               } else {
                 fetch(
-                  `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`,
+                  `https://photon.komoot.io/reverse?lon=${lng}&lat=${lat}`,
                 )
                   .then((res) => res.json())
-                  .then((data) =>
-                    resolve(data?.display_name || `${lat}, ${lng}`),
-                  )
+                  .then((data) => {
+                    const props = data.features?.[0]?.properties;
+                    resolve(props ? [props.name, props.street, props.city, props.state].filter(Boolean).join(", ") : `${lat}, ${lng}`)
+                  })
                   .catch(() => resolve(`${lat}, ${lng}`));
               }
             },
@@ -84,10 +88,13 @@ const reverseGeocode = async (lat: number, lng: number): Promise<string> => {
         } catch (e) {
           console.error("Error with Google reverse geocoding", e);
           fetch(
-            `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`,
+            `https://photon.komoot.io/reverse?lon=${lng}&lat=${lat}`,
           )
             .then((res) => res.json())
-            .then((data) => resolve(data?.display_name || `${lat}, ${lng}`))
+            .then((data) => {
+                const props = data.features?.[0]?.properties;
+                resolve(props ? [props.name, props.street, props.city, props.state].filter(Boolean).join(", ") : `${lat}, ${lng}`)
+            })
             .catch(() => resolve(`${lat}, ${lng}`));
         }
       });
@@ -95,11 +102,12 @@ const reverseGeocode = async (lat: number, lng: number): Promise<string> => {
   } else {
     try {
       const res = await fetch(
-        `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`,
+        `https://photon.komoot.io/reverse?lon=${lng}&lat=${lat}`,
       );
       if (res.ok) {
         const data = await res.json();
-        return data?.display_name || `${lat}, ${lng}`;
+        const props = data.features?.[0]?.properties;
+        return props ? [props.name, props.street, props.city, props.state].filter(Boolean).join(", ") : `${lat}, ${lng}`;
       }
     } catch (err) {
       console.error(err);
@@ -220,17 +228,30 @@ export default function BookingForm({
           }
         });
       } else {
-        // High-accuracy OpenStreetMap (Nominatim) search across India
+        // High-accuracy and fast Photon search
         try {
           const queryText = details.address;
           const query = encodeURIComponent(queryText);
           const res = await fetch(
-            `https://nominatim.openstreetmap.org/search?format=json&q=${query}&limit=5&addressdetails=1&countrycodes=in`,
+            `https://photon.komoot.io/api/?q=${query}&limit=5`
           );
           if (res.ok) {
             const data = await res.json();
-            setSuggestions(data || []);
-            setIsDropdownOpen(data && data.length > 0);
+            const formatted = (data.features || []).map((f: any) => {
+              const props = f.properties;
+              return {
+                lat: f.geometry.coordinates[1],
+                lon: f.geometry.coordinates[0],
+                address: {
+                    road: props.street || props.name || "",
+                    suburb: props.district || props.city || "",
+                    city: props.country || "India"
+                },
+                display_name: [props.name, props.street, props.district, props.city, props.state, props.country].filter(Boolean).join(", ")
+              };
+            });
+            setSuggestions(formatted);
+            setIsDropdownOpen(formatted.length > 0);
           }
         } catch (err) {
           console.error("Error fetching address suggestions:", err);
@@ -238,7 +259,7 @@ export default function BookingForm({
           setSearching(false);
         }
       }
-    }, 600);
+    }, 300);
 
     return () => clearTimeout(delayDebounce);
   }, [details.address]);
