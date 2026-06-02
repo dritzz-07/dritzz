@@ -42,6 +42,7 @@ export default function Footer() {
               <Link
                 to="/about-us"
                 className="hover:text-white transition-colors block py-1"
+                style={{ lineHeight: "19px" }}
               >
                 About Us
               </Link>
@@ -50,6 +51,7 @@ export default function Footer() {
               <Link
                 to="/contact-us"
                 className="hover:text-white transition-colors block py-1"
+                style={{ lineHeight: "19px" }}
               >
                 Contact Us
               </Link>
@@ -58,6 +60,7 @@ export default function Footer() {
               <Link
                 to="/privacy-policy"
                 className="hover:text-white transition-colors block py-1"
+                style={{ lineHeight: "19px" }}
               >
                 Privacy Policy
               </Link>
@@ -66,6 +69,7 @@ export default function Footer() {
               <Link
                 to="/terms-and-conditions"
                 className="hover:text-white transition-colors block py-1"
+                style={{ lineHeight: "19px" }}
               >
                 Terms & Conditions
               </Link>
@@ -74,6 +78,7 @@ export default function Footer() {
               <Link
                 to="/refund-policy"
                 className="hover:text-white transition-colors block py-1"
+                style={{ lineHeight: "19px" }}
               >
                 Refund Policy
               </Link>
