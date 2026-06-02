@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 
 export function useAutoScroll(ref: React.RefObject<HTMLDivElement | null>, intervalTime = 2000) {
   useEffect(() => {

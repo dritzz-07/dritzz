@@ -13,7 +13,6 @@ export default function ShowcaseVideo() {
     offset: ["start end", "end start"],
   });
 
-  const scale = useTransform(scrollYProgress, [0, 0.5, 1], [0.8, 1, 0.8]);
   const opacity = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0, 1, 1, 0]);
 
   const togglePlay = () => {
@@ -72,10 +71,10 @@ export default function ShowcaseVideo() {
       </div>
 
       <motion.div
-        style={{ scale, opacity }}
-        className="max-w-6xl mx-auto px-6 w-full relative"
+        style={{ opacity }}
+        className="w-full relative"
       >
-        <div className="relative aspect-video rounded-[2rem] overflow-hidden bg-white/5 border border-white/10 shadow-[0_0_50px_rgba(16,185,129,0.1)] group">
+        <div className="relative aspect-video w-full overflow-hidden bg-black/5 border-y border-white/10 group">
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent z-10 pointer-events-none" />
 
           <video

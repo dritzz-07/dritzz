@@ -79,7 +79,7 @@ export default function Pricing({ onSelectPackage }: PricingProps) {
         </div>
         <h2 className="text-3xl md:text-5xl font-extrabold mb-5 text-white tracking-tight leading-tight">
           Why Pay Every Time? <br className="hidden md:block" />
-          <span className="text-diamond-shine drop-shadow-sm">
+          <span className="text-diamond-shine drop-shadow-sm font-black">
             Go Monthly & Save More.
           </span>
         </h2>
@@ -179,7 +179,7 @@ export default function Pricing({ onSelectPackage }: PricingProps) {
                     }}
                     className="absolute top-8 right-8"
                   >
-                    <div className="absolute hidden md:block inset-0 bg-zinc-500 opacity-10 opacity-20 rounded-full" />
+                    <div className="absolute hidden md:block inset-0 bg-zinc-500 opacity-20 rounded-full" />
                     <Icon className="w-10 h-10 text-white relative z-10 drop-shadow-sm" />
                   </motion.div>
                 )}
@@ -418,7 +418,15 @@ export default function Pricing({ onSelectPackage }: PricingProps) {
                 duration: 2.5,
                 ease: "easeInOut",
               }}
-              className="mb-8 inline-flex items-center gap-2 px-4 py-2 rounded-full border border-white/60 bg-gradient-to-r from-black via-zinc-800 to-black animate-slow-shine shadow-[0_0_20px_rgba(255,255,255,0.15)]"
+              style={{
+                height: "34.7778px",
+                width: "354.333px",
+                marginBottom: "33px",
+                paddingLeft: "21px",
+                marginTop: "-2px",
+                marginRight: "-8px",
+              }}
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-white/60 bg-gradient-to-r from-black via-zinc-800 to-black animate-slow-shine shadow-[0_0_20px_rgba(255,255,255,0.15)]"
             >
               <Sparkles className="w-4 h-4 text-white animate-pulse" />
               <span className="text-xs sm:text-xs font-black uppercase tracking-[0.3em] text-white">
@@ -428,7 +436,7 @@ export default function Pricing({ onSelectPackage }: PricingProps) {
             </motion.div>
 
             <h3 className="text-4xl md:text-6xl font-black mb-6 tracking-tight leading-tight">
-              <span className="text-white drop-shadow-md text-[28px]">One Membership.</span>{" "}
+              <span className="text-white drop-shadow-md text-[49px]">One Membership.</span>{" "}
               <br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-zinc-300 via-zinc-100 to-zinc-400 drop-shadow-sm text-[28px]">
                 Clean Car All Month.
@@ -442,7 +450,7 @@ export default function Pricing({ onSelectPackage }: PricingProps) {
             <div className="flex flex-col sm:flex-row items-center justify-center gap-6 w-full">
               <button
                 onClick={() => onSelectPackage("monthly", vehicle)}
-                className="w-full sm:w-auto btn-primary text-[8px] leading-[16.3333px] animate-diamond-shine"
+                className="w-full sm:w-auto btn-primary text-[13px] leading-[16.3333px] animate-diamond-shine"
               >
                 <Gem className="w-4 h-4" />
                 Get Membership
@@ -453,7 +461,7 @@ export default function Pricing({ onSelectPackage }: PricingProps) {
                     .getElementById("packages")
                     ?.scrollIntoView({ behavior: "smooth" })
                 }
-                className="w-full sm:w-auto btn-secondary text-[10px]"
+                className="w-full sm:w-auto btn-secondary text-[13px]"
               >
                 Schedule Wash
               </button>
