@@ -12,6 +12,8 @@ import {
   User,
 } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
+import { auth } from "../lib/firebase";
+import { RecaptchaVerifier, signInWithPhoneNumber, ConfirmationResult } from 'firebase/auth';
 
 interface AuthOverlayProps {
   isOpen: boolean;
@@ -27,39 +29,104 @@ export default function AuthOverlay({ isOpen, onClose }: AuthOverlayProps) {
   const [name, setName] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("+91");
   const [verificationCode, setVerificationCode] = useState("");
-  const [confirmationResult, setConfirmationResult] = useState<boolean>(false);
+  const [confirmationResult, setConfirmationResult] = useState<ConfirmationResult | null>(null);
 
   useEffect(() => {
     setName("");
     setPhoneNumber("+91");
     setVerificationCode("");
-    setConfirmationResult(false);
+    setConfirmationResult(null);
     setError(null);
+    
+    if (isOpen) {
+      if ((window as any).recaptchaVerifier) {
+        try {
+          (window as any).recaptchaVerifier.clear();
+        } catch {}
+        (window as any).recaptchaVerifier = null;
+      }
+      
+      const timer = setTimeout(() => {
+        if (!document.getElementById("recaptcha-container")) return;
+        (window as any).recaptchaVerifier = new RecaptchaVerifier(
+          auth,
+          "recaptcha-container",
+          {
+            size: "invisible",
+            callback: () => {
+              // reCAPTCHA solved
+            },
+          }
+        );
+      }, 100);
+      
+      return () => clearTimeout(timer);
+    } else {
+      if ((window as any).recaptchaVerifier) {
+        try {
+          (window as any).recaptchaVerifier.clear();
+        } catch {}
+        (window as any).recaptchaVerifier = null;
+      }
+    }
   }, [isOpen]);
 
   const handleGoogleLogin = async () => {
+    if (isLoading) return;
     setIsLoading(true);
     setError(null);
     try {
       await loginWithGoogle();
       onClose();
     } catch (err: any) {
+      console.error(err);
       setError(err.message || "Failed to login with Google");
     } finally {
       setIsLoading(false);
     }
   };
 
-  const handleSendCode = async (e: React.FormEvent) => {
+  const handlePhoneLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     if (isLoading) return;
     setIsLoading(true);
     setError(null);
     try {
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      setConfirmationResult(true);
+      const appVerifier = (window as any).recaptchaVerifier;
+      if (!appVerifier) throw new Error("reCAPTCHA not initialized. Please close and re-open.");
+      
+      const digitsOnly = phoneNumber.replace(/\D/g, "");
+      const formattedPhone = phoneNumber.startsWith("+")
+        ? "+" + digitsOnly
+        : `+91${digitsOnly}`;
+        
+      const confirmation = await signInWithPhoneNumber(
+        auth,
+        formattedPhone,
+        appVerifier
+      );
+      setConfirmationResult(confirmation);
     } catch (err: any) {
-      setError("Failed to send verification code.");
+      console.error(err);
+      setError(err.message || "Failed to send verification code.");
+      if ((window as any).recaptchaVerifier) {
+        try {
+          (window as any).recaptchaVerifier.clear();
+        } catch {}
+        (window as any).recaptchaVerifier = null;
+        
+        setTimeout(() => {
+          if (!document.getElementById("recaptcha-container")) return;
+          (window as any).recaptchaVerifier = new RecaptchaVerifier(
+            auth,
+            "recaptcha-container",
+            {
+              size: "invisible",
+              callback: () => {},
+            }
+          );
+        }, 100);
+      }
     } finally {
       setIsLoading(false);
     }
@@ -67,18 +134,17 @@ export default function AuthOverlay({ isOpen, onClose }: AuthOverlayProps) {
 
   const handleVerifyCode = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!confirmationResult) return;
+    if (!confirmationResult || isLoading) return;
     setIsLoading(true);
     setError(null);
     try {
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
       if (name.trim()) {
         localStorage.setItem("authFullName", name.trim());
       }
-      
+      await confirmationResult.confirm(verificationCode);
       onClose();
     } catch (err: any) {
+      console.error(err);
       setError("Invalid verification code. Please try again.");
     } finally {
       setIsLoading(false);
@@ -143,6 +209,7 @@ export default function AuthOverlay({ isOpen, onClose }: AuthOverlayProps) {
 
               <div className="space-y-5">
                 <button
+                  type="button"
                   onClick={handleGoogleLogin}
                   disabled={isLoading}
                   className="w-full h-14 btn-primary !mt-4 animate-diamond-shine"
@@ -165,11 +232,17 @@ export default function AuthOverlay({ isOpen, onClose }: AuthOverlayProps) {
                 </div>
 
                 <form
-                  onSubmit={
-                    confirmationResult ? handleVerifyCode : handleSendCode
-                  }
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    if (confirmationResult) {
+                      handleVerifyCode(e);
+                    } else {
+                      handlePhoneLogin(e);
+                    }
+                  }}
                   className="space-y-4"
                 >
+                  <div id="recaptcha-container"></div>
                   {!confirmationResult ? (
                     <>
                       <div className="relative group">
@@ -237,7 +310,7 @@ export default function AuthOverlay({ isOpen, onClose }: AuthOverlayProps) {
                         <button
                           type="button"
                           onClick={() => {
-                            setConfirmationResult(false);
+                            setConfirmationResult(null);
                             setVerificationCode("");
                             setError(null);
                           }}
@@ -255,7 +328,7 @@ export default function AuthOverlay({ isOpen, onClose }: AuthOverlayProps) {
             <div className="bg-black/20 p-6 text-center border-t border-zinc-900/30 flex items-center justify-center gap-2">
               <Sparkles className="w-3 h-3 text-white/80" />
               <span className="text-[11px] uppercase tracking-[0.2em] font-black text-white/80">
-                Encrypted & Secure
+                Encrypted & Secure with Firebase
               </span>
             </div>
           </motion.div>
