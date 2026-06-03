@@ -3,10 +3,8 @@ import { Star, Droplets, Zap } from "lucide-react";
 import { useRef, useState, useEffect } from "react";
 
 const BG_IMAGES = [
-  "/slide_7.png",
-  "/slide_3.jpg",
-  "/slide_6.jpg",
-  "/slide_5.jpg",
+  "/hero-image-1.png",
+  "/hero-image-2.png",
 ];
 
 export default function Hero() {
@@ -20,32 +18,28 @@ export default function Hero() {
   }, []);
 
   return (
-    <section className="relative min-h-[100dvh] w-full flex flex-col lg:justify-between overflow-hidden bg-[#0a0a0a] text-center pt-[70px] lg:pt-[200px] pb-8 md:pb-[8dvh]">
-      {/* Background Image below header */}
-      <div className="relative w-full h-[35vh] lg:absolute lg:inset-0 lg:h-full pointer-events-none z-0 mt-4 lg:mt-0">
+    <section className="relative w-full flex flex-col bg-[#0a0a0a] text-center pt-[55px]">
+      {/* Slideshow Area */}
+      <div className="relative w-full max-w-[1918px] mx-auto aspect-[1918/636] overflow-hidden pointer-events-none z-0">
         <AnimatePresence mode="popLayout">
           <motion.img
             key={currentImageIdx}
-            initial={{ opacity: 0, scale: 1.05 }}
+            initial={{ opacity: 0, scale: 1 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 1.5, ease: "easeOut" }}
             src={BG_IMAGES[currentImageIdx]}
             alt="Premium Car Detailing"
-            className="absolute inset-0 w-full h-full object-cover object-center"
+            className="absolute inset-0 w-full h-full object-cover lg:object-[100%_100%] object-center"
             referrerPolicy="no-referrer"
             fetchPriority="high"
           />
         </AnimatePresence>
-
-        {/* Gradient Overlay for Text Readability */}
-        <div className="absolute inset-0 bg-black/10 z-10 lg:block hidden" />
-        <div className="absolute inset-x-0 bottom-0 h-[15vh] lg:h-[70vh] bg-gradient-to-t from-[#0a0a0a] via-[#0a0a0a]/80 to-transparent z-10 pointer-events-none" />
       </div>
 
-      {/* Text Section Overlay */}
+      {/* Text Section Below */}
       <div 
-        className="relative z-20 px-6 max-w-5xl mx-auto w-full flex flex-col items-center gap-3 lg:gap-5 -mt-4 lg:mt-auto"
+        className="relative z-20 px-6 max-w-5xl mx-auto w-full flex flex-col items-center justify-center flex-1 gap-3 lg:gap-4 py-10 lg:py-16"
       >
         <motion.div
           initial={{ opacity: 0, y: 20 }}
