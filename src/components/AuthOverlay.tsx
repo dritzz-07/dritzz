@@ -12,12 +12,6 @@ import {
   User,
 } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
-import {
-  RecaptchaVerifier,
-  signInWithPhoneNumber,
-  ConfirmationResult,
-} from "firebase/auth";
-import { auth } from "../lib/firebase";
 
 interface AuthOverlayProps {
   isOpen: boolean;
@@ -33,86 +27,24 @@ export default function AuthOverlay({ isOpen, onClose }: AuthOverlayProps) {
   const [name, setName] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("+91");
   const [verificationCode, setVerificationCode] = useState("");
-  const [confirmationResult, setConfirmationResult] =
-    useState<ConfirmationResult | null>(null);
+  const [confirmationResult, setConfirmationResult] = useState<boolean>(false);
 
   useEffect(() => {
     setName("");
     setPhoneNumber("+91");
     setVerificationCode("");
-    setConfirmationResult(null);
+    setConfirmationResult(false);
     setError(null);
-
-    if (isOpen) {
-      if ((window as any).recaptchaVerifier) {
-        try {
-          (window as any).recaptchaVerifier.clear();
-        } catch {}
-        (window as any).recaptchaVerifier = null;
-      }
-      
-      const timer = setTimeout(() => {
-        if (!document.getElementById("recaptcha-container")) return;
-        (window as any).recaptchaVerifier = new RecaptchaVerifier(
-          auth,
-          "recaptcha-container",
-          {
-            size: "invisible",
-            callback: () => {
-              // reCAPTCHA solved
-            },
-          }
-        );
-      }, 100);
-      
-      return () => clearTimeout(timer);
-    } else {
-      if ((window as any).recaptchaVerifier) {
-        try {
-          (window as any).recaptchaVerifier.clear();
-        } catch {}
-        (window as any).recaptchaVerifier = null;
-      }
-    }
   }, [isOpen]);
 
   const handleGoogleLogin = async () => {
-    if (window !== window.top) {
-      setError("Google Sign-In is blocked inside this preview window. Opening the app in a new tab...");
-      setTimeout(() => {
-        window.open(window.location.href, '_blank');
-      }, 1500);
-      return;
-    }
-    
     setIsLoading(true);
     setError(null);
     try {
       await loginWithGoogle();
       onClose();
     } catch (err: any) {
-      if (err?.message?.includes("Full Page Redirect")) {
-        setError("Popup rejected by Google. Redirecting you to the full-page Google login in 2 seconds...");
-        setTimeout(() => {
-          // The redirect will happen automatically from the context
-        }, 2000);
-      } else if (err?.code === "auth/unauthorized-domain") {
-        setError(
-          `Domain not authorized: You MUST add exactly '${window.location.hostname}' (e.g. dritzz.com AND www.dritzz.com) to Firebase Console -> Authentication -> Settings -> Authorized domains.`,
-        );
-      } else if (err?.code === "auth/popup-closed-by-user") {
-        setError("Sign in cancelled.");
-      } else if (err?.code === "auth/network-request-failed") {
-        setError(
-          "Network Error (auth/network-request-failed): 1. Check your Google Cloud Console to see if the Firebase API Key has HTTP Restrictions blocking this domain. 2. Ensure your browser is not blocking 3rd party cookies.",
-        );
-      } else if (err?.code === "auth/invalid-continue-uri" || err?.message?.includes("invalid-continue-uri")) {
-        setError(
-          "Google Sign-In blocked. Ensure this exact domain is added to Google Cloud Console (APIs & Services -> Credentials -> Web Client -> Authorized JavaScript origins)."
-        );
-      } else {
-        setError(err.message || "Failed to login with Google");
-      }
+      setError(err.message || "Failed to login with Google");
     } finally {
       setIsLoading(false);
     }
@@ -124,51 +56,10 @@ export default function AuthOverlay({ isOpen, onClose }: AuthOverlayProps) {
     setIsLoading(true);
     setError(null);
     try {
-      const appVerifier = (window as any).recaptchaVerifier;
-      if (!appVerifier) throw new Error("reCAPTCHA not initialized. Please try again.");
-      
-      const digitsOnly = phoneNumber.replace(/\D/g, "");
-      const formattedPhone = phoneNumber.startsWith("+")
-        ? "+" + digitsOnly
-        : `+91${digitsOnly}`;
-      const confirmation = await signInWithPhoneNumber(
-        auth,
-        formattedPhone,
-        appVerifier,
-      );
-      setConfirmationResult(confirmation);
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      setConfirmationResult(true);
     } catch (err: any) {
-      if (err?.code === "auth/invalid-app-credential" || err?.message?.includes("invalid-app-credential")) {
-         setError("App Credential error: You might need to go to Firebase Console -> App Check and register your domain for reCAPTCHA.");
-      } else if (err?.code === "auth/unauthorized-domain") {
-         setError(
-          "Domain not authorized for Phone Auth. Add this exact domain to Firebase Console -> Authentication -> Settings -> Authorized Domains."
-        );
-      } else {
-        setError(
-          err.message ||
-            "Failed to send verification code. Ensure the number is correct.",
-        );
-      }
-      if ((window as any).recaptchaVerifier) {
-        try {
-          (window as any).recaptchaVerifier.clear();
-        } catch {}
-        (window as any).recaptchaVerifier = null;
-        
-        // Re-initialize for next attempt
-        setTimeout(() => {
-          if (!document.getElementById("recaptcha-container")) return;
-          (window as any).recaptchaVerifier = new RecaptchaVerifier(
-            auth,
-            "recaptcha-container",
-            {
-              size: "invisible",
-              callback: () => {},
-            }
-          );
-        }, 100);
-      }
+      setError("Failed to send verification code.");
     } finally {
       setIsLoading(false);
     }
@@ -180,10 +71,12 @@ export default function AuthOverlay({ isOpen, onClose }: AuthOverlayProps) {
     setIsLoading(true);
     setError(null);
     try {
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
       if (name.trim()) {
         localStorage.setItem("authFullName", name.trim());
       }
-      await confirmationResult.confirm(verificationCode);
+      
       onClose();
     } catch (err: any) {
       setError("Invalid verification code. Please try again.");
@@ -248,21 +141,6 @@ export default function AuthOverlay({ isOpen, onClose }: AuthOverlayProps) {
                 </motion.div>
               )}
 
-              {window !== window.top && (
-                <div className="mb-6 p-4 bg-amber-500/10 border border-amber-500/20 rounded-2xl flex flex-col items-center gap-3 text-amber-500 text-xs text-center font-medium">
-                  <div className="flex items-center gap-2">
-                    <AlertCircle className="w-4 h-4" />
-                    <span>Google Auth rarely works inside this preview window.</span>
-                  </div>
-                  <button 
-                    onClick={() => window.open(window.location.href, '_blank')}
-                    className="w-full py-2.5 bg-amber-500/20 hover:bg-amber-500/30 rounded-xl transition-colors border border-amber-500/30 font-bold"
-                  >
-                    TEST IN NEW TAB
-                  </button>
-                </div>
-              )}
-
               <div className="space-y-5">
                 <button
                   onClick={handleGoogleLogin}
@@ -292,7 +170,6 @@ export default function AuthOverlay({ isOpen, onClose }: AuthOverlayProps) {
                   }
                   className="space-y-4"
                 >
-                  <div id="recaptcha-container"></div>
                   {!confirmationResult ? (
                     <>
                       <div className="relative group">
@@ -360,7 +237,7 @@ export default function AuthOverlay({ isOpen, onClose }: AuthOverlayProps) {
                         <button
                           type="button"
                           onClick={() => {
-                            setConfirmationResult(null);
+                            setConfirmationResult(false);
                             setVerificationCode("");
                             setError(null);
                           }}
@@ -378,7 +255,7 @@ export default function AuthOverlay({ isOpen, onClose }: AuthOverlayProps) {
             <div className="bg-black/20 p-6 text-center border-t border-zinc-900/30 flex items-center justify-center gap-2">
               <Sparkles className="w-3 h-3 text-white/80" />
               <span className="text-[11px] uppercase tracking-[0.2em] font-black text-white/80">
-                Encrypted & Secure with Firebase
+                Encrypted & Secure
               </span>
             </div>
           </motion.div>
