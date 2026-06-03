@@ -52,11 +52,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     
     getRedirectResult(auth).catch((error) => {
       console.error("Error from redirect result:", error);
-      if (error?.code === 'auth/invalid-continue-uri' || error?.message?.includes('invalid-continue-uri')) {
-        alert("Google Error (invalid-continue-uri): Your Firebase Authorized Domains are definitely not updated yet, or you missed a setting. Please check your Firebase Console again, ensure it is the 'dritzz-83eb1' project, and wait 30 minutes.");
-      } else {
-        alert("Login Error: " + error.message);
-      }
     });
 
     const unsubscribeAuth = onAuthStateChanged(auth, async (currentUser) => {

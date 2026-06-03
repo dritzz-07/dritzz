@@ -42,6 +42,38 @@ export default function AuthOverlay({ isOpen, onClose }: AuthOverlayProps) {
     setVerificationCode("");
     setConfirmationResult(null);
     setError(null);
+
+    if (isOpen) {
+      if ((window as any).recaptchaVerifier) {
+        try {
+          (window as any).recaptchaVerifier.clear();
+        } catch {}
+        (window as any).recaptchaVerifier = null;
+      }
+      
+      const timer = setTimeout(() => {
+        if (!document.getElementById("recaptcha-container")) return;
+        (window as any).recaptchaVerifier = new RecaptchaVerifier(
+          auth,
+          "recaptcha-container",
+          {
+            size: "invisible",
+            callback: () => {
+              // reCAPTCHA solved
+            },
+          }
+        );
+      }, 100);
+      
+      return () => clearTimeout(timer);
+    } else {
+      if ((window as any).recaptchaVerifier) {
+        try {
+          (window as any).recaptchaVerifier.clear();
+        } catch {}
+        (window as any).recaptchaVerifier = null;
+      }
+    }
   }, [isOpen]);
 
   const handleGoogleLogin = async () => {
@@ -66,17 +98,17 @@ export default function AuthOverlay({ isOpen, onClose }: AuthOverlayProps) {
         }, 2000);
       } else if (err?.code === "auth/unauthorized-domain") {
         setError(
-          `Domain not authorized: You MUST add exactly '${window.location.hostname}' to Firebase Console -> Authentication -> Settings -> Authorized domains. (Wait 5-10m for it to propagate)`,
+          `Domain not authorized: You MUST add exactly '${window.location.hostname}' (e.g. dritzz.com AND www.dritzz.com) to Firebase Console -> Authentication -> Settings -> Authorized domains.`,
         );
       } else if (err?.code === "auth/popup-closed-by-user") {
         setError("Sign in cancelled.");
       } else if (err?.code === "auth/network-request-failed") {
         setError(
-          "Network Error (auth/network-request-failed): 1. Check your Google Cloud Console to see if the Firebase API Key has HTTP Restrictions blocking this domain. 2. Ensure your browser is not blocking 3rd party cookies (Brave, Safari, Incognito do this by default).",
+          "Network Error (auth/network-request-failed): 1. Check your Google Cloud Console to see if the Firebase API Key has HTTP Restrictions blocking this domain. 2. Ensure your browser is not blocking 3rd party cookies.",
         );
       } else if (err?.code === "auth/invalid-continue-uri" || err?.message?.includes("invalid-continue-uri")) {
         setError(
-          `Google Auth Error ('invalid-continue-uri').\n\n1. Go to Firebase Console -> Authentication -> Settings -> Authorized domains.\n2. Add EXACTLY this domain (without https:// and no trailing slash): ${window.location.hostname}\n\nFirebase is blocking this specific preview URL from being used as a sign-in origin.`
+          "Google Sign-In blocked. Ensure this exact domain is added to Google Cloud Console (APIs & Services -> Credentials -> Web Client -> Authorized JavaScript origins)."
         );
       } else {
         setError(err.message || "Failed to login with Google");
@@ -86,28 +118,15 @@ export default function AuthOverlay({ isOpen, onClose }: AuthOverlayProps) {
     }
   };
 
-  const setupRecaptcha = () => {
-    if (!(window as any).recaptchaVerifier) {
-      (window as any).recaptchaVerifier = new RecaptchaVerifier(
-        auth,
-        "recaptcha-container",
-        {
-          size: "invisible",
-          callback: () => {
-            // reCAPTCHA solved
-          },
-        },
-      );
-    }
-  };
-
   const handleSendCode = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (isLoading) return;
     setIsLoading(true);
     setError(null);
     try {
-      setupRecaptcha();
       const appVerifier = (window as any).recaptchaVerifier;
+      if (!appVerifier) throw new Error("reCAPTCHA not initialized. Please try again.");
+      
       const digitsOnly = phoneNumber.replace(/\D/g, "");
       const formattedPhone = phoneNumber.startsWith("+")
         ? "+" + digitsOnly
@@ -122,7 +141,9 @@ export default function AuthOverlay({ isOpen, onClose }: AuthOverlayProps) {
       if (err?.code === "auth/invalid-app-credential" || err?.message?.includes("invalid-app-credential")) {
          setError("App Credential error: You might need to go to Firebase Console -> App Check and register your domain for reCAPTCHA.");
       } else if (err?.code === "auth/unauthorized-domain") {
-         setError("Domain not authorized for Phone Auth. Add this domain to Firebase Authentication Authorized Domains.");
+         setError(
+          "Domain not authorized for Phone Auth. Add this exact domain to Firebase Console -> Authentication -> Settings -> Authorized Domains."
+        );
       } else {
         setError(
           err.message ||
@@ -130,8 +151,23 @@ export default function AuthOverlay({ isOpen, onClose }: AuthOverlayProps) {
         );
       }
       if ((window as any).recaptchaVerifier) {
-        (window as any).recaptchaVerifier.clear();
+        try {
+          (window as any).recaptchaVerifier.clear();
+        } catch {}
         (window as any).recaptchaVerifier = null;
+        
+        // Re-initialize for next attempt
+        setTimeout(() => {
+          if (!document.getElementById("recaptcha-container")) return;
+          (window as any).recaptchaVerifier = new RecaptchaVerifier(
+            auth,
+            "recaptcha-container",
+            {
+              size: "invisible",
+              callback: () => {},
+            }
+          );
+        }, 100);
       }
     } finally {
       setIsLoading(false);
