@@ -8,7 +8,7 @@ import {
   ShieldCheck,
   CreditCard,
 } from "lucide-react";
-import generatedImage from "../assets/images/regenerated_image_1779745573278.png";
+import generatedImage from "../assets/images/regenerated_image_1780476582362.png";
 import { useAutoScroll } from "../hooks/useAutoScroll";
 
 const reasons = [

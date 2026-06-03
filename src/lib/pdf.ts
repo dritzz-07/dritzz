@@ -1,7 +1,7 @@
 import { jsPDF } from 'jspdf';
 import { BookingDetails, Package } from '../types';
 
-import logoImage from '../assets/images/regenerated_image_1779231339878.png';
+import logoImage from "../assets/images/regenerated_image_1780476796220.png";
 
 export const generateInvoice = async (details: BookingDetails, pkg: Package, amount: number, paymentMethod: string, refId: string, status: string = 'completed') => {
   const doc = new jsPDF();

@@ -1,6 +1,6 @@
 import { Phone, Mail, Globe, MessageCircle } from "lucide-react";
 import { Link } from "react-router-dom";
-import logoImage from "../assets/images/regenerated_image_1779294281601.png";
+import logoImage from "../assets/images/regenerated_image_1780476806245.png";
 
 export default function Footer() {
   return (
