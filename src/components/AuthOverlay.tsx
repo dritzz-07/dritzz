@@ -76,11 +76,26 @@ export default function AuthOverlay({ isOpen, onClose }: AuthOverlayProps) {
     setIsLoading(true);
     setError(null);
     try {
+      if (window !== window.top) {
+        setError("Google Sign-In is blocked inside this preview window. Opening the app in a new tab...");
+        setTimeout(() => {
+          window.open(window.location.href, "_blank");
+        }, 1500);
+        return;
+      }
       await loginWithGoogle();
       onClose();
     } catch (err: any) {
       console.error(err);
-      setError(err.message || "Failed to login with Google");
+      if (err?.code === "auth/invalid-continue-uri" || err?.message?.includes("invalid-continue-uri") || err?.code === "auth/unauthorized-domain") {
+        if (window.location.hostname.includes('run.app')) {
+           setError(`Authentication blocked in preview environment. Google does not recognize this temporary '.run.app' domain.\n\nSince you have already authorized 'dritzz.com', please DEPLOY this app from AI Studio, or EXPORT it to test Google Sign-In. It will not work in this preview environment without adding the temporary URL to Google Cloud.`);
+        } else {
+           setError(err.message || "Domain not authorized in Google Cloud / Firebase console.");
+        }
+      } else {
+        setError(err.message || "Failed to login with Google");
+      }
     } finally {
       setIsLoading(false);
     }
@@ -108,7 +123,18 @@ export default function AuthOverlay({ isOpen, onClose }: AuthOverlayProps) {
       setConfirmationResult(confirmation);
     } catch (err: any) {
       console.error(err);
-      setError(err.message || "Failed to send verification code.");
+      if (err?.code === "auth/unauthorized-domain") {
+         if (window.location.hostname.includes('run.app')) {
+           setError(`Phone Auth blocked in preview environment. Firebase does not recognize this temporary '.run.app' domain.\n\nSince you have already authorized 'dritzz.com', please DEPLOY this app from AI Studio, or EXPORT it to test phone login.`);
+         } else {
+           setError("Domain not authorized in Firebase Console.");
+         }
+      } else {
+        setError(
+          err.message ||
+            "Failed to send verification code. Ensure the number is correct.",
+        );
+      }
       if ((window as any).recaptchaVerifier) {
         try {
           (window as any).recaptchaVerifier.clear();
@@ -205,6 +231,21 @@ export default function AuthOverlay({ isOpen, onClose }: AuthOverlayProps) {
                   <AlertCircle className="w-4 h-4 min-w-[16px]" />
                   <span className="break-words whitespace-pre-line">{error}</span>
                 </motion.div>
+              )}
+
+              {window !== window.top && (
+                <div className="mb-6 p-4 bg-amber-500/10 border border-amber-500/20 rounded-2xl flex flex-col items-center gap-3 text-amber-500 text-xs text-center font-medium">
+                  <div className="flex items-center gap-2">
+                    <AlertCircle className="w-4 h-4" />
+                    <span>Google Auth rarely works inside this preview window.</span>
+                  </div>
+                  <button 
+                    onClick={() => window.open(window.location.href, '_blank')}
+                    className="w-full py-2.5 bg-amber-500/20 hover:bg-amber-500/30 rounded-xl transition-colors border border-amber-500/30 font-bold"
+                  >
+                    TEST IN NEW TAB
+                  </button>
+                </div>
               )}
 
               <div className="space-y-5">
