@@ -30,33 +30,33 @@ export default function TermsConditions() {
           <h1 className="text-2xl md:text-3xl font-light mb-12 uppercase tracking-[0.2em] text-white/90">Terms & Conditions</h1>
           <div className="space-y-6 text-neutral-400 font-light text-sm md:text-base leading-relaxed">
             <div>
-              <h2 className="text-xs font-semibold text-white/80 uppercase tracking-widest mt-12 mb-4">Booking Terms</h2>
-              <p>Creating a booking confirms a request for service. Confirmation is subject to slot availability in your area.</p>
+              <h2 className="text-xs font-semibold text-white/80 uppercase tracking-widest mt-12 mb-4">Service Usage Terms</h2>
+              <p>By accessing and using Dritzz properties, you agree to comply with all operational policies and legal constraints. The platform is designed for individuals seeking premium vehicle detailing and washing services.</p>
             </div>
             
             <div>
-              <h2 className="text-xs font-semibold text-white/80 uppercase tracking-widest mt-10 mb-4">Vehicle Accessibility Requirements</h2>
-              <p>We require reasonable access and sufficient space around your vehicle to efficiently enact our cleaning services. In accessible spaces without utility blockages, optimal services are guaranteed.</p>
+              <h2 className="text-xs font-semibold text-white/80 uppercase tracking-widest mt-10 mb-4">Booking Rules</h2>
+              <p>Creating a booking confirms a request for service. Confirmation is subject to slot availability in your area. We require reasonable access and sufficient space around your vehicle to efficiently enact our cleaning services.</p>
             </div>
             
             <div>
-              <h2 className="text-xs font-semibold text-white/80 uppercase tracking-widest mt-10 mb-4">Payment Rules</h2>
-              <p>Payments are completed via designated online channels integrated into our platform. Cash payments are subject to service executive verification and company protocols.</p>
+              <h2 className="text-xs font-semibold text-white/80 uppercase tracking-widest mt-10 mb-4">Cancellation and Refund Policy</h2>
+              <p>Bookings may be cancelled or rescheduled up to 4 hours in advance at no penalty. Cancellations made within the 4-hour window may be subject to a nominal fee. Approved refunds are processed back to the original method of payment within 5-7 business days.</p>
             </div>
             
             <div>
-              <h2 className="text-xs font-semibold text-white/80 uppercase tracking-widest mt-10 mb-4">Service Scheduling Conditions</h2>
-              <p>Appointments might be impacted by unforeseen traffic density or extreme weather parameters. You will be promptly informed should rescheduling map to these elements.</p>
+              <h2 className="text-xs font-semibold text-white/80 uppercase tracking-widest mt-10 mb-4">User Responsibilities</h2>
+              <p>Customers must secure their private valuables from their vehicles prior to our team's arrival. Users are also responsible for guaranteeing the service site is accessible as scheduled to avoid delays or service skips.</p>
             </div>
             
             <div>
-              <h2 className="text-xs font-semibold text-white/80 uppercase tracking-widest mt-10 mb-4">Liability Limitations</h2>
-              <p>While our teams practice the utmost diligence, Dritzz limits liability regarding pre-existing vehicle defects, dents, or pre-worn materials exacerbated during a normal wash cycle.</p>
+              <h2 className="text-xs font-semibold text-white/80 uppercase tracking-widest mt-10 mb-4">Limitation of Liability</h2>
+              <p>While our teams practice the utmost diligence, Dritzz limits liability regarding pre-existing vehicle defects, dents, or pre-worn materials exacerbated during a normal wash cycle. Our liability is restricted to the cost of the booked service.</p>
             </div>
             
             <div>
-              <h2 className="text-xs font-semibold text-white/80 uppercase tracking-widest mt-10 mb-4">Membership/Subscription Terms</h2>
-              <p>Monthly subscriptions entail recurring scheduled services spanning the active billing month. Members must ensure vehicle availability as per their assigned cadence.</p>
+              <h2 className="text-xs font-semibold text-white/80 uppercase tracking-widest mt-10 mb-4">Contact Us</h2>
+              <p>For any disputes, legal notices, or general inquiries regarding these terms, contact us immediately at: <a href="mailto:support@dritzz.com" className="text-white hover:underline">support@dritzz.com</a></p>
             </div>
           </div>
         </main>
