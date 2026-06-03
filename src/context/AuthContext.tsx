@@ -7,7 +7,8 @@ import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
   updateProfile,
-  sendPasswordResetEmail
+  sendPasswordResetEmail,
+  getRedirectResult
 } from 'firebase/auth';
 import { doc, getDoc, setDoc, serverTimestamp, onSnapshot } from 'firebase/firestore';
 import { auth, db, googleProvider } from '../lib/firebase';
@@ -49,6 +50,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     let unsubscribeProfile: (() => void) | null = null;
     
+    getRedirectResult(auth).catch((error) => {
+      console.error("Error from redirect result:", error);
+      if (error?.code === 'auth/invalid-continue-uri' || error?.message?.includes('invalid-continue-uri')) {
+        alert("Google Error (invalid-continue-uri): Your Firebase Authorized Domains are definitely not updated yet, or you missed a setting. Please check your Firebase Console again, ensure it is the 'dritzz-83eb1' project, and wait 30 minutes.");
+      } else {
+        alert("Login Error: " + error.message);
+      }
+    });
+
     const unsubscribeAuth = onAuthStateChanged(auth, async (currentUser) => {
       setUser(currentUser);
       
@@ -125,8 +135,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const loginWithGoogle = async () => {
     try {
       await signInWithPopup(auth, googleProvider);
-    } catch (error) {
-      console.error('Error logging in with Google:', error);
+    } catch (error: any) {
+      console.error('Error logging in with Google via popup:', error);
+      if (error?.code === 'auth/invalid-continue-uri' || error?.message?.includes('invalid-continue-uri') || error?.code === 'auth/unauthorized-domain') {
+        console.log('Attempting fallback to signInWithRedirect...');
+        import('firebase/auth').then(({ signInWithRedirect }) => {
+          signInWithRedirect(auth, googleProvider).catch((err) => {
+            console.error('Redirect failed too:', err);
+          });
+        });
+        throw new Error("Popup blocked or origin rejected. Falling back to Full Page Redirect. Please wait...");
+      }
       throw error;
     }
   };

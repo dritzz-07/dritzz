@@ -45,21 +45,38 @@ export default function AuthOverlay({ isOpen, onClose }: AuthOverlayProps) {
   }, [isOpen]);
 
   const handleGoogleLogin = async () => {
+    if (window !== window.top) {
+      setError("Google Sign-In is blocked inside this preview window. Opening the app in a new tab...");
+      setTimeout(() => {
+        window.open(window.location.href, '_blank');
+      }, 1500);
+      return;
+    }
+    
     setIsLoading(true);
     setError(null);
     try {
       await loginWithGoogle();
       onClose();
     } catch (err: any) {
-      if (err?.code === "auth/unauthorized-domain") {
+      if (err?.message?.includes("Full Page Redirect")) {
+        setError("Popup rejected by Google. Redirecting you to the full-page Google login in 2 seconds...");
+        setTimeout(() => {
+          // The redirect will happen automatically from the context
+        }, 2000);
+      } else if (err?.code === "auth/unauthorized-domain") {
         setError(
-          `This domain (${window.location.hostname}) is not authorized for Google OAuth inside your Firebase project. Please add it in the Firebase Console under Authentication > Settings > Authorized domains.`,
+          `Domain not authorized: You MUST add exactly '${window.location.hostname}' to Firebase Console -> Authentication -> Settings -> Authorized domains. (Wait 5-10m for it to propagate)`,
         );
       } else if (err?.code === "auth/popup-closed-by-user") {
         setError("Sign in cancelled.");
       } else if (err?.code === "auth/network-request-failed") {
         setError(
-          "Network request failed. If you are using a preview environment in an iframe or an ad-blocker, try opening the app in a new tab.",
+          "Network Error (auth/network-request-failed): 1. Check your Google Cloud Console to see if the Firebase API Key has HTTP Restrictions blocking this domain. 2. Ensure your browser is not blocking 3rd party cookies (Brave, Safari, Incognito do this by default).",
+        );
+      } else if (err?.code === "auth/invalid-continue-uri" || err?.message?.includes("invalid-continue-uri")) {
+        setError(
+          `Google Auth Error ('invalid-continue-uri').\n\n1. Go to Firebase Console -> Authentication -> Settings -> Authorized domains.\n2. Add EXACTLY this domain (without https:// and no trailing slash): ${window.location.hostname}\n\nFirebase is blocking this specific preview URL from being used as a sign-in origin.`
         );
       } else {
         setError(err.message || "Failed to login with Google");
@@ -102,10 +119,16 @@ export default function AuthOverlay({ isOpen, onClose }: AuthOverlayProps) {
       );
       setConfirmationResult(confirmation);
     } catch (err: any) {
-      setError(
-        err.message ||
-          "Failed to send verification code. Ensure the number is correct.",
-      );
+      if (err?.code === "auth/invalid-app-credential" || err?.message?.includes("invalid-app-credential")) {
+         setError("App Credential error: You might need to go to Firebase Console -> App Check and register your domain for reCAPTCHA.");
+      } else if (err?.code === "auth/unauthorized-domain") {
+         setError("Domain not authorized for Phone Auth. Add this domain to Firebase Authentication Authorized Domains.");
+      } else {
+        setError(
+          err.message ||
+            "Failed to send verification code. Ensure the number is correct.",
+        );
+      }
       if ((window as any).recaptchaVerifier) {
         (window as any).recaptchaVerifier.clear();
         (window as any).recaptchaVerifier = null;
@@ -185,8 +208,23 @@ export default function AuthOverlay({ isOpen, onClose }: AuthOverlayProps) {
                   className="mb-6 p-4 bg-red-500/10 border border-red-500/20 rounded-2xl flex items-center gap-3 text-red-400 text-xs"
                 >
                   <AlertCircle className="w-4 h-4 min-w-[16px]" />
-                  <span className="break-words">{error}</span>
+                  <span className="break-words whitespace-pre-line">{error}</span>
                 </motion.div>
+              )}
+
+              {window !== window.top && (
+                <div className="mb-6 p-4 bg-amber-500/10 border border-amber-500/20 rounded-2xl flex flex-col items-center gap-3 text-amber-500 text-xs text-center font-medium">
+                  <div className="flex items-center gap-2">
+                    <AlertCircle className="w-4 h-4" />
+                    <span>Google Auth rarely works inside this preview window.</span>
+                  </div>
+                  <button 
+                    onClick={() => window.open(window.location.href, '_blank')}
+                    className="w-full py-2.5 bg-amber-500/20 hover:bg-amber-500/30 rounded-xl transition-colors border border-amber-500/30 font-bold"
+                  >
+                    TEST IN NEW TAB
+                  </button>
+                </div>
               )}
 
               <div className="space-y-5">
