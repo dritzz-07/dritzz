@@ -71,7 +71,7 @@ export default function Pricing({ onSelectPackage }: PricingProps) {
       <div className="text-center relative z-10 flex flex-col items-center mb-20 animate-in fade-in slide-in-from-bottom-8 duration-700">
         <div
           className="mb-6 inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-white/10 bg-white/5"
-          style={{ borderColor: "#000000" }}
+          style={{ borderColor: "#fffbfb" }}
         >
           <Sparkles className="w-3 h-3 text-white" />
           <span className="text-xs uppercase tracking-widest text-neutral-300 font-bold">

@@ -595,6 +595,7 @@ export default function BookingForm({
         <form
           onSubmit={handleFormSubmit}
           className="lg:col-span-3 bg-neutral-900/95 border border-white/10 p-6 md:p-10 space-y-8 rounded-3xl shadow-2xl shadow-black/50"
+          style={{ borderColor: "#ffffff" }}
         >
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div className="space-y-2">
@@ -666,6 +667,7 @@ export default function BookingForm({
                     type="button"
                     onClick={handleGetLiveLocation}
                     className="flex items-center gap-1.5 text-xs text-white hover:text-neutral-300 font-black uppercase tracking-wider bg-zinc-500/10 hover:bg-zinc-500/25 px-3 py-1.5 rounded-lg border border-white/5 transition-all cursor-pointer shrink-0"
+                    style={{ color: "#58b8ff", borderColor: "#e1eaea" }}
                   >
                     {locating ? (
                       <>
@@ -881,7 +883,7 @@ export default function BookingForm({
                           <Sparkles className="w-3 h-3 text-white animate-pulse" />
                         </motion.div>
                       )}
-                      <div className="flex items-center justify-between mb-3">
+                      <div className="flex items-center justify-between mb-3" style={p.id === 'premium' ? { width: "270.331px", lineHeight: "22px", fontFamily: "monospace" } : {}}>
                         <span
                           className={`font-bold uppercase tracking-[0.15em] text-[14px] ${isSelected ? "text-white" : "text-neutral-300"}`}
                         >
@@ -926,7 +928,7 @@ export default function BookingForm({
         </form>
 
         <div className="lg:col-span-2 space-y-6 lg:sticky lg:top-32">
-          <div className="relative overflow-hidden bg-neutral-900/95 border border-white/10 text-white p-8 md:p-10 rounded-3xl shadow-2xl shadow-black/50">
+          <div className="relative overflow-hidden bg-neutral-900/95 border border-white/10 text-white p-8 md:p-10 rounded-3xl shadow-2xl shadow-black/50" style={{ borderColor: "#ffffff" }}>
             {/* Subtle glow inside card */}
             <div className="absolute hidden md:block top-0 right-0 w-64 h-64 bg-zinc-500/5 opacity-10 rounded-full pointer-events-none" />
 

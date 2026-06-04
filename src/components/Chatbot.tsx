@@ -230,8 +230,9 @@ export default function Chatbot() {
             </motion.div>
             <button
               onClick={() => setIsOpen(true)}
-              className="w-14 h-14 bg-gradient-to-tr from-gray-900 to-black hover:from-gray-800 hover:to-gray-900 border border-[#fff9f9] text-white rounded-full shadow-[0_0_30px_rgba(255,255,255,0.15)] flex items-center justify-center transition-all hover:scale-105 active:scale-95 group"
+              className="w-14 h-14 bg-gradient-to-tr from-gray-900 to-black hover:from-gray-800 hover:to-gray-900 border text-white rounded-full shadow-[0_0_30px_rgba(255,255,255,0.15)] flex items-center justify-center transition-all hover:scale-105 active:scale-95 group"
               aria-label="Open chat"
+              style={{ borderColor: "#067ef5" }}
             >
               <Bot className="w-6 h-6 group-hover:scale-110 transition-transform duration-300" />
             </button>
