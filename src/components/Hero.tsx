@@ -2,9 +2,12 @@ import { motion } from "motion/react";
 import { Star, Droplets, Zap } from "lucide-react";
 import React, { useRef, useState, useEffect, memo } from "react";
 
+import hero1 from "../assets/hero-image-1.webp";
+import hero2 from "../assets/hero-image-2.webp";
+
 const BG_IMAGES = [
-  "/hero-image-1.webp",
-  "/hero-image-2.webp",
+  hero1,
+  hero2,
 ];
 
 const Hero = memo(function Hero() {
@@ -19,24 +22,24 @@ const Hero = memo(function Hero() {
 
   return (
     <section className="relative w-full flex flex-col bg-[#0a0a0a] text-center pt-[70px] lg:pt-[90px]">
-      {/* Slideshow Area */}
-      <div className="relative w-full aspect-[16/9] md:aspect-[1918/636] overflow-hidden pointer-events-none z-0">
+      {/* Slideshow Area - Fits the image maintaining aspect ratio */}
+      <div className="relative w-full aspect-[1918/636] md:aspect-[1918/636] lg:aspect-[1918/636] overflow-hidden pointer-events-none z-0">
             {BG_IMAGES.map((src, idx) => (
               <img
                 key={src}
                 src={src}
                 alt="Premium Car Detailing"
-                className="absolute inset-0 w-full h-full object-cover lg:object-center object-center transition-opacity duration-1000 ease-in-out"
+                className="absolute inset-0 w-full h-full object-contain md:object-cover object-center transition-opacity duration-1000 ease-in-out"
                 style={{ opacity: currentImageIdx === idx ? 1 : 0 }}
               />
             ))}
-        {/* Dark Overlay for blending with text area below */}
-        <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-[#0a0a0a]" />
+        {/* Dark Overlay for blending with text area below, only visible where image covers */}
+        <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-[#0a0a0a] to-transparent z-[1]" />
       </div>
 
       {/* Text Section Below */}
       <div 
-        className="relative z-20 px-6 max-w-5xl mx-auto w-full flex flex-col items-center justify-center flex-1 gap-3 lg:gap-4 py-8 md:py-16"
+        className="relative z-20 px-6 max-w-5xl mx-auto w-full flex flex-col items-center justify-center gap-4 py-8 md:py-16"
       >
         <motion.div
           initial={{ opacity: 0, y: 20 }}
