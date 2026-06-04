@@ -19,8 +19,8 @@ const Testimonials = lazy(() => import("./components/Testimonials"));
 const ShowcaseVideo = lazy(() => import("./components/ShowcaseVideo"));
 const Footer = lazy(() => import("./components/Footer"));
 const PaymentModal = lazy(() => import("./components/PaymentModal"));
-import AuthOverlay from "./components/AuthOverlay";
-import ProfileSetupOverlay from "./components/ProfileSetupOverlay";
+const AuthOverlay = lazy(() => import("./components/AuthOverlay"));
+const ProfileSetupOverlay = lazy(() => import("./components/ProfileSetupOverlay"));
 const MyBookingsModal = lazy(() => import("./components/MyBookingsModal"));
 const AccountSettingsModal = lazy(
   () => import("./components/AccountSettingsModal"),
@@ -35,13 +35,25 @@ const RefundPolicy = lazy(() => import("./pages/RefundPolicy"));
 const ContactUs = lazy(() => import("./pages/ContactUs"));
 
 const LoadingFallback = () => (
-  <div className="h-32 flex items-center justify-center text-white/50 text-sm tracking-widest uppercase">
-    Loading section...
+  <div className="h-48 w-full flex flex-col items-center justify-center animate-pulse gap-4">
+    <div className="w-12 h-12 rounded-full border border-white/20 border-t-white/80 animate-spin" />
+    <span className="text-white/40 text-[10px] tracking-[0.3em] font-semibold uppercase">
+      Loading Module
+    </span>
   </div>
 );
+
 const PageLoader = () => (
-  <div className="min-h-screen bg-[#0A0A0C] flex items-center justify-center text-white/50 text-sm tracking-widest uppercase">
-    Loading...
+  <div className="fixed inset-0 min-h-screen bg-[#060606] flex flex-col items-center justify-center z-50">
+    <div className="w-[1px] h-24 bg-gradient-to-b from-transparent via-white/80 to-transparent animate-pulse mb-8" />
+    <div className="text-white text-xs font-bold tracking-[0.5em] uppercase mb-2 drop-shadow-xl animate-pulse">
+      DRITZZ
+    </div>
+    <div className="text-white/40 text-[9px] tracking-[0.2em] font-medium uppercase text-center w-full max-w-[200px]">
+      <div className="h-[2px] bg-white/10 w-full rounded-full overflow-hidden">
+        <div className="h-full bg-white/80 w-1/3 rounded-full animate-[slide_1.5s_ease-in-out_infinite]" />
+      </div>
+    </div>
   </div>
 );
 

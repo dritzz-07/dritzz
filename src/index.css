@@ -1,5 +1,10 @@
 @import "tailwindcss";
 
+@keyframes slide {
+  0% { transform: translateX(-150%); }
+  100% { transform: translateX(250%); }
+}
+
 @theme {
   --font-display: "Outfit", sans-serif;
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;

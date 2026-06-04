@@ -1,13 +1,13 @@
 import { motion, AnimatePresence } from "motion/react";
 import { Star, Droplets, Zap } from "lucide-react";
-import { useRef, useState, useEffect } from "react";
+import React, { useRef, useState, useEffect, memo } from "react";
 
 const BG_IMAGES = [
-  "/hero-image-1.png",
-  "/hero-image-2.png",
+  "/hero-image-1.webp",
+  "/hero-image-2.webp",
 ];
 
-export default function Hero() {
+const Hero = memo(function Hero() {
   const [currentImageIdx, setCurrentImageIdx] = useState(0);
 
   useEffect(() => {
@@ -148,4 +148,6 @@ export default function Hero() {
       </div>
     </section>
   );
-}
+});
+
+export default Hero;
