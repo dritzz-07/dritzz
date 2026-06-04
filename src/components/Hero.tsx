@@ -1,4 +1,4 @@
-import { motion, AnimatePresence } from "motion/react";
+import { motion } from "motion/react";
 import { Star, Droplets, Zap } from "lucide-react";
 import React, { useRef, useState, useEffect, memo } from "react";
 
@@ -21,18 +21,15 @@ const Hero = memo(function Hero() {
     <section className="relative w-full flex flex-col bg-[#0a0a0a] text-center pt-[70px] lg:pt-[90px]">
       {/* Slideshow Area */}
       <div className="relative w-full aspect-[16/9] md:aspect-[1918/636] overflow-hidden pointer-events-none z-0">
-        <AnimatePresence>
-          <motion.img
-            key={`hero-img-${currentImageIdx}`}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 1.5, ease: "easeInOut" }}
-            src={BG_IMAGES[currentImageIdx]}
-            alt="Premium Car Detailing"
-            className="absolute inset-0 w-full h-full object-cover lg:object-center object-center"
-          />
-        </AnimatePresence>
+            {BG_IMAGES.map((src, idx) => (
+              <img
+                key={src}
+                src={src}
+                alt="Premium Car Detailing"
+                className="absolute inset-0 w-full h-full object-cover lg:object-center object-center transition-opacity duration-1000 ease-in-out"
+                style={{ opacity: currentImageIdx === idx ? 1 : 0 }}
+              />
+            ))}
         {/* Dark Overlay for blending with text area below */}
         <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-[#0a0a0a]" />
       </div>
