@@ -1,6 +1,5 @@
 import { Phone, Mail, Globe, MessageCircle } from "lucide-react";
 import { Link } from "react-router-dom";
-import logoImage from "../assets/images/regenerated_image_1780476806245.png";
 
 export default function Footer() {
   return (
@@ -13,7 +12,7 @@ export default function Footer() {
         <div className="flex flex-col items-start text-left">
           <Link to="/" className="mb-6 flex items-center gap-3">
             <img
-              src={logoImage}
+              src={'/logo.svg'}
               alt="Dritzz Logo"
               className="w-[60px] h-[60px]"
               loading="lazy"

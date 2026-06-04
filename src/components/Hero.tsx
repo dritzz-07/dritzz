@@ -2,10 +2,10 @@ import { motion } from "motion/react";
 import { Star, Droplets, Zap } from "lucide-react";
 import React, { useRef, useState, useEffect, memo } from "react";
 
-import hero1 from "../assets/images/hero1.webp";
-import hero2 from "../assets/images/hero2.webp";
-import hero3 from "../assets/images/hero3.jpg";
-import fallbackHero from "../assets/images/fallback-carwash.webp";
+import hero1 from "../../public/hero-image-1.webp";
+import hero2 from "../../public/hero-image-2.webp";
+import hero3 from "../../public/hero-image-3.jpg";
+import fallbackHero from "../../public/hero-image-1.webp";
 
 const BG_IMAGES = [hero1, hero2, hero3];
 
@@ -14,6 +14,7 @@ const Hero = memo(function Hero() {
 
   useEffect(() => {
     // Preload images to avoid flash on first cycle
+    // (Ensure images are cached before rotation)
     BG_IMAGES.forEach((src) => {
       const img = new Image();
       img.src = src;

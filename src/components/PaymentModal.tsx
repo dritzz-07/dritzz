@@ -15,7 +15,6 @@ import { generateInvoice } from "../lib/pdf";
 import { db } from "../lib/firebase";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 import { getApiUrl } from "../lib/api";
-import logoImage from "../assets/images/regenerated_image_1780476796220.png";
 
 interface PaymentModalProps {
   isOpen: boolean;
@@ -318,7 +317,7 @@ export default function PaymentModal({
                 <div className="text-center py-6">
                   <div className="mb-8 flex justify-center">
                     <img
-                      src={logoImage}
+                      src={'/logo.svg'}
                       alt="Dritzz Logo"
                       className="h-10 w-auto"
                     />
