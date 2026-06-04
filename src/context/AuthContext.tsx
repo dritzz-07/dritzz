@@ -134,8 +134,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       await signInWithPopup(auth, googleProvider);
     } catch (error: any) {
-      // Intentionally not logging this to console so it doesn't get flagged by the agent as a code bug.
-      // The UI will handle displaying the configuration instructions.
+      if (error.code === 'auth/popup-blocked') {
+        throw new Error('Pop-up blocked by browser. Please allow pop-ups for this site.');
+      } else if (error.code === 'auth/popup-closed-by-user') {
+        throw new Error('Sign-in cancelled.');
+      }
       throw error;
     }
   };

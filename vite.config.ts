@@ -14,17 +14,13 @@ export default defineConfig(({mode}) => {
     build: {
       outDir: 'dist',
       emptyOutDir: true,
-      cssCodeSplit: false,
       rollupOptions: {
         output: {
-          inlineDynamicImports: true,
-          format: 'es',
-          entryFileNames: `index.js`,
-          chunkFileNames: `index.js`,
           assetFileNames: (assetInfo) => {
-            if (assetInfo.name && assetInfo.name.endsWith('.css')) return 'index.css';
-            return '[name].[ext]';
+            return 'assets/[name]-[hash].[ext]';
           },
+          chunkFileNames: 'assets/[name]-[hash].js',
+          entryFileNames: 'assets/[name]-[hash].js',
         },
       },
     },

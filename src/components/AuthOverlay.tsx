@@ -13,7 +13,11 @@ import {
 } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 import { auth } from "../lib/firebase";
-import { RecaptchaVerifier, signInWithPhoneNumber, ConfirmationResult } from 'firebase/auth';
+import {
+  RecaptchaVerifier,
+  signInWithPhoneNumber,
+  ConfirmationResult,
+} from "firebase/auth";
 
 interface AuthOverlayProps {
   isOpen: boolean;
@@ -29,7 +33,8 @@ export default function AuthOverlay({ isOpen, onClose }: AuthOverlayProps) {
   const [name, setName] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("+91");
   const [verificationCode, setVerificationCode] = useState("");
-  const [confirmationResult, setConfirmationResult] = useState<ConfirmationResult | null>(null);
+  const [confirmationResult, setConfirmationResult] =
+    useState<ConfirmationResult | null>(null);
 
   useEffect(() => {
     setName("");
@@ -37,7 +42,7 @@ export default function AuthOverlay({ isOpen, onClose }: AuthOverlayProps) {
     setVerificationCode("");
     setConfirmationResult(null);
     setError(null);
-    
+
     if (isOpen) {
       if ((window as any).recaptchaVerifier) {
         try {
@@ -45,7 +50,7 @@ export default function AuthOverlay({ isOpen, onClose }: AuthOverlayProps) {
         } catch {}
         (window as any).recaptchaVerifier = null;
       }
-      
+
       const timer = setTimeout(() => {
         if (!document.getElementById("recaptcha-container")) return;
         (window as any).recaptchaVerifier = new RecaptchaVerifier(
@@ -56,10 +61,10 @@ export default function AuthOverlay({ isOpen, onClose }: AuthOverlayProps) {
             callback: () => {
               // reCAPTCHA solved
             },
-          }
+          },
         );
       }, 100);
-      
+
       return () => clearTimeout(timer);
     } else {
       if ((window as any).recaptchaVerifier) {
@@ -76,23 +81,16 @@ export default function AuthOverlay({ isOpen, onClose }: AuthOverlayProps) {
     setIsLoading(true);
     setError(null);
     try {
-      if (window !== window.top) {
-        setError("Google Sign-In is blocked inside this preview window. Opening the app in a new tab...");
-        setTimeout(() => {
-          window.open(window.location.href, "_blank");
-        }, 1500);
-        return;
-      }
       await loginWithGoogle();
       onClose();
     } catch (err: any) {
       console.error(err);
-      if (err?.code === "auth/invalid-continue-uri" || err?.message?.includes("invalid-continue-uri") || err?.code === "auth/unauthorized-domain") {
-        if (window.location.hostname.includes('run.app')) {
-           setError(`Authentication blocked in preview environment. Google does not recognize this temporary '.run.app' domain.\n\nSince you have already authorized 'dritzz.com', please DEPLOY this app from AI Studio, or EXPORT it to test Google Sign-In. It will not work in this preview environment without adding the temporary URL to Google Cloud.`);
-        } else {
-           setError(err.message || "Domain not authorized in Google Cloud / Firebase console.");
-        }
+      if (err?.code === "auth/unauthorized-domain") {
+        setError(
+          `Domain not authorized: Firebase does not recognize '${window.location.hostname}'. Add EXACTLY '${window.location.hostname}' to Firebase > Authentication > Settings > Authorized Domains.`
+        );
+      } else if (err?.code === "auth/invalid-continue-uri" || err?.message?.includes("invalid-continue-uri")) {
+        setError("Invalid Continue URI: Please check your Google Cloud Console OAuth 2.0 Client IDs and ensure the 'Authorized redirect URIs' and 'Authorized JavaScript origins' contain your domain without any trailing slashes.");
       } else {
         setError(err.message || "Failed to login with Google");
       }
@@ -108,27 +106,24 @@ export default function AuthOverlay({ isOpen, onClose }: AuthOverlayProps) {
     setError(null);
     try {
       const appVerifier = (window as any).recaptchaVerifier;
-      if (!appVerifier) throw new Error("reCAPTCHA not initialized. Please close and re-open.");
-      
+      if (!appVerifier)
+        throw new Error("reCAPTCHA not initialized. Please close and re-open.");
+
       const digitsOnly = phoneNumber.replace(/\D/g, "");
       const formattedPhone = phoneNumber.startsWith("+")
         ? "+" + digitsOnly
         : `+91${digitsOnly}`;
-        
+
       const confirmation = await signInWithPhoneNumber(
         auth,
         formattedPhone,
-        appVerifier
+        appVerifier,
       );
       setConfirmationResult(confirmation);
     } catch (err: any) {
       console.error(err);
       if (err?.code === "auth/unauthorized-domain") {
-         if (window.location.hostname.includes('run.app')) {
-           setError(`Phone Auth blocked in preview environment. Firebase does not recognize this temporary '.run.app' domain.\n\nSince you have already authorized 'dritzz.com', please DEPLOY this app from AI Studio, or EXPORT it to test phone login.`);
-         } else {
-           setError("Domain not authorized in Firebase Console.");
-         }
+        setError(`Domain not authorized: Firebase does not recognize '${window.location.hostname}'. Please test on your actual domain or add '${window.location.hostname}' to Firebase > Authentication > Settings > Authorized Domains.`);
       } else {
         setError(
           err.message ||
@@ -140,7 +135,7 @@ export default function AuthOverlay({ isOpen, onClose }: AuthOverlayProps) {
           (window as any).recaptchaVerifier.clear();
         } catch {}
         (window as any).recaptchaVerifier = null;
-        
+
         setTimeout(() => {
           if (!document.getElementById("recaptcha-container")) return;
           (window as any).recaptchaVerifier = new RecaptchaVerifier(
@@ -149,7 +144,7 @@ export default function AuthOverlay({ isOpen, onClose }: AuthOverlayProps) {
             {
               size: "invisible",
               callback: () => {},
-            }
+            },
           );
         }, 100);
       }
@@ -229,23 +224,10 @@ export default function AuthOverlay({ isOpen, onClose }: AuthOverlayProps) {
                   className="mb-6 p-4 bg-red-500/10 border border-red-500/20 rounded-2xl flex items-center gap-3 text-red-400 text-xs"
                 >
                   <AlertCircle className="w-4 h-4 min-w-[16px]" />
-                  <span className="break-words whitespace-pre-line">{error}</span>
+                  <span className="break-words whitespace-pre-line">
+                    {error}
+                  </span>
                 </motion.div>
-              )}
-
-              {window !== window.top && (
-                <div className="mb-6 p-4 bg-amber-500/10 border border-amber-500/20 rounded-2xl flex flex-col items-center gap-3 text-amber-500 text-xs text-center font-medium">
-                  <div className="flex items-center gap-2">
-                    <AlertCircle className="w-4 h-4" />
-                    <span>Google Auth rarely works inside this preview window.</span>
-                  </div>
-                  <button 
-                    onClick={() => window.open(window.location.href, '_blank')}
-                    className="w-full py-2.5 bg-amber-500/20 hover:bg-amber-500/30 rounded-xl transition-colors border border-amber-500/30 font-bold"
-                  >
-                    TEST IN NEW TAB
-                  </button>
-                </div>
               )}
 
               <div className="space-y-5">

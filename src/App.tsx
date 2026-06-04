@@ -19,10 +19,8 @@ const Testimonials = lazy(() => import("./components/Testimonials"));
 const ShowcaseVideo = lazy(() => import("./components/ShowcaseVideo"));
 const Footer = lazy(() => import("./components/Footer"));
 const PaymentModal = lazy(() => import("./components/PaymentModal"));
-const AuthOverlay = lazy(() => import("./components/AuthOverlay"));
-const ProfileSetupOverlay = lazy(
-  () => import("./components/ProfileSetupOverlay"),
-);
+import AuthOverlay from "./components/AuthOverlay";
+import ProfileSetupOverlay from "./components/ProfileSetupOverlay";
 const MyBookingsModal = lazy(() => import("./components/MyBookingsModal"));
 const AccountSettingsModal = lazy(
   () => import("./components/AccountSettingsModal"),

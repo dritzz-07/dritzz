@@ -120,7 +120,7 @@ export default function AdminDashboard() {
           return; // successful signup auto logs in
         } catch (signupErr: any) {
           if (signupErr.code === "auth/email-already-in-use") {
-            setLoginError("Invalid email or password.");
+            setLoginError("Invalid email or password. If you signed up with Google, use \"Continue with Google\".");
           } else if (signupErr.code === "auth/network-request-failed") {
             setLoginError(
               "Network request failed. Please check your connection or turn off adblockers.",
