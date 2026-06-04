@@ -2,9 +2,10 @@ import { motion } from "motion/react";
 import { Star, Droplets, Zap } from "lucide-react";
 import React, { useRef, useState, useEffect, memo } from "react";
 
-import hero1 from "../assets/hero-1.webp";
-import hero2 from "../assets/hero-2.webp";
-import hero3 from "../assets/hero-3.jpg";
+import hero1 from "../assets/images/hero1.webp";
+import hero2 from "../assets/images/hero2.webp";
+import hero3 from "../assets/images/hero3.jpg";
+import fallbackHero from "../assets/images/fallback-carwash.webp";
 
 const BG_IMAGES = [hero1, hero2, hero3];
 
@@ -30,9 +31,12 @@ const Hero = memo(function Hero() {
       <div className="relative w-full aspect-[4/3] sm:aspect-[16/9] md:aspect-[21/9] lg:aspect-[1918/636] overflow-hidden pointer-events-none z-0 bg-black">
         {BG_IMAGES.map((src, idx) => (
           <img
-            key={src}
+            key={`hero-img-${idx}`}
             src={src}
             alt="Premium Car Detailing"
+            onError={(e) => {
+              e.currentTarget.src = fallbackHero;
+            }}
             className={`absolute inset-0 w-full h-full object-cover object-center transition-opacity duration-1000 ease-in-out ${
               currentImageIdx === idx ? "opacity-100 z-10" : "opacity-0 z-0"
             }`}
