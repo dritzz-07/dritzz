@@ -18,6 +18,8 @@ import {
 } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 
+import logoImage from "../assets/images/regenerated_image_1780603642951.png";
+
 import { collection, query, where, onSnapshot } from "firebase/firestore";
 import { db } from "../lib/firebase";
 
@@ -110,7 +112,7 @@ export default function Navbar({
         <motion.img
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
-          src={'/logo.svg'}
+          src={logoImage}
           alt="Dritzz Logo"
           className="w-[80px] h-[75px] -mb-[8px] object-contain transition-all"
         />

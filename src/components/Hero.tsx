@@ -2,12 +2,13 @@ import { motion } from "motion/react";
 import { Star, Droplets, Zap } from "lucide-react";
 import React, { useRef, useState, useEffect, memo } from "react";
 
-import hero1 from "../../public/hero-image-1.webp";
-import hero2 from "../../public/hero-image-2.webp";
-import hero3 from "../../public/hero-image-3.jpg";
-import fallbackHero from "../../public/hero-image-1.webp";
-
-const BG_IMAGES = [hero1, hero2, hero3];
+const BG_IMAGES = [
+  "/new-hero-1.png",
+  "/new-hero-2.jpg",
+  "/new-hero-3.jpg",
+  "/new-hero-4.jpeg"
+];
+const fallbackHero = "/new-hero-1.png";
 
 const Hero = memo(function Hero() {
   const [currentImageIdx, setCurrentImageIdx] = useState(0);

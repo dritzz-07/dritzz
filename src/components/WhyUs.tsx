@@ -120,7 +120,7 @@ export default function WhyUs() {
           className="relative group h-[250px] sm:h-[300px] md:h-[500px] w-full order-1 lg:order-2"
         >
           <img
-            src={'/hero-image-1.webp'}
+            src={'/new-hero-1.png'}
             alt="Dritzz Service"
             className="w-full h-full object-cover rounded-3xl border border-white/10 grayscale group-hover:grayscale-0 transition-all duration-700 shadow-2xl"
             loading="lazy"
