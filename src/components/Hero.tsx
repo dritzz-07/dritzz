@@ -18,34 +18,34 @@ const Hero = memo(function Hero() {
   }, []);
 
   return (
-    <section className="relative w-full flex flex-col bg-[#0a0a0a] text-center pt-[55px]">
+    <section className="relative w-full flex flex-col bg-[#0a0a0a] text-center pt-[70px] lg:pt-[90px]">
       {/* Slideshow Area */}
-      <div className="relative w-full max-w-[1918px] mx-auto aspect-[1918/636] overflow-hidden pointer-events-none z-0">
-        <AnimatePresence mode="popLayout">
+      <div className="relative w-full aspect-[16/9] md:aspect-[1918/636] overflow-hidden pointer-events-none z-0">
+        <AnimatePresence>
           <motion.img
-            key={currentImageIdx}
-            initial={{ opacity: 0, scale: 1 }}
-            animate={{ opacity: 1, scale: 1 }}
+            key={`hero-img-${currentImageIdx}`}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 1.5, ease: "easeOut" }}
+            transition={{ duration: 1.5, ease: "easeInOut" }}
             src={BG_IMAGES[currentImageIdx]}
             alt="Premium Car Detailing"
-            className="absolute inset-0 w-full h-full object-cover lg:object-[100%_100%] object-center"
-            referrerPolicy="no-referrer"
-            fetchPriority="high"
+            className="absolute inset-0 w-full h-full object-cover lg:object-center object-center"
           />
         </AnimatePresence>
+        {/* Dark Overlay for blending with text area below */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-[#0a0a0a]" />
       </div>
 
       {/* Text Section Below */}
       <div 
-        className="relative z-20 px-6 max-w-5xl mx-auto w-full flex flex-col items-center justify-center flex-1 gap-3 lg:gap-4 py-10 lg:py-16"
+        className="relative z-20 px-6 max-w-5xl mx-auto w-full flex flex-col items-center justify-center flex-1 gap-3 lg:gap-4 py-8 md:py-16"
       >
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
-          className="inline-block px-4 py-1.5 rounded-full border border-white/10 bg-white/5 backdrop-blur-xl text-white text-[8px] sm:text-[10px] font-semibold tracking-[0.2em] uppercase shadow-2xl mb-1 -mt-[19px]"
+          className="inline-block px-4 py-1.5 rounded-full border border-white/10 bg-white/5 backdrop-blur-xl text-white text-[8px] sm:text-[10px] font-semibold tracking-[0.2em] uppercase shadow-2xl mb-2"
         >
           Now Serving Hyderabad
         </motion.div>
