@@ -6,7 +6,7 @@ const BG_IMAGES = [
   "/new-hero-1.png",
   "/new-hero-2.jpg",
   "/new-hero-3.jpg",
-  "/new-hero-4.jpeg"
+  "/Hero 5.png"
 ];
 const fallbackHero = "/new-hero-1.png";
 
@@ -52,7 +52,7 @@ const Hero = memo(function Hero() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
-          className="inline-block px-4 py-1.5 rounded-full border border-white/10 bg-white/5 backdrop-blur-xl text-white text-[8px] sm:text-[10px] font-semibold tracking-[0.2em] uppercase shadow-2xl mb-2"
+          className="inline-block pl-[21px] pr-4 py-1.5 rounded-full border border-[#ffffff] bg-white/5 backdrop-blur-xl text-white text-[8px] sm:text-[10px] font-semibold tracking-[0.2em] uppercase shadow-2xl mb-2"
         >
           Now Serving Hyderabad
         </motion.div>
