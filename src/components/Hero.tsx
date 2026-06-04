@@ -5,6 +5,7 @@ import React, { useRef, useState, useEffect, memo } from "react";
 const BG_IMAGES = [
   "/hero-image-1.webp",
   "/hero-image-2.webp",
+  "/hero-image-3.jpg",
 ];
 
 const Hero = memo(function Hero() {
