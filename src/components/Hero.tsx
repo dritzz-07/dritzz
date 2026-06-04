@@ -1,13 +1,10 @@
-import { motion } from "motion/react";
+import { motion, AnimatePresence } from "motion/react";
 import { Star, Droplets, Zap } from "lucide-react";
 import React, { useRef, useState, useEffect, memo } from "react";
 
-import hero1 from "../assets/hero-image-1.webp";
-import hero2 from "../assets/hero-image-2.webp";
-
 const BG_IMAGES = [
-  hero1,
-  hero2,
+  new URL("/hero-image-1.webp", import.meta.url).href,
+  new URL("/hero-image-2.webp", import.meta.url).href,
 ];
 
 const Hero = memo(function Hero() {
@@ -23,18 +20,21 @@ const Hero = memo(function Hero() {
   return (
     <section className="relative w-full flex flex-col bg-[#0a0a0a] text-center pt-[70px] lg:pt-[90px]">
       {/* Slideshow Area - Fits the image maintaining aspect ratio */}
-      <div className="relative w-full aspect-[1918/636] md:aspect-[1918/636] lg:aspect-[1918/636] overflow-hidden pointer-events-none z-0">
-            {BG_IMAGES.map((src, idx) => (
-              <img
-                key={src}
-                src={src}
-                alt="Premium Car Detailing"
-                className="absolute inset-0 w-full h-full object-contain md:object-cover object-center transition-opacity duration-1000 ease-in-out"
-                style={{ opacity: currentImageIdx === idx ? 1 : 0 }}
-              />
-            ))}
+      <div className="relative w-full aspect-[4/3] sm:aspect-[16/9] md:aspect-[21/9] lg:aspect-[1918/636] overflow-hidden pointer-events-none z-0 bg-black">
+        <AnimatePresence>
+          <motion.img
+            key={`hero-img-${currentImageIdx}`}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 1.5, ease: "easeInOut" }}
+            src={BG_IMAGES[currentImageIdx]}
+            alt="Premium Car Detailing"
+            className="absolute inset-0 w-full h-full object-cover object-center"
+          />
+        </AnimatePresence>
         {/* Dark Overlay for blending with text area below, only visible where image covers */}
-        <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-[#0a0a0a] to-transparent z-[1]" />
+        <div className="absolute inset-x-0 bottom-0 h-[20%] bg-gradient-to-t from-[#0a0a0a] to-transparent z-[1]" />
       </div>
 
       {/* Text Section Below */}
