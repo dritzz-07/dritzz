@@ -3,8 +3,8 @@ import { Star, Droplets, Zap } from "lucide-react";
 import React, { useRef, useState, useEffect, memo } from "react";
 
 const BG_IMAGES = [
-  new URL("/hero-image-1.webp", import.meta.url).href,
-  new URL("/hero-image-2.webp", import.meta.url).href,
+  "/hero-image-1.webp",
+  "/hero-image-2.webp",
 ];
 
 const Hero = memo(function Hero() {
