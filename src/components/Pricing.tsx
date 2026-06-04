@@ -229,6 +229,9 @@ export default function Pricing({ onSelectPackage }: PricingProps) {
                       ₹{price}
                     </span>
                   </div>
+                  <div className="text-[10px] text-neutral-400 mt-1.5 font-medium">
+                    Inclusive of GST
+                  </div>
                   <div className="flex items-center gap-2 mt-3">
                     <div
                       className={`text-[11px] uppercase tracking-widest font-bold ${isMonthly ? "text-neutral-300" : "text-neutral-300"}`}
@@ -344,8 +347,11 @@ export default function Pricing({ onSelectPackage }: PricingProps) {
                 >
                   ₹{price}
                 </span>
+                <div className="text-[10px] text-neutral-400 mt-1 font-medium">
+                  Inclusive of GST
+                </div>
                 <div
-                  className={`text-[9px] uppercase tracking-widest font-bold mt-1 ${isMonthly ? "text-neutral-300" : "text-neutral-400"}`}
+                  className={`text-[9px] uppercase tracking-widest font-bold mt-1.5 ${isMonthly ? "text-neutral-300" : "text-neutral-400"}`}
                 >
                   {isMonthly ? "per month" : "per wash"} ·{" "}
                   {vehicle === "suv" ? "SUV / MUV" : vehicle}

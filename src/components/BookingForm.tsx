@@ -523,7 +523,7 @@ export default function BookingForm({
   }, [user, userProfile]);
 
   const selectedPkg = PACKAGES.find((p) => p.id === details.packageId);
-  const originalPrice =
+  const rawTotalPrice =
     details.vehicles && details.vehicles.length > 0
       ? details.vehicles.reduce((sum, v) => sum + v.price, 0)
       : selectedPkg
@@ -531,12 +531,14 @@ export default function BookingForm({
         : 0;
 
   const isSocietyOffer = details.vehicles && details.vehicles.length >= 3;
-  const originalDiscountedPrice = isSocietyOffer
-    ? Math.round(originalPrice * 0.8)
-    : originalPrice;
-  const cgst = Math.round(originalDiscountedPrice * 0.09);
-  const sgst = Math.round(originalDiscountedPrice * 0.09);
-  const totalPrice = originalDiscountedPrice + cgst + sgst;
+  const grandTotal = isSocietyOffer
+    ? Math.round(rawTotalPrice * 0.8)
+    : rawTotalPrice;
+    
+  const mrp = Number((grandTotal / 1.18).toFixed(2));
+  const totalGst = Number((grandTotal - mrp).toFixed(2));
+  // Keep cgst and sgst for display if needed, but the prompt says 18% GST display
+  // We can show just MRP and Total GST.
 
   const handleChange = (
     e: React.ChangeEvent<
@@ -1026,31 +1028,34 @@ export default function BookingForm({
                 <span className="text-xs uppercase tracking-[0.2em] text-white font-bold mb-4 block">
                   Price Breakdown
                 </span>
-                <div className="space-y-4">
+                <div className="space-y-4 bg-[#111827]/50 rounded-xl p-4 border border-white/5" style={{ backgroundColor: "#060606" }}>
                   <div className="flex justify-between items-center text-xs border-b border-white/5 pb-3">
                     <span className="text-neutral-100 font-medium tracking-wide">
-                      Service Amount
+                      MRP (Before GST)
                     </span>
-                    <span className="font-bold text-white text-xs">
-                      ₹{originalDiscountedPrice}
+                    <span className="font-bold text-white text-xs text-mono">
+                      ₹{mrp.toFixed(2)}
                     </span>
                   </div>
                   <div className="flex justify-between items-center text-xs border-b border-white/5 pb-3">
                     <span className="text-neutral-100 font-medium tracking-wide">
-                      CGST (9%)
+                      GST (18%)
                     </span>
-                    <span className="font-bold text-white text-xs">
-                      ₹{cgst}
-                    </span>
-                  </div>
-                  <div className="flex justify-between items-center text-xs border-b border-white/5 pb-3">
-                    <span className="text-neutral-100 font-medium tracking-wide">
-                      SGST (9%)
-                    </span>
-                    <span className="font-bold text-white text-xs">
-                      ₹{sgst}
+                    <span className="font-bold text-white text-xs text-mono">
+                      ₹{totalGst.toFixed(2)}
                     </span>
                   </div>
+                  <div className="flex justify-between items-center pt-1">
+                    <span className="text-white font-bold tracking-wide text-xs">
+                      Grand Total
+                    </span>
+                    <span className="font-black text-white text-base text-mono">
+                      ₹{grandTotal}
+                    </span>
+                  </div>
+                </div>
+                <div className="text-[10px] text-neutral-400 font-medium mt-3 text-center w-full block">
+                  All prices are inclusive of GST.
                 </div>
               </div>
 
@@ -1094,11 +1099,11 @@ export default function BookingForm({
               </div>
               <div className="flex flex-col items-end relative z-10">
                 <span className="text-5xl font-black text-white tracking-tighter drop-shadow-lg">
-                  ₹{totalPrice}
+                  ₹{grandTotal}
                 </span>
                 {isSocietyOffer && (
                   <span className="text-xs text-neutral-300/60 line-through decoration-zinc-500/40 mt-1 font-medium">
-                    ₹{Math.round(originalPrice * 1.18)}
+                    ₹{Math.round(rawTotalPrice)}
                   </span>
                 )}
               </div>
@@ -1144,7 +1149,7 @@ export default function BookingForm({
                 </span>
                 <div className="flex items-center gap-2">
                   <span className="text-2xl font-black text-white tracking-tighter">
-                    ₹{totalPrice}
+                    ₹{grandTotal}
                   </span>
                   {isSocietyOffer && (
                     <span className="text-[9px] text-white font-black uppercase tracking-widest bg-zinc-500/30 px-1 py-0.5 rounded border border-zinc-400/30">

@@ -6,10 +6,10 @@ export const PACKAGES: Package[] = [
     name: 'Basic Care',
     tagline: 'Affordable Quick Wash',
     price: {
-      hatchback: 449,
-      sedan: 449,
-      suv: 449,
-      muv: 449
+      hatchback: 499,
+      sedan: 499,
+      suv: 599,
+      muv: 599
     },
     icon: 'Droplets',
     features: [
@@ -23,10 +23,10 @@ export const PACKAGES: Package[] = [
     name: 'Premium Care',
     tagline: 'Complete Interior + Exterior Care',
     price: {
-      hatchback: 799,
-      sedan: 899,
-      suv: 1099,
-      muv: 1099
+      hatchback: 699,
+      sedan: 699,
+      suv: 799,
+      muv: 799
     },
     icon: 'Sparkles',
     features: [
@@ -43,10 +43,10 @@ export const PACKAGES: Package[] = [
     name: 'Monthly Care',
     tagline: 'Smart Car Owners Choose Monthly Care',
     price: {
-      hatchback: 2499,
-      sedan: 2799,
-      suv: 3199,
-      muv: 3199
+      hatchback: 1999,
+      sedan: 1999,
+      suv: 2499,
+      muv: 2499
     },
     icon: 'Gem',
     features: [
