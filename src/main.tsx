@@ -1,4 +1,4 @@
-import {StrictMode} from 'react';
+import {StrictMode, Component, ReactNode} from 'react';
 import {createRoot} from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 import App from './App.tsx';
@@ -8,6 +8,38 @@ import { AuthProvider } from './context/AuthContext';
 
 // main.tsx
 console.log('Dritzz App: Script Loaded');
+
+class ErrorBoundary extends Component<any, any> {
+  public state: any;
+  public props: any;
+
+  constructor(props: any) {
+    super(props);
+    this.state = { hasError: false, error: null };
+  }
+
+  static getDerivedStateFromError(error: any) {
+    return { hasError: true, error };
+  }
+
+  componentDidCatch(error: any, errorInfo: any) {
+    console.error('Dritzz App: Boundary caught error:', error, errorInfo);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div style={{ padding: '20px', color: 'white', background: '#900', fontFamily: 'sans-serif', minHeight: '100vh' }}>
+          <h2>Application Render Error</h2>
+          <pre>{this.state.error?.message}</pre>
+          <pre style={{ fontSize: '12px', opacity: 0.8, overflow: 'auto' }}>{this.state.error?.stack}</pre>
+          <button onClick={() => window.location.reload()} style={{ padding: '10px', background: 'white', color: 'black', border: 'none', cursor: 'pointer' }}>Reload</button>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
 
 function initApp() {
   const rootElement = document.getElementById('root');
@@ -20,11 +52,13 @@ function initApp() {
       console.log('Dritzz App: Rendering components...');
       root.render(
         <StrictMode>
-          <AuthProvider>
-            <BrowserRouter>
-              <App />
-            </BrowserRouter>
-          </AuthProvider>
+          <ErrorBoundary>
+            <AuthProvider>
+              <BrowserRouter>
+                <App />
+              </BrowserRouter>
+            </AuthProvider>
+          </ErrorBoundary>
         </StrictMode>,
       );
       console.log('Dritzz App: Render initiated successfully.');
