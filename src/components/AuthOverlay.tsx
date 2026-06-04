@@ -89,10 +89,8 @@ export default function AuthOverlay({ isOpen, onClose }: AuthOverlayProps) {
         setError(
           `Domain not authorized: Firebase does not recognize '${window.location.hostname}'. Add EXACTLY '${window.location.hostname}' to Firebase > Authentication > Settings > Authorized Domains.`
         );
-      } else if (err?.code === "auth/invalid-continue-uri" || err?.message?.includes("invalid-continue-uri")) {
-        setError("Invalid Continue URI: Please check your Google Cloud Console OAuth 2.0 Client IDs and ensure the 'Authorized redirect URIs' and 'Authorized JavaScript origins' contain your domain without any trailing slashes.");
       } else {
-        setError(err.message || "Failed to login with Google");
+        setError(`Error (${err?.code || 'unknown'}): ${err.message || "Failed to login with Google"}`);
       }
     } finally {
       setIsLoading(false);
