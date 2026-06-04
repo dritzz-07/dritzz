@@ -84,6 +84,7 @@ export default function ShowcaseVideo() {
             loop
             muted={isMuted}
             playsInline
+            preload="none"
             // To add your own video:
             // 1. Upload your video file (e.g., 'my-video.mp4') to the 'public' folder in the file explorer.
             // 2. Change the 'src' below to src="/my-video.mp4"

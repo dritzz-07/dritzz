@@ -102,7 +102,7 @@ export default function Navbar({
   };
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 pt-1 pb-4 md:px-8 lg:px-16 bg-white border-b border-white/5 w-full h-[55px]">
+    <nav className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 pt-1 pb-4 md:px-8 lg:px-16 bg-[#000000] border-b border-white/5 w-full h-[55px]">
       <a
         href="/"
         className="flex items-center gap-2 decoration-none text-white group"
@@ -113,16 +113,16 @@ export default function Navbar({
           whileTap={{ scale: 0.95 }}
           src={logoImage}
           alt="Dritzz Logo"
-          className="w-[80px] h-[79px] -mb-[7px] object-contain transition-all"
+          className="w-[80px] h-[75px] -mb-[8px] object-contain transition-all"
         />
       </a>
 
-      <ul className="hidden md:flex items-center md:gap-6 lg:gap-10 list-none -mb-[10px] h-[19px] w-[600.625px] font-['Inter'] font-normal text-center no-underline justify-center">
+      <ul className="hidden md:flex items-center md:gap-6 lg:gap-10 list-none -mb-[10px] h-[19px] w-[600.625px] font-['Inter'] font-normal text-center no-underline justify-center text-[#ffffff]">
         <li>
           <a
             href="/"
             onClick={handleNavClick}
-            className="text-[14px] font-normal text-black transition-colors decoration-none relative"
+            className="text-[14px] font-normal text-[#ffffff] transition-colors decoration-none relative"
           >
             Home
           </a>
@@ -133,7 +133,7 @@ export default function Navbar({
               <a
                 href={`#${item.toLowerCase().replace(/\s+/g, "-")}`}
                 onClick={handleNavClick}
-                className="text-[14px] font-normal text-black transition-colors decoration-none relative"
+                className="text-[14px] font-normal text-[#ffffff] transition-colors decoration-none relative"
               >
                 {item}
               </a>

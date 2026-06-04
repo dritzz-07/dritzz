@@ -7,8 +7,9 @@ import Hero from "./components/Hero";
 import { useAuth } from "./context/AuthContext";
 import { BookingDetails, VehicleType, Package } from "./types";
 import { PACKAGES } from "./constants";
-import WaterSplashEffects from "./components/WaterSplashEffects";
-import Chatbot from "./components/Chatbot";
+
+const WaterSplashEffects = lazy(() => import("./components/WaterSplashEffects"));
+const Chatbot = lazy(() => import("./components/Chatbot"));
 
 const HowItWorks = lazy(() => import("./components/HowItWorks"));
 const Pricing = lazy(() => import("./components/Pricing"));
