@@ -35,7 +35,7 @@ export default function HowItWorks() {
       id="how-it-works"
       className="bg-black px-6 md:px-16 py-16 md:py-24 border-t border-white/10"
     >
-      <div className="section-label" style={{ color: "#ffffff", borderColor: "#ffffff" }}>
+      <div className="section-label !bg-white/10 !border-white/20 !text-white">
         Simple Process
       </div>
       <h2 className="section-title !text-white !bg-none drop-shadow-none">HOW IT WORKS?</h2>

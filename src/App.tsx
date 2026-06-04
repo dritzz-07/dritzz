@@ -124,7 +124,9 @@ function MainApp() {
         <div className="absolute bottom-[-20%] right-[-20%] w-[60vw] h-[60vh] bg-[radial-gradient(circle_at_center,_rgba(30,45,95,0.5),_transparent_70%)]" />
       </div>
       <div className="relative z-10 w-full h-full">
-        <WaterSplashEffects />
+        <Suspense fallback={null}>
+          <WaterSplashEffects />
+        </Suspense>
         <Navbar
           openLogin={() => {
             setIsAuthOpen(true);
@@ -297,7 +299,9 @@ function MainApp() {
           />
         </Suspense>
 
-        <Chatbot />
+        <Suspense fallback={null}>
+          <Chatbot />
+        </Suspense>
       </div>
     </div>
   );
