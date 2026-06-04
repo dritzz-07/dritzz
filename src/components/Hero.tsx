@@ -1,17 +1,23 @@
-import { motion, AnimatePresence } from "motion/react";
+import { motion } from "motion/react";
 import { Star, Droplets, Zap } from "lucide-react";
 import React, { useRef, useState, useEffect, memo } from "react";
 
-const BG_IMAGES = [
-  "/hero-image-1.webp",
-  "/hero-image-2.webp",
-  "/hero-image-3.jpg",
-];
+import hero1 from "../assets/hero-1.webp";
+import hero2 from "../assets/hero-2.webp";
+import hero3 from "../assets/hero-3.jpg";
+
+const BG_IMAGES = [hero1, hero2, hero3];
 
 const Hero = memo(function Hero() {
   const [currentImageIdx, setCurrentImageIdx] = useState(0);
 
   useEffect(() => {
+    // Preload images to avoid flash on first cycle
+    BG_IMAGES.forEach((src) => {
+      const img = new Image();
+      img.src = src;
+    });
+
     const timer = setInterval(() => {
       setCurrentImageIdx((prev) => (prev + 1) % BG_IMAGES.length);
     }, 4000); // Faster transition
@@ -22,20 +28,18 @@ const Hero = memo(function Hero() {
     <section className="relative w-full flex flex-col bg-[#0a0a0a] text-center pt-[70px] lg:pt-[90px]">
       {/* Slideshow Area - Fits the image maintaining aspect ratio */}
       <div className="relative w-full aspect-[4/3] sm:aspect-[16/9] md:aspect-[21/9] lg:aspect-[1918/636] overflow-hidden pointer-events-none z-0 bg-black">
-        <AnimatePresence>
-          <motion.img
-            key={`hero-img-${currentImageIdx}`}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 1.5, ease: "easeInOut" }}
-            src={BG_IMAGES[currentImageIdx]}
+        {BG_IMAGES.map((src, idx) => (
+          <img
+            key={src}
+            src={src}
             alt="Premium Car Detailing"
-            className="absolute inset-0 w-full h-full object-cover object-center"
+            className={`absolute inset-0 w-full h-full object-cover object-center transition-opacity duration-1000 ease-in-out ${
+              currentImageIdx === idx ? "opacity-100 z-10" : "opacity-0 z-0"
+            }`}
           />
-        </AnimatePresence>
+        ))}
         {/* Dark Overlay for blending with text area below, only visible where image covers */}
-        <div className="absolute inset-x-0 bottom-0 h-[20%] bg-gradient-to-t from-[#0a0a0a] to-transparent z-[1]" />
+        <div className="absolute inset-x-0 bottom-0 h-[30%] bg-gradient-to-t from-[#0a0a0a] to-transparent z-[20]" />
       </div>
 
       {/* Text Section Below */}
