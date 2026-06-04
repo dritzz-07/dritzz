@@ -8,8 +8,20 @@ import { useAuth } from "./context/AuthContext";
 import { BookingDetails, VehicleType, Package } from "./types";
 import { PACKAGES } from "./constants";
 
-const WaterSplashEffects = lazy(() => import("./components/WaterSplashEffects"));
-const Chatbot = lazy(() => import("./components/Chatbot"));
+const WaterSplashEffects = lazy(() => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(import("./components/WaterSplashEffects") as any);
+    }, 2500);
+  });
+});
+const Chatbot = lazy(() => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(import("./components/Chatbot") as any);
+    }, 3000);
+  });
+});
 
 const HowItWorks = lazy(() => import("./components/HowItWorks"));
 const Pricing = lazy(() => import("./components/Pricing"));
@@ -156,9 +168,17 @@ function MainApp() {
           <Hero />
           <Suspense fallback={<LoadingFallback />}>
             <ShowcaseVideo />
+          </Suspense>
+          <Suspense fallback={<LoadingFallback />}>
             <HowItWorks />
+          </Suspense>
+          <Suspense fallback={<LoadingFallback />}>
             <Services />
+          </Suspense>
+          <Suspense fallback={<LoadingFallback />}>
             <Pricing onSelectPackage={handleSelectPackage} />
+          </Suspense>
+          <Suspense fallback={<LoadingFallback />}>
             <BookingForm
               initialVehicle={selectedVehicle}
               initialPackageId={selectedPkgId}
@@ -167,7 +187,11 @@ function MainApp() {
                 setIsAuthOpen(true);
               }}
             />
+          </Suspense>
+          <Suspense fallback={<LoadingFallback />}>
             <WhyUs />
+          </Suspense>
+          <Suspense fallback={<LoadingFallback />}>
             <Testimonials />
           </Suspense>
         </main>
@@ -178,10 +202,18 @@ function MainApp() {
             {mobileTab === "home" && (
               <>
                 <Hero />
-                <ShowcaseVideo />
-                <HowItWorks />
-                <WhyUs />
-                <Testimonials />
+                <Suspense fallback={<LoadingFallback />}>
+                  <ShowcaseVideo />
+                </Suspense>
+                <Suspense fallback={<LoadingFallback />}>
+                  <HowItWorks />
+                </Suspense>
+                <Suspense fallback={<LoadingFallback />}>
+                  <WhyUs />
+                </Suspense>
+                <Suspense fallback={<LoadingFallback />}>
+                  <Testimonials />
+                </Suspense>
               </>
             )}
             {mobileTab === "services" && <Services />}

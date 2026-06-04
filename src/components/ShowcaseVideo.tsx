@@ -1,12 +1,29 @@
 import { motion, useScroll, useTransform } from "motion/react";
 import { Play, Pause, Volume2, VolumeX } from "lucide-react";
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 
 export default function ShowcaseVideo() {
   const [isPlaying, setIsPlaying] = useState(true);
   const [isMuted, setIsMuted] = useState(true);
   const videoRef = useRef<HTMLVideoElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+
+  const [isInView, setIsInView] = useState(false);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsInView(true);
+        }
+      },
+      { threshold: 0.1 }
+    );
+    if (containerRef.current) {
+      observer.observe(containerRef.current);
+    }
+    return () => observer.disconnect();
+  }, []);
 
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -85,10 +102,7 @@ export default function ShowcaseVideo() {
             muted={isMuted}
             playsInline
             preload="none"
-            // To add your own video:
-            // 1. Upload your video file (e.g., 'my-video.mp4') to the 'public' folder in the file explorer.
-            // 2. Change the 'src' below to src="/my-video.mp4"
-            src="https://assets.mixkit.co/videos/49197/49197-720.mp4"
+            src={isInView ? "https://assets.mixkit.co/videos/49197/49197-720.mp4" : undefined}
           />
 
           <div className="absolute bottom-0 left-0 right-0 p-8 md:p-12 z-20 flex items-end justify-between opacity-0 translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500">

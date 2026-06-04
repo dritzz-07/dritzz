@@ -14,13 +14,7 @@ const Hero = memo(function Hero() {
   const [currentImageIdx, setCurrentImageIdx] = useState(0);
 
   useEffect(() => {
-    // Preload images to avoid flash on first cycle
-    // (Ensure images are cached before rotation)
-    BG_IMAGES.forEach((src) => {
-      const img = new Image();
-      img.src = src;
-    });
-
+    // Only start carousel after the first image is likely loaded
     const timer = setInterval(() => {
       setCurrentImageIdx((prev) => (prev + 1) % BG_IMAGES.length);
     }, 4000); // Faster transition
@@ -36,6 +30,8 @@ const Hero = memo(function Hero() {
             key={`hero-img-${idx}`}
             src={src}
             alt="Premium Car Detailing"
+            loading={idx === 0 ? "eager" : "lazy"}
+            fetchPriority={idx === 0 ? "high" : "auto"}
             onError={(e) => {
               e.currentTarget.src = fallbackHero;
             }}
