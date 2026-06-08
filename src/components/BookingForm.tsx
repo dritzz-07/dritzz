@@ -130,6 +130,7 @@ export default function BookingForm({
   onRequireAuth,
 }: BookingFormProps) {
   const { user, userProfile, loginWithGoogle } = useAuth();
+  
   const [details, setDetails] = useState<BookingDetails>({
     name: "",
     phone: "+91 ",
@@ -1058,27 +1059,6 @@ export default function BookingForm({
                 </div>
                 <div className="text-[10px] text-neutral-400 font-medium mt-3 text-center w-full block">
                   All prices are inclusive of GST.
-                </div>
-              </div>
-
-              <div className="mt-6 border-t border-white/5 pt-6">
-                <label className="text-xs uppercase tracking-widest text-neutral-300 font-bold block mb-3">
-                  Apply Promo Code
-                </label>
-                <div className="flex gap-3">
-                  <div className="relative flex-1">
-                    <input
-                      type="text"
-                      placeholder="ENTER DISCOUNT CODE"
-                      className="w-full bg-black/40 border border-white/10 px-4 py-3.5 text-xs focus:border-neutral-500/50 focus:ring-1 focus:ring-zinc-500/50 outline-none transition-all rounded-xl text-white font-mono uppercase placeholder-neutral-600"
-                    />
-                  </div>
-                  <button
-                    type="button"
-                    className="px-5 py-3.5 bg-zinc-600/10 hover:bg-zinc-600/20 text-white border border-white/10 text-[11px] font-black uppercase tracking-widest rounded-xl transition-colors shrink-0"
-                  >
-                    Apply
-                  </button>
                 </div>
               </div>
             </div>

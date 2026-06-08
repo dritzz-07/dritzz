@@ -4,9 +4,9 @@ import React, { useRef, useState, useEffect, memo } from "react";
 
 const BG_IMAGES = [
   "/new-hero-1.png",
-  "/new-hero-2.jpg",
-  "/new-hero-3.jpg",
-  "/Hero 5.png"
+  "/Hero 20.png",
+  "/Hero 30.png",
+  "/Hero 50.png"
 ];
 const fallbackHero = "/new-hero-1.png";
 
@@ -24,7 +24,7 @@ const Hero = memo(function Hero() {
   return (
     <section className="relative w-full flex flex-col bg-[#0a0a0a] text-center pt-[70px] lg:pt-[90px]">
       {/* Slideshow Area - Fits the image maintaining aspect ratio */}
-      <div className="relative w-full aspect-[4/3] sm:aspect-[16/9] md:aspect-[21/9] lg:aspect-[1918/636] overflow-hidden pointer-events-none z-0 bg-black">
+      <div className="relative w-full aspect-[4/3] sm:aspect-[16/9] lg:aspect-video overflow-hidden pointer-events-none z-0 bg-[#0a0a0a]">
         {BG_IMAGES.map((src, idx) => (
           <img
             key={`hero-img-${idx}`}
@@ -35,7 +35,7 @@ const Hero = memo(function Hero() {
             onError={(e) => {
               e.currentTarget.src = fallbackHero;
             }}
-            className={`absolute inset-0 w-full h-full object-cover object-center transition-opacity duration-1000 ease-in-out ${
+            className={`absolute inset-0 w-full h-full object-contain md:object-cover object-center transition-opacity duration-1000 ease-in-out ${
               currentImageIdx === idx ? "opacity-100 z-10" : "opacity-0 z-0"
             }`}
           />
