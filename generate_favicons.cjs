@@ -21,15 +21,15 @@ async function main() {
   
   for (const size of sizes) {
     if (size === 180) {
-      await sharp(sourceImage).resize(size, size).png().toFile(path.join(publicDir, `apple-touch-icon.png`));
+      await sharp(sourceImage).resize(size, size, { fit: 'contain', background: { r: 10, g: 10, b: 12, alpha: 1 } }).png().toFile(path.join(publicDir, `apple-touch-icon.png`));
     } else {
-      await sharp(sourceImage).resize(size, size).png().toFile(path.join(publicDir, `favicon-${size}x${size}.png`));
+      await sharp(sourceImage).resize(size, size, { fit: 'contain', background: { r: 10, g: 10, b: 12, alpha: 1 } }).png().toFile(path.join(publicDir, `favicon-${size}x${size}.png`));
     }
   }
 
-  const buf16 = await sharp(sourceImage).resize(16, 16).png().toBuffer();
-  const buf32 = await sharp(sourceImage).resize(32, 32).png().toBuffer();
-  const buf48 = await sharp(sourceImage).resize(48, 48).png().toBuffer();
+  const buf16 = await sharp(sourceImage).resize(16, 16, { fit: 'contain', background: { r: 10, g: 10, b: 12, alpha: 0 } }).png().toBuffer();
+  const buf32 = await sharp(sourceImage).resize(32, 32, { fit: 'contain', background: { r: 10, g: 10, b: 12, alpha: 0 } }).png().toBuffer();
+  const buf48 = await sharp(sourceImage).resize(48, 48, { fit: 'contain', background: { r: 10, g: 10, b: 12, alpha: 0 } }).png().toBuffer();
 
   const icoBuf = await (pngToIco.default || pngToIco)([buf16, buf32, buf48]);
   fs.writeFileSync(path.join(publicDir, 'favicon.ico'), icoBuf);

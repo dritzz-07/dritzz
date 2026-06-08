@@ -209,9 +209,11 @@ async function startServer() {
     const distPath = path.join(process.cwd(), "dist");
     app.use(express.static(distPath, {
       maxAge: '1y',
-      setHeaders: (res, path) => {
-        if (path.endsWith('.html')) {
-          res.setHeader('Cache-Control', 'no-cache');
+      setHeaders: (res, reqPath) => {
+        if (reqPath.endsWith('.html') || reqPath.endsWith('.ico') || reqPath.includes('favicon') || reqPath.endsWith('manifest.json')) {
+          res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+          res.setHeader('Pragma', 'no-cache');
+          res.setHeader('Expires', '0');
         }
       }
     }));
