@@ -5,7 +5,7 @@ const pngToIco = require('png-to-ico');
 
 async function main() {
   const publicDir = path.join(__dirname, 'public');
-  const sourceImage = path.join(__dirname, 'LOGO DRITZZ.jpg');
+  const sourceImage = path.join(__dirname, 'logo.png.png');
 
   // Verify file exists
   if (!fs.existsSync(sourceImage)) {
