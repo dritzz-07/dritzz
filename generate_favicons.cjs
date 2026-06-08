@@ -5,13 +5,28 @@ const pngToIco = require('png-to-ico');
 
 async function main() {
   const publicDir = path.join(__dirname, 'public');
-  const sourceImage = path.join(__dirname, 'D logo.png');
+  const rawSource = path.join(__dirname, 'D logo.png');
+  const sourceImage = path.join(__dirname, 'icon_source_optimized.png');
 
   // Verify file exists
-  if (!fs.existsSync(sourceImage)) {
-    console.error('Source image not found:', sourceImage);
+  if (!fs.existsSync(rawSource)) {
+    console.error('Source image not found:', rawSource);
     return;
   }
+
+  // Pre-process image to remove excess transparent padding and ensure 90% fill
+  await new Promise((resolve, reject) => {
+    sharp(rawSource).trim().toBuffer((err, data, info) => {
+      if(err) return reject(err);
+      const maxDim = Math.max(info.width, info.height);
+      const pad = Math.round(maxDim * ((1/0.9) - 1) / 2);
+      sharp(data)
+        .extend({ top: pad, bottom: pad, left: pad, right: pad, background: {r:0,g:0,b:0,alpha:0} })
+        .toFile(sourceImage)
+        .then(resolve)
+        .catch(reject);
+    });
+  });
 
   // Load the image with sharp
   const image = sharp(sourceImage);
