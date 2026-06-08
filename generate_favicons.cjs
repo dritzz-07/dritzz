@@ -5,7 +5,7 @@ const pngToIco = require('png-to-ico');
 
 async function main() {
   const publicDir = path.join(__dirname, 'public');
-  const sourceImage = path.join(__dirname, 'favicon-source.png');
+  const sourceImage = path.join(__dirname, 'D logo.png');
 
   // Verify file exists
   if (!fs.existsSync(sourceImage)) {
