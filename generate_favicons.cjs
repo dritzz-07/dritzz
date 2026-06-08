@@ -5,7 +5,7 @@ const pngToIco = require('png-to-ico');
 
 async function main() {
   const publicDir = path.join(__dirname, 'public');
-  const sourceImage = path.join(__dirname, 'logo.png.png');
+  const sourceImage = path.join(__dirname, 'favicon-source.png');
 
   // Verify file exists
   if (!fs.existsSync(sourceImage)) {
@@ -23,7 +23,7 @@ async function main() {
     if (size === 180) {
       await sharp(sourceImage).resize(size, size, { fit: 'contain', background: { r: 10, g: 10, b: 12, alpha: 1 } }).png().toFile(path.join(publicDir, `apple-touch-icon.png`));
     } else {
-      await sharp(sourceImage).resize(size, size, { fit: 'contain', background: { r: 10, g: 10, b: 12, alpha: 1 } }).png().toFile(path.join(publicDir, `favicon-${size}x${size}.png`));
+      await sharp(sourceImage).resize(size, size, { fit: 'contain', background: { r: 10, g: 10, b: 12, alpha: 0 } }).png().toFile(path.join(publicDir, `favicon-${size}x${size}.png`));
     }
   }
 
