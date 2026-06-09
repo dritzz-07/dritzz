@@ -34,8 +34,8 @@ async function main() {
   }
 
   // 2. Perform Morphological Dilation (to make the stroke slightly thicker)
-  // Dilating by a circular neighborhood of radius 5 pixels on 843x582 canvas
-  const dilateRadius = 5;
+  // Dilating by a circular neighborhood of radius 6 pixels on 843x582 canvas
+  const dilateRadius = 6;
   const isLogoDilated = new Uint8Array(width * height);
 
   for (let y = 0; y < height; y++) {
@@ -108,10 +108,10 @@ async function main() {
     }
   });
 
-  // Calculate scaling for circular composite
-  // Circle occupies ~922 pixels (90%) on 1024x1024 canvas.
-  // Logo width scaled by approx 17.5% from 630px to 740px.
-  const scaledWidth = 740;
+  // Calculate scaling for full canvas composite
+  // Rounded square fills the entire 1024x1024 canvas.
+  // Logo diameter scaled to occupy 87% (approx 890px width) of the 1024px canvas.
+  const scaledWidth = 890;
   const scaledHeight = Math.round(scaledWidth * (h / w));
   console.log('Scaled logo dimensions:', scaledWidth, 'x', scaledHeight);
 
@@ -130,26 +130,26 @@ async function main() {
     }
   });
 
-  // Create SVG string for solid black circular badge of radius 461 (diameter 922, approx 90% of canvas)
-  const circleSvg = `
+  // Create SVG string for solid black rounded-square badge that fills the full 1024x1024 canvas
+  const roundedSquareSvg = `
   <svg width="1024" height="1024">
-    <circle cx="512" cy="512" r="461" fill="#000000" />
+    <rect x="0" y="0" width="1024" height="1024" rx="160" ry="160" fill="#000000" />
   </svg>
   `;
 
   const leftOffset = Math.floor((1024 - scaledWidth) / 2);
   const topOffset = Math.floor((1024 - scaledHeight) / 2);
 
-  // Composite circular badge and the centered white logo
+  // Composite rounded-square badge and the perfectly centered white logo
   await transparentCanvas
     .composite([
-      { input: Buffer.from(circleSvg), left: 0, top: 0 },
+      { input: Buffer.from(roundedSquareSvg), left: 0, top: 0 },
       { input: resizedLogoBuffer, left: leftOffset, top: topOffset }
     ])
     .png()
     .toFile(sourceImage);
 
-  console.log('Optimized master image with black circular badge generated at:', sourceImage);
+  console.log('Optimized master image with black rounded-square badge generated at:', sourceImage);
 
   // Generate PNG sizes
   const sizes = [16, 32, 48, 96, 144, 180, 192, 512];
