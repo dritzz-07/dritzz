@@ -109,9 +109,9 @@ async function main() {
   });
 
   // Calculate scaling for circular composite
-  // Circle occupies ~900 pixels on 1024x1024 canvas (approx 88%).
-  // Logo diameter should occupy ~70% of circle diameter (900 * 0.70 = 630 pixels width).
-  const scaledWidth = 630;
+  // Circle occupies ~922 pixels (90%) on 1024x1024 canvas.
+  // Logo width scaled by approx 17.5% from 630px to 740px.
+  const scaledWidth = 740;
   const scaledHeight = Math.round(scaledWidth * (h / w));
   console.log('Scaled logo dimensions:', scaledWidth, 'x', scaledHeight);
 
@@ -130,10 +130,10 @@ async function main() {
     }
   });
 
-  // Create SVG string for solid black circular badge of diameter 900 (radius 450)
+  // Create SVG string for solid black circular badge of radius 461 (diameter 922, approx 90% of canvas)
   const circleSvg = `
   <svg width="1024" height="1024">
-    <circle cx="512" cy="512" r="450" fill="#000000" />
+    <circle cx="512" cy="512" r="461" fill="#000000" />
   </svg>
   `;
 
