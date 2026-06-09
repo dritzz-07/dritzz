@@ -20,14 +20,51 @@ async function main() {
     .raw()
     .toBuffer({ resolveWithObject: true });
 
-  // Find bounding box based on light logo on dark background (luminance > 30)
-  let minX = info.width, maxX = 0, minY = info.height, maxY = 0;
-  for (let y = 0; y < info.height; y++) {
-    for (let x = 0; x < info.width; x++) {
-      const idx = (y * info.width + x) * 3;
-      const r = data[idx], g = data[idx+1], b = data[idx+2];
-      const lum = 0.2126 * r + 0.7152 * g + 0.0722 * b;
-      if (lum > 30) {
+  const width = info.width;
+  const height = info.height;
+
+  // 1. Categorize pixels as logo (value 1) or background (value 0)
+  const isLogoOrig = new Uint8Array(width * height);
+  for (let idx = 0; idx < width * height; idx++) {
+    const r = data[idx * 3];
+    const g = data[idx * 3 + 1];
+    const b = data[idx * 3 + 2];
+    const lum = 0.2126 * r + 0.7152 * g + 0.0722 * b;
+    isLogoOrig[idx] = lum > 100 ? 1 : 0;
+  }
+
+  // 2. Perform Morphological Dilation (to make the stroke slightly thicker)
+  // Dilating by a circular neighborhood of radius 5 pixels on 843x582 canvas
+  const dilateRadius = 5;
+  const isLogoDilated = new Uint8Array(width * height);
+
+  for (let y = 0; y < height; y++) {
+    for (let x = 0; x < width; x++) {
+      let active = false;
+      for (let dy = -dilateRadius; dy <= dilateRadius; dy++) {
+        for (let dx = -dilateRadius; dx <= dilateRadius; dx++) {
+          if (dx * dx + dy * dy <= dilateRadius * dilateRadius) {
+            const nx = x + dx;
+            const ny = y + dy;
+            if (nx >= 0 && nx < width && ny >= 0 && ny < height) {
+              if (isLogoOrig[ny * width + nx]) {
+                active = true;
+                break;
+              }
+            }
+          }
+        }
+        if (active) break;
+      }
+      isLogoDilated[y * width + x] = active ? 1 : 0;
+    }
+  }
+
+  // 3. Find precise Bounding Box of the dilated/thickened logo
+  let minX = width, maxX = 0, minY = height, maxY = 0;
+  for (let y = 0; y < height; y++) {
+    for (let x = 0; x < width; x++) {
+      if (isLogoDilated[y * width + x]) {
         if (x < minX) minX = x;
         if (x > maxX) maxX = x;
         if (y < minY) minY = y;
@@ -38,45 +75,43 @@ async function main() {
 
   const w = maxX - minX + 1;
   const h = maxY - minY + 1;
-  console.log('Dynamic Bounds found - Width:', w, 'Height:', h, 'minX:', minX, 'minY:', minY);
+  console.log('Dilated Bounds found - Width:', w, 'Height:', h, 'minX:', minX, 'minY:', minY);
 
-  // Extract the cropped region and convert to solid white (#FFFFFF) for logo and solid black (#000000) for background
-  const croppedData = Buffer.alloc(w * h * 3);
+  // 4. Extract cropped region and convert to solid white (#FFFFFF) with transparent background
+  const croppedData = Buffer.alloc(w * h * 4); // RGBA format
   for (let dy = 0; dy < h; dy++) {
     for (let dx = 0; dx < w; dx++) {
       const srcX = minX + dx;
       const srcY = minY + dy;
-      const srcIdx = (srcY * info.width + srcX) * 3;
-      const destIdx = (dy * w + dx) * 3;
-
-      const r = data[srcIdx], g = data[srcIdx+1], b = data[srcIdx+2];
-      const lum = 0.2126 * r + 0.7152 * g + 0.0722 * b;
-      const isLogo = lum > 30;
+      const isLogo = isLogoDilated[srcY * width + srcX];
+      const destIdx = (dy * w + dx) * 4;
 
       if (isLogo) {
-        croppedData[destIdx] = 255;   // R (white)
-        croppedData[destIdx+1] = 255; // G (white)
-        croppedData[destIdx+2] = 255; // B (white)
+        croppedData[destIdx] = 255;     // R
+        croppedData[destIdx+1] = 255;   // G
+        croppedData[destIdx+2] = 255;   // B
+        croppedData[destIdx+3] = 255;   // A (solid white)
       } else {
-        croppedData[destIdx] = 0;     // R (black)
-        croppedData[destIdx+1] = 0;   // G (black)
-        croppedData[destIdx+2] = 0;   // B (black)
+        croppedData[destIdx] = 0;       // R
+        croppedData[destIdx+1] = 0;     // G
+        croppedData[destIdx+2] = 0;     // B
+        croppedData[destIdx+3] = 0;     // A (fully transparent)
       }
     }
   }
 
-  // Create sharp image from raw buffer
   const logoImage = sharp(croppedData, {
     raw: {
       width: w,
       height: h,
-      channels: 3
+      channels: 4
     }
   });
 
-  // Scale the logo so it occupies 85% of a 1024x1024 canvas.
-  // 1024 * 0.85 = 870 pixels width.
-  const scaledWidth = 870;
+  // Calculate scaling for circular composite
+  // Circle occupies ~900 pixels on 1024x1024 canvas (approx 88%).
+  // Logo diameter should occupy ~70% of circle diameter (900 * 0.70 = 630 pixels width).
+  const scaledWidth = 630;
   const scaledHeight = Math.round(scaledWidth * (h / w));
   console.log('Scaled logo dimensions:', scaledWidth, 'x', scaledHeight);
 
@@ -85,53 +120,81 @@ async function main() {
     .png()
     .toBuffer();
 
-  // Create a solid black 1024x1024 background canvas
-  const blackBackground = sharp({
+  // Create a 1024x1024 transparent background canvas
+  const transparentCanvas = sharp({
     create: {
       width: 1024,
       height: 1024,
-      channels: 3,
-      background: { r: 0, g: 0, b: 0 }
+      channels: 4,
+      background: { r: 0, g: 0, b: 0, alpha: 0 }
     }
   });
+
+  // Create SVG string for solid black circular badge of diameter 900 (radius 450)
+  const circleSvg = `
+  <svg width="1024" height="1024">
+    <circle cx="512" cy="512" r="450" fill="#000000" />
+  </svg>
+  `;
 
   const leftOffset = Math.floor((1024 - scaledWidth) / 2);
   const topOffset = Math.floor((1024 - scaledHeight) / 2);
 
-  await blackBackground
-    .composite([{
-      input: resizedLogoBuffer,
-      left: leftOffset,
-      top: topOffset
-    }])
+  // Composite circular badge and the centered white logo
+  await transparentCanvas
+    .composite([
+      { input: Buffer.from(circleSvg), left: 0, top: 0 },
+      { input: resizedLogoBuffer, left: leftOffset, top: topOffset }
+    ])
     .png()
     .toFile(sourceImage);
 
-  console.log('Optimized master image generated at:', sourceImage);
+  console.log('Optimized master image with black circular badge generated at:', sourceImage);
 
   // Generate PNG sizes
   const sizes = [16, 32, 48, 96, 144, 180, 192, 512];
   
   for (const size of sizes) {
     if (size === 180) {
-      await sharp(sourceImage).resize(size, size, { fit: 'contain', background: { r: 0, g: 0, b: 0, alpha: 1 } }).png().toFile(path.join(publicDir, `apple-touch-icon.png`));
+      await sharp(sourceImage)
+        .resize(size, size, { fit: 'contain', background: { r: 0, g: 0, b: 0, alpha: 0 } })
+        .png()
+        .toFile(path.join(publicDir, `apple-touch-icon.png`));
     } else {
-      await sharp(sourceImage).resize(size, size, { fit: 'contain', background: { r: 0, g: 0, b: 0, alpha: 1 } }).png().toFile(path.join(publicDir, `favicon-${size}x${size}.png`));
+      await sharp(sourceImage)
+        .resize(size, size, { fit: 'contain', background: { r: 0, g: 0, b: 0, alpha: 0 } })
+        .png()
+        .toFile(path.join(publicDir, `favicon-${size}x${size}.png`));
     }
   }
 
   // Generate 1024x1024 favicon PNG as well
   await sharp(sourceImage).resize(1024, 1024).png().toFile(path.join(publicDir, 'favicon-1024x1024.png'));
 
-  const buf16 = await sharp(sourceImage).resize(16, 16, { fit: 'contain', background: { r: 0, g: 0, b: 0, alpha: 1 } }).png().toBuffer();
-  const buf32 = await sharp(sourceImage).resize(32, 32, { fit: 'contain', background: { r: 0, g: 0, b: 0, alpha: 1 } }).png().toBuffer();
-  const buf48 = await sharp(sourceImage).resize(48, 48, { fit: 'contain', background: { r: 0, g: 0, b: 0, alpha: 1 } }).png().toBuffer();
+  // Generate .ico file
+  const buf16 = await sharp(sourceImage).resize(16, 16, { fit: 'contain', background: { r: 0, g: 0, b: 0, alpha: 0 } }).png().toBuffer();
+  const buf32 = await sharp(sourceImage).resize(32, 32, { fit: 'contain', background: { r: 0, g: 0, b: 0, alpha: 0 } }).png().toBuffer();
+  const buf48 = await sharp(sourceImage).resize(48, 48, { fit: 'contain', background: { r: 0, g: 0, b: 0, alpha: 0 } }).png().toBuffer();
 
   const icoBuf = await (pngToIco.default || pngToIco)([buf16, buf32, buf48]);
   fs.writeFileSync(path.join(publicDir, 'favicon.ico'), icoBuf);
 
-  // Also update standard SEO Open Graph image (1200x630) with solid black background
-  await sharp(sourceImage).resize(1200, 630, { fit: 'contain', background: { r: 0, g: 0, b: 0, alpha: 1 } }).png().toFile(path.join(publicDir, 'og-image.png'));
+  // Also update standard SEO Open Graph image (1200x630) centered layout
+  await sharp({
+    create: {
+      width: 1200,
+      height: 630,
+      channels: 4,
+      background: { r: 0, g: 0, b: 0, alpha: 0 }
+    }
+  })
+  .composite([{
+    input: await sharp(sourceImage).resize(540, 540, { fit: 'contain' }).png().toBuffer(),
+    left: Math.floor((1200 - 540) / 2),
+    top: Math.floor((630 - 540) / 2)
+  }])
+  .png()
+  .toFile(path.join(publicDir, 'og-image.png'));
 
   console.log('Icons generated successfully.');
 }
