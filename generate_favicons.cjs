@@ -5,7 +5,7 @@ const pngToIco = require('png-to-ico');
 
 async function main() {
   const publicDir = path.join(__dirname, 'public');
-  const rawSource = path.join(__dirname, 'faaon.jpg');
+  const rawSource = path.join(__dirname, 'faaon11.jpg');
   const sourceImage = path.join(__dirname, 'icon_source_optimized.png');
 
   // Verify file exists
@@ -20,13 +20,14 @@ async function main() {
     .raw()
     .toBuffer({ resolveWithObject: true });
 
-  // Find bounding box
+  // Find bounding box based on dark logo on light background (luminance < 150)
   let minX = info.width, maxX = 0, minY = info.height, maxY = 0;
   for (let y = 0; y < info.height; y++) {
     for (let x = 0; x < info.width; x++) {
       const idx = (y * info.width + x) * 3;
       const r = data[idx], g = data[idx+1], b = data[idx+2];
-      if (r > 15 || g > 15 || b > 15) {
+      const lum = 0.2126 * r + 0.7152 * g + 0.0722 * b;
+      if (lum < 150) {
         if (x < minX) minX = x;
         if (x > maxX) maxX = x;
         if (y < minY) minY = y;
@@ -49,7 +50,8 @@ async function main() {
       const destIdx = (dy * w + dx) * 3;
 
       const r = data[srcIdx], g = data[srcIdx+1], b = data[srcIdx+2];
-      const isLogo = r > 30 || g > 30 || b > 30;
+      const lum = 0.2126 * r + 0.7152 * g + 0.0722 * b;
+      const isLogo = lum < 150;
 
       if (isLogo) {
         croppedData[destIdx] = 255;   // R
@@ -72,9 +74,9 @@ async function main() {
     }
   });
 
-  // Scale the logo so it occupies 97% of a 1024x1024 canvas.
-  // 1024 * 0.97 = 993 pixels width.
-  const scaledWidth = 993;
+  // Scale the logo so it occupies 91.5% of a 1024x1024 canvas.
+  // 1024 * 0.915 = 937 pixels width.
+  const scaledWidth = 937;
   const scaledHeight = Math.round(scaledWidth * (h / w));
   console.log('Scaled logo dimensions:', scaledWidth, 'x', scaledHeight);
 
@@ -117,6 +119,9 @@ async function main() {
       await sharp(sourceImage).resize(size, size, { fit: 'contain', background: { r: 0, g: 0, b: 0, alpha: 1 } }).png().toFile(path.join(publicDir, `favicon-${size}x${size}.png`));
     }
   }
+
+  // Generate 1024x1024 favicon PNG as well
+  await sharp(sourceImage).resize(1024, 1024).png().toFile(path.join(publicDir, 'favicon-1024x1024.png'));
 
   const buf16 = await sharp(sourceImage).resize(16, 16, { fit: 'contain', background: { r: 0, g: 0, b: 0, alpha: 1 } }).png().toBuffer();
   const buf32 = await sharp(sourceImage).resize(32, 32, { fit: 'contain', background: { r: 0, g: 0, b: 0, alpha: 1 } }).png().toBuffer();
