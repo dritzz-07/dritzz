@@ -1,8 +1,6 @@
 import { useState, lazy, Suspense } from "react";
 import { Routes, Route } from "react-router-dom";
 import { Home, Sparkles, Package as PackageIcon, Calendar } from "lucide-react";
-import { motion, AnimatePresence } from "motion/react";
-import SplashIntro from "./components/SplashIntro";
 import Navbar from "./components/Navbar";
 import Hero from "./components/Hero";
 
@@ -352,25 +350,8 @@ function MainApp() {
 }
 
 export default function App() {
-  const [showSplash, setShowSplash] = useState(() => {
-    return window.location.pathname === "/";
-  });
-
   return (
     <Suspense fallback={<PageLoader />}>
-      <AnimatePresence mode="wait">
-        {showSplash && (
-          <motion.div
-            key="splash-screen"
-            initial={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.8, ease: "easeInOut" }}
-            className="fixed inset-0 z-[99999]"
-          >
-            <SplashIntro onComplete={() => setShowSplash(false)} />
-          </motion.div>
-        )}
-      </AnimatePresence>
       <Routes>
         <Route path="/" element={<MainApp />} />
         <Route path="/admin" element={<AdminDashboard />} />
