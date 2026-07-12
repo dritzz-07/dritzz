@@ -49,9 +49,9 @@ export const generateInvoice = async (details: BookingDetails, pkg: Package, amo
     };
     
     const logoDataUrl = await getLogoDataUrl();
-    // Maintain aspect ratio (1077 x 805 => 1.338:1) with high resolution
-    // Centered vertically in 45mm header: (45 - 24) / 2 = 10.5mm
-    doc.addImage(logoDataUrl, 'PNG', 15, 10.5, 32.1, 24);
+    // The new dritzz logo has a 1:1 aspect ratio (1024 x 1024)
+    // Centered vertically in 45mm header: (45 - 28) / 2 = 8.5mm
+    doc.addImage(logoDataUrl, 'PNG', 15, 8.5, 28, 28);
   } catch (err) {
     console.error('Failed to add logo to PDF', err);
   }
