@@ -2,7 +2,7 @@ import { jsPDF } from 'jspdf';
 import { BookingDetails, Package } from '../types';
 
 
-export const generateInvoice = async (details: BookingDetails, pkg: Package, amount: number, paymentMethod: string, refId: string, status: string = 'completed') => {
+export const generateInvoice = async (details: BookingDetails, pkg: Package, amount: number, paymentMethod: string, refId: string, status: string = 'completed', paymentStatus?: string) => {
   const doc = new jsPDF();
   
   // Header Background
@@ -29,7 +29,7 @@ export const generateInvoice = async (details: BookingDetails, pkg: Package, amo
         img.onerror = () => {
           reject(new Error('Failed to load logo PNG'));
         };
-        img.src = '/logo.svg';
+        img.src = '/logo_invoice.png';
       });
     };
     
@@ -50,6 +50,7 @@ export const generateInvoice = async (details: BookingDetails, pkg: Package, amo
   doc.text('GSTIN: 36XXXXXXXXXX   SAC: 998729', 190, 31, { align: 'right' });
 
   // Status Badge
+  const actualPaymentStatus = paymentStatus || (status === 'cancelled' ? 'cancelled' : 'Paid');
   if (status === 'cancelled') {
     doc.setFillColor(255, 235, 235);
     doc.roundedRect(160, 50, 30, 8, 2, 2, 'F');
@@ -57,6 +58,13 @@ export const generateInvoice = async (details: BookingDetails, pkg: Package, amo
     doc.setFontSize(10);
     doc.setFont('helvetica', 'bold');
     doc.text('CANCELLED', 175, 55.5, { align: 'center' });
+  } else if (actualPaymentStatus === 'Pending Payment' || actualPaymentStatus === 'Awaiting Payment') {
+    doc.setFillColor(254, 243, 199);
+    doc.roundedRect(155, 50, 35, 8, 2, 2, 'F');
+    doc.setTextColor(180, 83, 9);
+    doc.setFontSize(9);
+    doc.setFont('helvetica', 'bold');
+    doc.text('PENDING PAYMENT', 172.5, 55.5, { align: 'center' });
   } else {
     doc.setFillColor(235, 255, 235);
     doc.roundedRect(170, 50, 20, 8, 2, 2, 'F');
@@ -201,7 +209,7 @@ export const generateInvoice = async (details: BookingDetails, pkg: Package, amo
   doc.setTextColor(60, 60, 60);
   doc.setFont('helvetica', 'normal');
   doc.text(`Method: ${paymentMethod.toUpperCase()}`, 20, summaryTopIdx + 6);
-  doc.text(`Status: ${status.charAt(0).toUpperCase() + status.slice(1)}`, 20, summaryTopIdx + 11);
+  doc.text(`Status: ${actualPaymentStatus.toUpperCase()}`, 20, summaryTopIdx + 11);
   
   // Footer
   const pageHeight = doc.internal.pageSize.height;

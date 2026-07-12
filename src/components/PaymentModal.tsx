@@ -87,6 +87,7 @@ export default function PaymentModal({
         refId,
         paymentMethod: method,
         status: "pending",
+        paymentStatus: method === "cash" ? "Pending Payment" : "Paid",
         createdAt: serverTimestamp(),
         updatedAt: serverTimestamp(),
       };
@@ -132,7 +133,7 @@ export default function PaymentModal({
     if (!bookingDetails || !pkg) return;
     setIsGenerating(true);
     try {
-      await generateInvoice(bookingDetails, pkg, amount, method, refId);
+      await generateInvoice(bookingDetails, pkg, amount, method, refId, "pending", method === "cash" ? "Pending Payment" : "Paid");
     } catch (err) {
       console.error(err);
     } finally {

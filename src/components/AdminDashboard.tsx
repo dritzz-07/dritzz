@@ -53,6 +53,9 @@ interface Booking {
   amount: number;
   status: string;
   paymentMethod: string;
+  paymentStatus?: string;
+  paymentConfirmedAt?: string;
+  paymentConfirmedBy?: string;
   createdAt: any;
   address?: string;
   latitude?: number;
@@ -86,6 +89,7 @@ export default function AdminDashboard() {
 
   // Add Booking State
   const [isAddingBooking, setIsAddingBooking] = useState(false);
+  const [confirmPaymentBooking, setConfirmPaymentBooking] = useState<Booking | null>(null);
 
   const adminEmails = [
     "dritzz.info@gmail.com",
@@ -250,6 +254,65 @@ export default function AdminDashboard() {
     }
   };
 
+  const handleConfirmPayment = async (bookingId: string) => {
+    try {
+      const bRef = doc(db, "bookings", bookingId);
+      const now = new Date().toISOString();
+      const adminEmail = user?.email || "Admin";
+
+      await updateDoc(bRef, {
+        paymentStatus: "Paid",
+        paymentConfirmedAt: now,
+        paymentConfirmedBy: adminEmail,
+      });
+
+      setBookings((prev) =>
+        prev.map((b) =>
+          b.id === bookingId
+            ? {
+                ...b,
+                paymentStatus: "Paid",
+                paymentConfirmedAt: now,
+                paymentConfirmedBy: adminEmail,
+              }
+            : b
+        )
+      );
+      setConfirmPaymentBooking(null);
+    } catch (error) {
+      console.error("Error confirming payment:", error);
+      alert("Failed to confirm payment");
+    }
+  };
+
+  const handleMarkAsUnpaid = async (bookingId: string) => {
+    if (!window.confirm("Are you sure you want to mark this booking as Unpaid?")) return;
+    try {
+      const bRef = doc(db, "bookings", bookingId);
+      await updateDoc(bRef, {
+        paymentStatus: "Pending Payment",
+        paymentConfirmedAt: null,
+        paymentConfirmedBy: null,
+      });
+
+      setBookings((prev) =>
+        prev.map((b) =>
+          b.id === bookingId
+            ? {
+                ...b,
+                paymentStatus: "Pending Payment",
+                paymentConfirmedAt: undefined,
+                paymentConfirmedBy: undefined,
+              }
+            : b
+        )
+      );
+    } catch (error) {
+      console.error("Error marking as unpaid:", error);
+      alert("Failed to mark as unpaid");
+    }
+  };
+
   const filteredBookings = bookings.filter((b) => {
     // Verify booking type matches tab selection
     if (activeTab === "bookings" && b.packageId === "monthly") {
@@ -323,6 +386,7 @@ export default function AdminDashboard() {
       vehicles: b.vehicles || [],
       notes: "",
     };
+    const paymentStatusVal = b.paymentStatus || (b.paymentMethod === "cash" ? "Pending Payment" : "Paid");
     await generateInvoice(
       details,
       pkg,
@@ -330,6 +394,7 @@ export default function AdminDashboard() {
       b.paymentMethod || "Manual",
       b.refId,
       b.status,
+      paymentStatusVal,
     );
   };
 
@@ -828,6 +893,7 @@ export default function AdminDashboard() {
                             Service Details
                           </th>
                           <th className="px-6 py-4 font-bold">Slot</th>
+                          <th className="px-6 py-4 font-bold">Payment</th>
                           <th className="px-6 py-4 font-bold">Status</th>
                           <th className="px-6 py-4 font-bold">Actions</th>
                         </tr>
@@ -880,41 +946,29 @@ export default function AdminDashboard() {
                                 <span className="flex items-center gap-1">
                                   <Phone className="w-3 h-3" /> {b.phone}
                                 </span>
-                                {b.address &&
-                                  (b.latitude && b.longitude ? (
+                                {b.address && (
+                                  <div className="flex flex-col gap-1 mt-1 pt-1 border-t border-white/5">
+                                    <div className="flex items-start gap-1 text-[11px] text-neutral-100 max-w-[200px] leading-tight">
+                                      <MapPin className="w-3 h-3 text-neutral-300 shrink-0 mt-0.5" />
+                                      <span className="line-clamp-2" title={b.address}>
+                                        {b.address}
+                                      </span>
+                                    </div>
                                     <a
-                                      href={`https://www.google.com/maps/dir/?api=1&destination=${b.latitude},${b.longitude}`}
+                                      href={
+                                        b.latitude && b.longitude
+                                          ? `https://www.google.com/maps/dir/?api=1&destination=${b.latitude},${b.longitude}`
+                                          : `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(b.address)}`
+                                      }
                                       target="_blank"
                                       rel="noreferrer"
-                                      className="flex items-start gap-1 mt-1 pt-1 border-t border-white/5 text-[11px] text-white hover:text-neutral-300 max-w-[200px] leading-tight transition-colors cursor-pointer group"
-                                      title="Click to get directions on Google Maps"
+                                      className="inline-flex items-center gap-1.5 mt-1 text-[10px] text-white hover:text-neutral-200 font-bold uppercase tracking-widest bg-zinc-800 hover:bg-zinc-700 border border-white/10 px-2.5 py-1.5 rounded-lg transition-all w-fit cursor-pointer group"
+                                      title="Open Google Maps turn-by-turn navigation"
                                     >
-                                      <MapPin className="w-3 h-3 text-white shrink-0 mt-0.5 group-hover:scale-110 transition-transform" />
-                                      <span className="line-clamp-2 underline decoration-dashed decoration-zinc-500/30 group-hover:decoration-zinc-400">
-                                        {b.address}
-                                      </span>
+                                      <Navigation className="w-3 h-3 text-white group-hover:scale-110 transition-transform" />
+                                      Navigate
                                     </a>
-                                  ) : (
-                                    <span
-                                      className="flex items-start gap-1 mt-1 pt-1 border-t border-white/5 text-[11px] text-neutral-100 max-w-[200px] leading-tight"
-                                      title={b.address}
-                                    >
-                                      <MapPin className="w-3 h-3 text-neutral-300 shrink-0 mt-0.5" />
-                                      <span className="line-clamp-2">
-                                        {b.address}
-                                      </span>
-                                    </span>
-                                  ))}
-                                {b.latitude && b.longitude && (
-                                  <a
-                                    href={`https://www.google.com/maps/dir/?api=1&destination=${b.latitude},${b.longitude}`}
-                                    target="_blank"
-                                    rel="noreferrer"
-                                    className="inline-flex items-center gap-1 mt-1 text-xs text-white hover:text-neutral-300 font-bold uppercase tracking-widest bg-zinc-500/10 hover:bg-zinc-500/20 px-2 py-1 rounded transition-all w-fit cursor-pointer"
-                                  >
-                                    <Navigation className="w-2.5 h-2.5 text-white animate-pulse" />
-                                    Get Directions
-                                  </a>
+                                  </div>
                                 )}
                               </div>
                             </td>
@@ -936,6 +990,52 @@ export default function AdminDashboard() {
                               <div className="font-medium">{b.date}</div>
                               <div className="text-xs text-neutral-300">
                                 {b.timeSlot}
+                              </div>
+                            </td>
+                            <td className="px-6 py-4">
+                              <div className="flex flex-col gap-1">
+                                <div className="flex items-center gap-1.5 text-xs text-neutral-300">
+                                  <span className="font-semibold text-white uppercase tracking-wider">
+                                    {b.paymentMethod === "cash" ? "COD" : (b.paymentMethod || "Manual").toUpperCase()}
+                                  </span>
+                                </div>
+                                <div className="flex items-center gap-2 mt-1">
+                                  <span className={`px-2.5 py-1 text-[10px] font-bold uppercase rounded-lg border ${
+                                    (b.paymentStatus || (b.paymentMethod === "cash" ? "Pending Payment" : "Paid")) === "Paid"
+                                      ? "bg-green-500/10 text-green-400 border-green-500/20"
+                                      : "bg-yellow-500/10 text-yellow-500 border-yellow-500/20"
+                                  }`}>
+                                    {b.paymentStatus || (b.paymentMethod === "cash" ? "Pending Payment" : "Paid")}
+                                  </span>
+                                  
+                                  {(b.paymentStatus || (b.paymentMethod === "cash" ? "Pending Payment" : "Paid")) !== "Paid" ? (
+                                    <button
+                                      onClick={() => setConfirmPaymentBooking(b)}
+                                      className="px-2.5 py-1 bg-green-500/10 hover:bg-green-500/20 text-green-400 font-bold text-[10px] uppercase tracking-wider rounded-lg border border-green-500/20 transition-all cursor-pointer"
+                                    >
+                                      Mark as Paid
+                                    </button>
+                                  ) : (
+                                    <button
+                                      onClick={() => handleMarkAsUnpaid(b.id)}
+                                      className="px-2.5 py-1 bg-zinc-800 hover:bg-zinc-700 text-neutral-300 font-bold text-[10px] uppercase tracking-wider rounded-lg border border-white/5 transition-all cursor-pointer"
+                                      title="Mark as Unpaid"
+                                    >
+                                      Mark as Unpaid
+                                    </button>
+                                  )}
+                                </div>
+                                {b.paymentStatus === "Paid" && b.paymentConfirmedAt && (
+                                  <div className="text-[10px] text-neutral-500 mt-1 max-w-[200px] whitespace-normal leading-tight">
+                                    Confirmed by {b.paymentConfirmedBy} on {new Date(b.paymentConfirmedAt).toLocaleDateString("en-GB", {
+                                      day: "2-digit",
+                                      month: "short",
+                                      year: "numeric",
+                                      hour: "2-digit",
+                                      minute: "2-digit",
+                                    })}
+                                  </div>
+                                )}
                               </div>
                             </td>
                             <td className="px-6 py-4">
@@ -1083,22 +1183,67 @@ export default function AdminDashboard() {
                             </a>
                           </div>
                           {b.address && (
-                            <div className="flex items-start gap-2 text-xs text-neutral-300 mt-1">
-                              <MapPin className="w-4 h-4 shrink-0 mt-0.5 text-white" />
-                              <span className="line-clamp-2">{b.address}</span>
+                            <>
+                              <div className="flex items-start gap-2 text-xs text-neutral-300 mt-1">
+                                <MapPin className="w-4 h-4 shrink-0 mt-0.5 text-white" />
+                                <span className="line-clamp-2">{b.address}</span>
+                              </div>
+                              <a
+                                href={
+                                  b.latitude && b.longitude
+                                    ? `https://www.google.com/maps/dir/?api=1&destination=${b.latitude},${b.longitude}`
+                                    : `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(b.address)}`
+                                }
+                                target="_blank"
+                                rel="noreferrer"
+                                className="mt-1 flex items-center justify-center gap-1.5 text-[10px] text-black font-black uppercase tracking-widest bg-white hover:bg-neutral-200 px-3 py-2.5 rounded-lg transition-all w-full cursor-pointer shadow-md"
+                              >
+                                <Navigation className="w-3 h-3 text-black animate-pulse" />
+                                Navigate
+                              </a>
+                            </>
+                          )}
+                        </div>
+
+                        {/* Payment Info inside Mobile Card */}
+                        <div className="border-t border-white/5 pt-3 flex flex-col gap-2">
+                          <div className="flex items-center justify-between text-xs">
+                            <span className="text-neutral-400 font-medium">Payment Method:</span>
+                            <span className="font-mono text-white capitalize">{b.paymentMethod === "cash" ? "COD" : (b.paymentMethod || "Manual").toUpperCase()}</span>
+                          </div>
+                          <div className="flex items-center justify-between text-xs">
+                            <span className="text-neutral-400 font-medium">Payment Status:</span>
+                            <span className={`px-2 py-0.5 text-[10px] font-bold uppercase rounded ${
+                              (b.paymentStatus || (b.paymentMethod === "cash" ? "Pending Payment" : "Paid")) === "Paid" 
+                                ? "bg-green-500/10 text-green-400 border border-green-500/20" 
+                                : "bg-yellow-500/10 text-yellow-500 border border-yellow-500/20"
+                            }`}>
+                              {b.paymentStatus || (b.paymentMethod === "cash" ? "Pending Payment" : "Paid")}
+                            </span>
+                          </div>
+                          {b.paymentStatus === "Paid" && b.paymentConfirmedAt && (
+                            <div className="text-[10px] text-neutral-500 text-right leading-tight whitespace-normal">
+                              Confirmed by {b.paymentConfirmedBy} on {new Date(b.paymentConfirmedAt).toLocaleString()}
                             </div>
                           )}
-                          {b.latitude && b.longitude && (
-                            <a
-                              href={`https://www.google.com/maps/dir/?api=1&destination=${b.latitude},${b.longitude}`}
-                              target="_blank"
-                              rel="noreferrer"
-                              className="mt-1 flex items-center justify-center gap-1 text-[10px] text-black font-black uppercase tracking-widest bg-white hover:bg-neutral-200 px-3 py-2.5 rounded-lg transition-all w-full cursor-pointer shadow-md"
-                            >
-                              <Navigation className="w-3 h-3 text-black animate-pulse" />
-                              Navigate
-                            </a>
-                          )}
+                          {/* Payment Actions */}
+                          <div className="flex gap-2 mt-1">
+                            {(b.paymentStatus || (b.paymentMethod === "cash" ? "Pending Payment" : "Paid")) !== "Paid" ? (
+                              <button
+                                onClick={() => setConfirmPaymentBooking(b)}
+                                className="w-full py-2 bg-green-500/10 hover:bg-green-500/20 text-green-400 font-bold text-[10px] uppercase tracking-wider rounded-lg border border-green-500/20 transition-all cursor-pointer text-center"
+                              >
+                                Mark as Paid
+                              </button>
+                            ) : (
+                              <button
+                                onClick={() => handleMarkAsUnpaid(b.id)}
+                                className="w-full py-2 bg-zinc-800 hover:bg-zinc-700 text-neutral-300 font-bold text-[10px] uppercase tracking-wider rounded-lg border border-white/5 transition-all cursor-pointer text-center"
+                              >
+                                Mark as Unpaid
+                              </button>
+                            )}
+                          </div>
                         </div>
 
                         <div className="flex justify-between items-center border-t border-white/5 pt-3">
@@ -1541,6 +1686,63 @@ export default function AdminDashboard() {
             fetchBookings();
           }}
         />
+      )}
+
+      {/* Payment Confirmation Popup Modal */}
+      {confirmPaymentBooking && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
+          <div className="bg-neutral-900 border border-white/10 rounded-[24px] w-full max-w-md p-6 shadow-2xl relative animate-in fade-in duration-200">
+            <div className="flex flex-col items-center text-center">
+              <div className="w-12 h-12 bg-green-500/10 rounded-full flex items-center justify-center mb-4">
+                <CheckCircle2 className="w-6 h-6 text-green-400" />
+              </div>
+              <h3 className="text-lg font-black uppercase tracking-tight text-white mb-2">
+                Confirm Payment Receipt
+              </h3>
+              <p className="text-neutral-400 text-xs leading-relaxed mb-6">
+                Have you received the payment from the customer?
+              </p>
+
+              {/* Booking Info Box */}
+              <div className="w-full bg-black/40 border border-white/5 rounded-xl p-4 text-left space-y-2 mb-6">
+                <div className="flex justify-between text-xs">
+                  <span className="text-neutral-500 font-medium">Customer:</span>
+                  <span className="text-white font-bold">{confirmPaymentBooking.name}</span>
+                </div>
+                <div className="flex justify-between text-xs">
+                  <span className="text-neutral-500 font-medium">Reference:</span>
+                  <span className="text-white font-mono">{confirmPaymentBooking.refId}</span>
+                </div>
+                <div className="flex justify-between text-xs">
+                  <span className="text-neutral-500 font-medium">Amount:</span>
+                  <span className="text-white font-bold text-sm">₹{confirmPaymentBooking.amount}</span>
+                </div>
+                <div className="flex justify-between text-xs">
+                  <span className="text-neutral-500 font-medium">Method:</span>
+                  <span className="text-white capitalize">{confirmPaymentBooking.paymentMethod === "cash" ? "Cash on Delivery" : confirmPaymentBooking.paymentMethod}</span>
+                </div>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="flex gap-3 w-full">
+                <button
+                  type="button"
+                  onClick={() => setConfirmPaymentBooking(null)}
+                  className="flex-1 py-3 bg-white/5 hover:bg-white/10 border border-white/10 text-white font-bold text-xs uppercase tracking-wider rounded-xl transition-colors cursor-pointer"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleConfirmPayment(confirmPaymentBooking.id)}
+                  className="flex-1 py-3 bg-green-500 hover:bg-green-600 text-black font-black text-xs uppercase tracking-wider rounded-xl transition-colors cursor-pointer shadow-lg shadow-green-500/10"
+                >
+                  Yes, Mark as Paid
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
       )}
 
       {/* Mobile Bottom Nav */}
