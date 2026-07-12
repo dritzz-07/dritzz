@@ -1,5 +1,6 @@
 import { jsPDF } from 'jspdf';
 import { BookingDetails, Package } from '../types';
+import { LOGO_BASE64 } from './logoData';
 
 
 export const generateInvoice = async (details: BookingDetails, pkg: Package, amount: number, paymentMethod: string, refId: string, status: string = 'completed', paymentStatus?: string) => {
@@ -11,47 +12,10 @@ export const generateInvoice = async (details: BookingDetails, pkg: Package, amo
   
   // Try to load and add the logo from PNG
   try {
-    const getLogoDataUrl = async (): Promise<string> => {
-      try {
-        const response = await fetch('/logo_invoice.png');
-        if (!response.ok) throw new Error('Network response was not ok');
-        const blob = await response.blob();
-        return new Promise((resolve, reject) => {
-          const reader = new FileReader();
-          reader.onloadend = () => {
-            resolve(reader.result as string);
-          };
-          reader.onerror = () => reject(new Error('Failed to read logo blob'));
-          reader.readAsDataURL(blob);
-        });
-      } catch (fetchErr) {
-        console.warn('Fetch logo failed, trying Image element fallback...', fetchErr);
-        return new Promise((resolve, reject) => {
-          const img = new Image();
-          img.onload = () => {
-            const canvas = document.createElement('canvas');
-            canvas.width = img.width;
-            canvas.height = img.height;
-            const ctx = canvas.getContext('2d');
-            if (ctx) {
-              ctx.drawImage(img, 0, 0);
-              resolve(canvas.toDataURL('image/png'));
-            } else {
-              reject(new Error('Canvas context not available'));
-            }
-          };
-          img.onerror = () => {
-            reject(new Error('Failed to load logo PNG via Image element'));
-          };
-          img.src = '/logo_invoice.png';
-        });
-      }
-    };
-    
-    const logoDataUrl = await getLogoDataUrl();
-    // The new dritzz logo has a 1:1 aspect ratio (1024 x 1024)
-    // Centered vertically in 45mm header: (45 - 28) / 2 = 8.5mm
-    doc.addImage(logoDataUrl, 'PNG', 15, 8.5, 28, 28);
+    // LOGO_BASE64 is imported as an inlined base64 data URL string.
+    // This completely bypasses iframe sandbox/CORS restrictions and loads instantly.
+    // Dimensions 20mm x 20mm maintains high quality and falls perfectly in the 40-50px height range.
+    doc.addImage(LOGO_BASE64, 'PNG', 15, 12.5, 20, 20);
   } catch (err) {
     console.error('Failed to add logo to PDF', err);
   }
