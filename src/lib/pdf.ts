@@ -47,7 +47,7 @@ export const generateInvoice = async (details: BookingDetails, pkg: Package, amo
   doc.setTextColor(150, 150, 150);
   doc.setFont('helvetica', 'normal');
   doc.text('dritzz.info@gmail.com | +91 7075504625', 190, 26, { align: 'right' });
-  doc.text('GSTIN: 36XXXXXXXXXX   SAC: 998729', 190, 31, { align: 'right' });
+  doc.text('GSTIN: 36AANCC2917J1ZF   SAC: 998729', 190, 31, { align: 'right' });
 
   // Status Badge
   const actualPaymentStatus = paymentStatus || (status === 'cancelled' ? 'cancelled' : 'Paid');
@@ -187,10 +187,10 @@ export const generateInvoice = async (details: BookingDetails, pkg: Package, amo
   
   doc.setFont('helvetica', 'normal');
   doc.setFontSize(9);
-  doc.text('MRP (Before GST):', 125, summaryTopIdx + 6);
+  doc.text('MRP (Before GST):', 115, summaryTopIdx + 6);
   doc.text(`Rs. ${baseAmount.toFixed(2)}`, 182, summaryTopIdx + 6, { align: 'right' });
   
-  doc.text('GST (18%):', 125, summaryTopIdx + 11);
+  doc.text('GST (18%):', 115, summaryTopIdx + 11);
   doc.text(`Rs. ${totalGst.toFixed(2)}`, 182, summaryTopIdx + 11, { align: 'right' });
   
   doc.line(110, summaryTopIdx + 16, 190, summaryTopIdx + 16);
@@ -198,7 +198,7 @@ export const generateInvoice = async (details: BookingDetails, pkg: Package, amo
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(14);
   doc.setTextColor(20, 20, 20);
-  doc.text('GRAND TOTAL', 125, summaryTopIdx + 26);
+  doc.text('GRAND TOTAL', 115, summaryTopIdx + 26);
   doc.text(`Rs. ${amount.toFixed(2)}`, 182, summaryTopIdx + 26, { align: 'right' });
   
   // Payment Info
