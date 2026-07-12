@@ -11,30 +11,47 @@ export const generateInvoice = async (details: BookingDetails, pkg: Package, amo
   
   // Try to load and add the logo from PNG
   try {
-    const getLogoDataUrl = (): Promise<string> => {
-      return new Promise((resolve, reject) => {
-        const img = new Image();
-        img.onload = () => {
-          const canvas = document.createElement('canvas');
-          canvas.width = img.width;
-          canvas.height = img.height;
-          const ctx = canvas.getContext('2d');
-          if (ctx) {
-            ctx.drawImage(img, 0, 0);
-            resolve(canvas.toDataURL('image/png'));
-          } else {
-            reject(new Error('Canvas context not available'));
-          }
-        };
-        img.onerror = () => {
-          reject(new Error('Failed to load logo PNG'));
-        };
-        img.src = '/logo_invoice.png';
-      });
+    const getLogoDataUrl = async (): Promise<string> => {
+      try {
+        const response = await fetch('/logo_invoice.png');
+        if (!response.ok) throw new Error('Network response was not ok');
+        const blob = await response.blob();
+        return new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onloadend = () => {
+            resolve(reader.result as string);
+          };
+          reader.onerror = () => reject(new Error('Failed to read logo blob'));
+          reader.readAsDataURL(blob);
+        });
+      } catch (fetchErr) {
+        console.warn('Fetch logo failed, trying Image element fallback...', fetchErr);
+        return new Promise((resolve, reject) => {
+          const img = new Image();
+          img.onload = () => {
+            const canvas = document.createElement('canvas');
+            canvas.width = img.width;
+            canvas.height = img.height;
+            const ctx = canvas.getContext('2d');
+            if (ctx) {
+              ctx.drawImage(img, 0, 0);
+              resolve(canvas.toDataURL('image/png'));
+            } else {
+              reject(new Error('Canvas context not available'));
+            }
+          };
+          img.onerror = () => {
+            reject(new Error('Failed to load logo PNG via Image element'));
+          };
+          img.src = '/logo_invoice.png';
+        });
+      }
     };
     
     const logoDataUrl = await getLogoDataUrl();
-    doc.addImage(logoDataUrl, 'PNG', 15, 8, 28, 28);
+    // Maintain aspect ratio (1077 x 805 => 1.338:1) with high resolution
+    // Centered vertically in 45mm header: (45 - 24) / 2 = 10.5mm
+    doc.addImage(logoDataUrl, 'PNG', 15, 10.5, 32.1, 24);
   } catch (err) {
     console.error('Failed to add logo to PDF', err);
   }
@@ -187,19 +204,19 @@ export const generateInvoice = async (details: BookingDetails, pkg: Package, amo
   
   doc.setFont('helvetica', 'normal');
   doc.setFontSize(9);
-  doc.text('MRP (Before GST):', 115, summaryTopIdx + 6);
-  doc.text(`Rs. ${baseAmount.toFixed(2)}`, 182, summaryTopIdx + 6, { align: 'right' });
+  doc.text('MRP (Before GST):', 110, summaryTopIdx + 6);
+  doc.text(`Rs. ${baseAmount.toFixed(2)}`, 185, summaryTopIdx + 6, { align: 'right' });
   
-  doc.text('GST (18%):', 115, summaryTopIdx + 11);
-  doc.text(`Rs. ${totalGst.toFixed(2)}`, 182, summaryTopIdx + 11, { align: 'right' });
+  doc.text('GST (18%):', 110, summaryTopIdx + 11);
+  doc.text(`Rs. ${totalGst.toFixed(2)}`, 185, summaryTopIdx + 11, { align: 'right' });
   
   doc.line(110, summaryTopIdx + 16, 190, summaryTopIdx + 16);
   
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(14);
   doc.setTextColor(20, 20, 20);
-  doc.text('GRAND TOTAL', 115, summaryTopIdx + 26);
-  doc.text(`Rs. ${amount.toFixed(2)}`, 182, summaryTopIdx + 26, { align: 'right' });
+  doc.text('GRAND TOTAL', 110, summaryTopIdx + 26);
+  doc.text(`Rs. ${amount.toFixed(2)}`, 185, summaryTopIdx + 26, { align: 'right' });
   
   // Payment Info
   doc.setFontSize(9);
