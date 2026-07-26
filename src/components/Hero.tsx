@@ -1,5 +1,5 @@
 import { motion } from "motion/react";
-import { Star, Droplets, Zap } from "lucide-react";
+import { Star, Droplets, Zap, CalendarCheck, ArrowRight } from "lucide-react";
 import React, { useRef, useState, useEffect, memo } from "react";
 
 const BG_IMAGES = [
@@ -10,7 +10,11 @@ const BG_IMAGES = [
 ];
 const fallbackHero = "/new-hero-1.png";
 
-const Hero = memo(function Hero() {
+interface HeroProps {
+  onBookNow?: () => void;
+}
+
+const Hero = memo(function Hero({ onBookNow }: HeroProps) {
   const [currentImageIdx, setCurrentImageIdx] = useState(0);
 
   useEffect(() => {
@@ -20,6 +24,19 @@ const Hero = memo(function Hero() {
     }, 4000); // Faster transition
     return () => clearInterval(timer);
   }, []);
+
+  const handleBookNowClick = () => {
+    if (onBookNow) {
+      onBookNow();
+    } else {
+      const el = document.getElementById("booking") || document.getElementById("packages");
+      if (el) {
+        el.scrollIntoView({ behavior: "smooth" });
+      } else {
+        window.location.href = "/#booking";
+      }
+    }
+  };
 
   return (
     <section className="relative w-full flex flex-col bg-[#0a0a0a] text-center pt-[70px] lg:pt-[90px]">
@@ -88,6 +105,25 @@ const Hero = memo(function Hero() {
           Professional Detailing at your home, office, or apartment. Fast,
           affordable, and spotless.
         </motion.p>
+
+        {/* Highlighted Centered Book Now Button below Hero Image */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9, y: 15 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.9 }}
+          className="mt-3 sm:mt-5 flex justify-center items-center w-full"
+        >
+          <motion.button
+            onClick={handleBookNowClick}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            className="flex-none rounded-full bg-white text-black hover:bg-neutral-100 border border-white/50 px-8 sm:px-10 py-3.5 sm:py-4 text-xs sm:text-sm font-black uppercase tracking-[0.2em] shadow-lg hover:shadow-xl flex items-center justify-center gap-2 cursor-pointer transition-all duration-300"
+          >
+            <CalendarCheck className="w-4 h-4 text-black flex-none" />
+            <span className="whitespace-nowrap font-black text-black">Book Now</span>
+            <ArrowRight className="w-4 h-4 text-black group-hover:translate-x-1 transition-transform flex-none" />
+          </motion.button>
+        </motion.div>
 
         <motion.div
           initial={{ opacity: 0, y: 15 }}

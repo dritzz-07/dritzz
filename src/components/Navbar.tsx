@@ -29,6 +29,7 @@ interface NavbarProps {
   openSettings?: (
     tab?: "addresses" | "vehicles" | "invoices" | "support" | "settings",
   ) => void;
+  onBookNow?: () => void;
 }
 
 const MenuButton = ({
@@ -58,6 +59,7 @@ export default function Navbar({
   openLogin,
   openBookings,
   openSettings,
+  onBookNow,
 }: NavbarProps) {
   const [splashes, setSplashes] = useState<
     { id: number; x: number; y: number }[]
@@ -74,7 +76,7 @@ export default function Navbar({
       }
     }
     const handleScroll = () => {
-      setScrolled(window.scrollY > 20);
+      setScrolled(window.scrollY > 10);
     };
     document.addEventListener("mousedown", handleClickOutside);
     window.addEventListener("scroll", handleScroll);
@@ -103,10 +105,16 @@ export default function Navbar({
   };
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 pt-1 pb-4 md:px-8 lg:px-16 bg-[#000000] border-b border-white/5 w-full h-[55px]">
+    <nav
+      className={`fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-3 sm:px-6 md:px-8 lg:px-16 w-full h-[60px] md:h-[65px] transition-all duration-300 ${
+        scrolled
+          ? "bg-black/95 backdrop-blur-xl border-b border-white/15 shadow-[0_10px_30px_rgba(0,0,0,0.95)]"
+          : "bg-black/90 backdrop-blur-md border-b border-white/10 shadow-[0_4px_20px_rgba(0,0,0,0.8)]"
+      }`}
+    >
       <a
         href="/"
-        className="flex items-center gap-2 decoration-none text-white group"
+        className="flex items-center gap-2 decoration-none text-white group flex-none"
         onClick={handleNavClick}
       >
         <motion.img
@@ -114,16 +122,16 @@ export default function Navbar({
           whileTap={{ scale: 0.95 }}
           src={logoImage}
           alt="Dritzz Logo"
-          className="w-[80px] h-[75px] -mb-[8px] object-contain transition-all"
+          className="w-[70px] sm:w-[85px] h-[50px] sm:h-[60px] object-contain transition-all"
         />
       </a>
 
-      <ul className="hidden md:flex items-center md:gap-6 lg:gap-10 list-none -mb-[10px] h-[19px] w-[600.625px] font-['Inter'] font-normal text-center no-underline justify-center text-[#ffffff]">
+      <ul className="hidden md:flex items-center md:gap-5 lg:gap-8 list-none font-['Inter'] font-normal text-center no-underline justify-center text-[#ffffff]">
         <li>
           <a
             href="/"
             onClick={handleNavClick}
-            className="text-[14px] font-normal text-[#ffffff] transition-colors decoration-none relative"
+            className="text-[14px] font-medium text-[#ffffff] hover:text-amber-300 transition-colors decoration-none relative"
           >
             Home
           </a>
@@ -134,7 +142,7 @@ export default function Navbar({
               <a
                 href={`#${item.toLowerCase().replace(/\s+/g, "-")}`}
                 onClick={handleNavClick}
-                className="text-[14px] font-normal text-[#ffffff] transition-colors decoration-none relative"
+                className="text-[14px] font-medium text-[#ffffff] hover:text-amber-300 transition-colors decoration-none relative"
               >
                 {item}
               </a>
@@ -143,16 +151,16 @@ export default function Navbar({
         )}
       </ul>
 
-      <div className="flex items-center gap-4 md:gap-6">
+      <div className="flex items-center gap-2 sm:gap-3">
         {user ? (
           <div className="relative" ref={menuRef}>
             <motion.button
               onClick={() => setShowProfileMenu(!showProfileMenu)}
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
-              className="flex items-center gap-2.5 px-1.5 py-1.5 pr-4 rounded-full bg-gradient-to-b from-zinc-800 to-zinc-950 border border-white/10 text-neutral-100 uppercase tracking-[0.2em] text-[11px] shadow-[0_0_20px_rgba(255,255,255,0.1)] hover:shadow-[0_0_30px_rgba(255,255,255,0.2)] hover:scale-105 active:scale-[0.98] transition-all duration-300 font-black"
+              className="flex items-center gap-1.5 sm:gap-2.5 px-1.5 py-1.5 pr-2.5 sm:pr-4 rounded-full bg-gradient-to-b from-zinc-800 to-zinc-950 border border-white/10 text-neutral-100 uppercase tracking-[0.15em] sm:tracking-[0.2em] text-[10px] sm:text-[11px] shadow-[0_0_20px_rgba(255,255,255,0.1)] hover:shadow-[0_0_30px_rgba(255,255,255,0.2)] hover:scale-105 active:scale-[0.98] transition-all duration-300 font-black h-[40.76px]"
             >
-              <div className="w-8 h-8 rounded-full overflow-hidden bg-white/10 border border-white/10 flex items-center justify-center">
+              <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full overflow-hidden bg-white/10 border border-white/10 flex items-center justify-center flex-none">
                 {user.photoURL ? (
                   <img
                     src={user.photoURL}
@@ -326,17 +334,15 @@ export default function Navbar({
             </AnimatePresence>
           </div>
         ) : (
-          <>
-            <motion.button
-              onClick={openLogin}
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              className="btn-primary flex-none !py-2.5 !text-[11px] animate-diamond-shine h-[40.76px] -mb-[7px] pl-[20px] pr-[17px] -ml-[9px] mt-[7px]"
-            >
-              <Car className="w-4 h-4" strokeWidth={2.5} />
-              <span>Sign In</span>
-            </motion.button>
-          </>
+          <motion.button
+            onClick={openLogin}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            className="btn-primary flex-none !py-2.5 px-3 sm:!px-4 !text-[10px] sm:!text-[11px] animate-diamond-shine h-[40.76px] flex items-center gap-1.5 cursor-pointer"
+          >
+            <Car className="w-3.5 h-3.5 sm:w-4 sm:h-4" strokeWidth={2.5} />
+            <span className="whitespace-nowrap">Sign In</span>
+          </motion.button>
         )}
       </div>
 

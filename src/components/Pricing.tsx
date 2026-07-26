@@ -31,12 +31,12 @@ export default function Pricing({ onSelectPackage }: PricingProps) {
   const getButtonText = (pkgId: string) => {
     switch (pkgId) {
       case "monthly":
-        return "Get Membership";
+        return "Select Monthly Plan";
       case "premium":
-        return "Book Premium Wash";
+        return "Select Premium Wash";
       case "basic":
       default:
-        return "Book Now";
+        return "Select Basic Wash";
     }
   };
 
@@ -97,10 +97,10 @@ export default function Pricing({ onSelectPackage }: PricingProps) {
             <button
               key={v}
               onClick={() => setVehicle(v)}
-              className={`relative overflow-hidden px-8 py-3.5 text-xs uppercase tracking-[0.15em] font-bold transition-all duration-300 rounded-full ${
+              className={`relative overflow-hidden px-7 py-3 text-xs uppercase tracking-[0.15em] font-bold transition-all duration-200 rounded-full cursor-pointer ${
                 vehicle === v
-                  ? "bg-gradient-to-tr from-zinc-100 via-white to-zinc-200 text-black animate-diamond-shine scale-105"
-                  : "text-neutral-300 hover:text-white hover:bg-white/10"
+                  ? "bg-white text-black shadow-md scale-105"
+                  : "text-neutral-400 hover:text-white hover:bg-white/10"
               }`}
             >
               <div className="flex items-center gap-3">
@@ -267,17 +267,15 @@ export default function Pricing({ onSelectPackage }: PricingProps) {
 
                 <button
                   onClick={() => onSelectPackage(pkg.id, vehicle)}
-                  className={`w-full relative group overflow-hidden rounded-full font-black tracking-[0.1em] uppercase transition-all duration-300 hover:scale-[1.05] animate-diamond-shine ${
+                  className={`w-full group rounded-full font-bold tracking-wider uppercase transition-all duration-200 py-3.5 px-6 text-xs flex items-center justify-center gap-2 cursor-pointer ${
                     isMonthly
-                      ? "bg-black text-white px-6 py-4 text-[13px] shadow-[0_0_30px_rgba(255,255,255,0.4)] hover:shadow-[0_0_50px_rgba(255,255,255,0.6)] border-2 border-white"
-                      : "bg-black text-white px-6 py-4 text-[13px] shadow-[0_0_20px_rgba(255,255,255,0.1)] border border-white hover:shadow-[0_0_30px_rgba(255,255,255,0.3)] hover:bg-white hover:text-black"
+                      ? "bg-white text-black hover:bg-neutral-200 shadow-lg"
+                      : "bg-zinc-900 text-white border border-white/20 hover:bg-white hover:text-black hover:border-white"
                   }`}
                 >
-                  <span className="relative z-10 flex items-center justify-center gap-2">
+                  <span className="flex items-center justify-center gap-2">
                     {getButtonText(pkg.id)}
-                    {isMonthly && (
-                      <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
-                    )}
+                    <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
                   </span>
                 </button>
               </motion.div>
@@ -371,17 +369,15 @@ export default function Pricing({ onSelectPackage }: PricingProps) {
 
               <button
                 onClick={() => onSelectPackage(pkg.id, vehicle)}
-                className={`w-full relative group overflow-hidden rounded-full font-black tracking-wide uppercase transition-all duration-300 hover:scale-[1.03] animate-diamond-shine ${
+                className={`w-full group rounded-full font-bold tracking-wider uppercase transition-all duration-200 py-3.5 text-xs flex items-center justify-center gap-2 cursor-pointer ${
                   isMonthly
-                    ? "bg-black text-white py-4 text-[11px] shadow-[0_0_25px_rgba(255,255,255,0.4)] hover:shadow-[0_0_40px_rgba(255,255,255,0.6)] border-2 border-white"
-                    : "bg-black text-white py-4 text-[11px] border border-white shadow-[0_0_15px_rgba(255,255,255,0.1)] hover:bg-white hover:text-black"
+                    ? "bg-white text-black hover:bg-neutral-200 shadow-lg"
+                    : "bg-zinc-900 text-white border border-white/20 hover:bg-white hover:text-black hover:border-white"
                 }`}
               >
-                <span className="relative z-10 flex items-center justify-center gap-1.5">
+                <span className="flex items-center justify-center gap-1.5">
                   {getButtonText(pkg.id)}
-                  {isMonthly && (
-                    <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" />
-                  )}
+                  <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" />
                 </span>
               </button>
             </div>
@@ -443,15 +439,13 @@ export default function Pricing({ onSelectPackage }: PricingProps) {
               doorstep car care experience.
             </p>
 
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-6 w-full px-6">
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 w-full px-6">
               <button
                 onClick={() => onSelectPackage("monthly", vehicle)}
-                className="w-full sm:w-auto relative group overflow-hidden rounded-full bg-black border border-white/30 text-white px-10 py-4 font-black tracking-[0.2em] text-[14px] uppercase shadow-[0_0_30px_rgba(255,255,255,0.2)] hover:shadow-[0_0_40px_rgba(255,255,255,0.4)] transition-all duration-300 hover:scale-[1.05] hover:border-white/60 animate-diamond-shine"
+                className="w-full sm:w-auto rounded-full bg-white text-black hover:bg-neutral-200 px-8 py-3.5 font-bold tracking-wider text-xs uppercase shadow-lg transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer"
               >
-                <span className="relative z-10 flex items-center justify-center gap-2">
-                  <Crown className="w-5 h-5 text-zinc-100 pb-0.5 drop-shadow-[0_0_8px_rgba(255,255,255,0.8)]" />
-                  Get Black Membership
-                </span>
+                <Crown className="w-4 h-4 text-black" />
+                Get Black Membership
               </button>
               <button
                 onClick={() =>
@@ -459,7 +453,7 @@ export default function Pricing({ onSelectPackage }: PricingProps) {
                     .getElementById("packages")
                     ?.scrollIntoView({ behavior: "smooth" })
                 }
-                className="w-full sm:w-auto px-10 py-4 rounded-full border border-white/20 text-white font-bold text-[14px] uppercase tracking-wide hover:bg-white/5 transition-all duration-300"
+                className="w-full sm:w-auto px-8 py-3.5 rounded-full border border-white/20 text-white font-bold text-xs uppercase tracking-wider hover:bg-white/10 transition-all duration-200 cursor-pointer"
               >
                 Schedule Wash
               </button>

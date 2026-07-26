@@ -138,6 +138,20 @@ function MainApp() {
     setIsPaymentOpen(true);
   };
 
+  const handleBookNow = () => {
+    if (window.innerWidth < 768) {
+      setMobileTab("book");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    } else {
+      const bookingSection = document.getElementById("booking");
+      if (bookingSection) {
+        bookingSection.scrollIntoView({ behavior: "smooth" });
+      } else {
+        window.location.href = "/#booking";
+      }
+    }
+  };
+
   return (
     <div className="min-h-screen bg-[#0A0A0C] text-white selection:bg-white selection:text-black relative overflow-x-hidden pb-[80px] md:pb-0">
       {/* Global Deep Space Glow based on the reference image */}
@@ -161,11 +175,12 @@ function MainApp() {
             setSettingsTab(tab);
             setIsSettingsOpen(true);
           }}
+          onBookNow={handleBookNow}
         />
 
         {/* Desktop View */}
         <main className="relative z-10 hidden md:block">
-          <Hero />
+          <Hero onBookNow={handleBookNow} />
           <Suspense fallback={<LoadingFallback />}>
             <ShowcaseVideo />
           </Suspense>
@@ -201,7 +216,7 @@ function MainApp() {
           <Suspense fallback={<LoadingFallback />}>
             {mobileTab === "home" && (
               <>
-                <Hero />
+                <Hero onBookNow={handleBookNow} />
                 <Suspense fallback={<LoadingFallback />}>
                   <ShowcaseVideo />
                 </Suspense>
